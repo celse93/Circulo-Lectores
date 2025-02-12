@@ -2,6 +2,10 @@
 
 Create the subdirectories for each section of the app
 
+## Root
+
+Set up autolinting for JS and Python with Prettier and Ruff
+
 ## Web
 
 Inside the web subdirectories
@@ -9,7 +13,7 @@ Inside the web subdirectories
 ### Install a React template
 
 From the Vite [docs](https://vite.dev/guide/#scaffolding-your-first-vite-project)
- 
+
 ```shell
 npm create vite@latest . -- --template react
 ```
@@ -26,7 +30,8 @@ If you want one for data fetching instead of using the native fetch, you can try
 - [axios](https://axios-http.com/docs/intro)
 - [react-query](https://tanstack.com/query/latest/docs/framework/react/installation)
 
-And a style/component library like: 
+And a style/component library like:
+
 - [material-ui](https://mui.com/material-ui/getting-started/installation/)
 - [react-bootstrap](https://react-bootstrap.netlify.app/docs/getting-started/introduction)
 - [reactstrap](https://reactstrap.github.io/?path=/docs/home-installation--page#getting-started)
