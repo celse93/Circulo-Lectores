@@ -1,6 +1,0 @@
-services:
-  - type: web
-    name: flask-api
-    env: python
-    buildCommand: pipenv install --deploy
-    startCommand: pipenv run start
