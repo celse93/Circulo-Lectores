@@ -15,12 +15,23 @@ from flask_jwt_extended import (
     set_access_cookies,
     unset_jwt_cookies,
 )
+import cloudinary
+import cloudinary.uploader
+from cloudinary.utils import cloudinary_url
 
 load_dotenv()
 app = Flask(__name__)
 start_time = time.time()
 
 db_url = os.getenv("DATABASE_URL")
+cloudinary_secret = os.getenv("CLOUDINARY_API_SECRET")
+
+cloudinary.config(
+    cloud_name="jscarzo",
+    api_key="633729364266153",
+    api_secret=cloudinary_secret,
+    secure=False,
+)
 
 if db_url is not None:
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
@@ -29,8 +40,6 @@ else:
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 jwt_key = os.getenv("JWT_SECRET_KEY")
-
-print("db_url:", db_url)
 
 # JWT
 app.config["JWT_SECRET_KEY"] = jwt_key
@@ -50,8 +59,25 @@ CORS(app, supports_credentials=True)
 @app.route("/health", methods=["GET"])
 def health_check():
     users = Users.query.all()
-    print(users)
     return jsonify({"status": "ok", "uptime": round(time.time() - start_time, 2)}), 200
+
+
+@app.route("/upload", methods=["POST"])
+@jwt_required()
+def upload_file():
+    if "file" not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files["file"]
+
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
+
+    try:
+        upload_result = cloudinary.uploader.upload(file)
+        return jsonify(upload_result)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 @app.route("/register", methods=["POST"])
