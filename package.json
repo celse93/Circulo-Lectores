@@ -1,11 +1,20 @@
 {
   "devDependencies": {
     "husky": "^9.1.7",
+    "concurrently": "^8.2.0",
+    "eslint": "^8.50.0",
     "lint-staged": "^15.4.3",
     "prettier": "^3.5.0"
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "dev:web": "cd web && npm run dev",
+    "dev:api": "cd api && pipenv run start",
+    "dev": "concurrently \"npm run dev:web\" \"npm run dev:api\"",
+    "lint:web": "cd web && npx eslint . --ext .js,.jsx,.ts,.tsx",
+    "format:web": "cd web && npx prettier --write .",
+    "lint:api": "cd api && pipenv run ruff .",
+    "format:api": "cd api && pipenv run ruff . --fix"
   },
   "lint-staged": {
     "*.{js,jsx,json,css,html}": "prettier --write",

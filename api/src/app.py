@@ -1,37 +1,23 @@
 import os
 import time
-import bcrypt
+from src.utils import generate_sitemap
+from src.routes.auth import auth_routes
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from flask_migrate import Migrate
-from src.models import Users, db
+from src.db import db
+from src.admin.setup_admin import setup_admin
 from flask_cors import CORS
-from sqlalchemy import or_
+
 from flask_jwt_extended import (
-    create_access_token,
-    get_csrf_token,
-    jwt_required,
     JWTManager,
-    set_access_cookies,
-    unset_jwt_cookies,
 )
-import cloudinary
-import cloudinary.uploader
-from cloudinary.utils import cloudinary_url
 
 load_dotenv()
 app = Flask(__name__)
 start_time = time.time()
 
 db_url = os.getenv("DATABASE_URL")
-cloudinary_secret = os.getenv("CLOUDINARY_API_SECRET")
-
-cloudinary.config(
-    cloud_name="jscarzo",
-    api_key="633729364266153",
-    api_secret=cloudinary_secret,
-    secure=False,
-)
 
 if db_url is not None:
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
@@ -56,101 +42,17 @@ app.config["CORS_HEADERS"] = "Content-Type"
 CORS(app, supports_credentials=True)
 
 
+@app.route("/")
+def sitemap():
+    return generate_sitemap(app)
+
+
 @app.route("/health", methods=["GET"])
 def health_check():
-    users = Users.query.all()
     return jsonify({"status": "ok", "uptime": round(time.time() - start_time, 2)}), 200
 
 
-@app.route("/upload", methods=["POST"])
-@jwt_required()
-def upload_file():
-    if "file" not in request.files:
-        return jsonify({"error": "No file part"}), 400
-
-    file = request.files["file"]
-
-    if file.filename == "":
-        return jsonify({"error": "No selected file"}), 400
-
-    try:
-        upload_result = cloudinary.uploader.upload(file)
-        return jsonify(upload_result)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/register", methods=["POST"])
-def register():
-    data = request.get_json()
-    user_name = data.get("user_name")
-    email = data.get("email")
-    password = data.get("password")
-
-    required_fields = ["user_name", "email", "password"]
-
-    if not all(field in data for field in required_fields):
-        return jsonify({"error": "Missing required fields"}), 400
-
-    existing_user = (
-        db.session.query(Users)
-        .filter(or_(Users.user_name == user_name, Users.email == email))
-        .first()
-    )
-    if existing_user:
-        return jsonify({"error": "Username or Email already registered"}), 400
-
-    hashedPassword = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode(
-        "utf-8"
-    )
-
-    new_user = Users(user_name=user_name, email=email, password=hashedPassword)
-    db.session.add(new_user)
-    db.session.commit()
-
-    return jsonify({"message": "User registered successfully"}), 201
-
-
-@app.route("/login", methods=["POST"])
-def get_login():
-    data = request.get_json()
-
-    email = data["email"]
-    password = data["password"]
-
-    required_fields = ["email", "password"]
-    if not all(field in data for field in required_fields):
-        return jsonify({"error": "Missing required fields"}), 400
-
-    user = Users.query.filter_by(email=email).first()
-
-    if not user:
-        return jsonify({"error": "User not found"}), 400
-
-    is_password_valid = bcrypt.checkpw(
-        password.encode("utf-8"), user.password.encode("utf-8")
-    )
-
-    if not is_password_valid:
-        return jsonify({"error": "Password not correct"}), 400
-
-    access_token = create_access_token(identity=str(user.id))
-    csrf_token = get_csrf_token(access_token)
-    response = jsonify(
-        {"msg": "login successful", "user": user, "csrf_token": csrf_token}
-    )
-    set_access_cookies(response, access_token)
-
-    return response
-
-
-@app.route("/logout", methods=["POST"])
-@jwt_required()
-def logout_with_cookies():
-    response = jsonify({"msg": "logout successful"})
-    unset_jwt_cookies(response)
-    return response
-
+auth_routes(app)
 
 if __name__ == "__main__":
     PORT = int(os.environ.get("PORT", 8080))

@@ -1,63 +1,59 @@
-# Final Project Boilerplate
+# 🚀 Final Project Boilerplate
 
-Create the subdirectories for each section of the app
+## 🏠 Root
 
-## Root
+The root of the project is set up with **automatic pre-commit autolinting** for **JavaScript** and **Python** using **Prettier** 🖋️ and **Ruff** 🐍.  
 
-Set up autolinting for JS and Python with Prettier and Ruff
+## 🌐 Web (`/web`)
 
-## Web
+### ⚛️ React Template
 
-Inside the web subdirectories
+The front-end uses a **React template from Vite**.  
+Scaffolding reference: [Vite Docs](https://vite.dev/guide/#scaffolding-your-first-vite-project)  
 
-### Install a React template
+### 📦 Necessary Packages for FE
 
-From the Vite [docs](https://vite.dev/guide/#scaffolding-your-first-vite-project)
+#### Utilities
 
-```shell
-npm create vite@latest . -- --template react
-```
+- **lodash**: Functional utilities [GitHub](https://github.com/lodash/lodash?tab=readme-ov-file#installation) 🔧
+- **react-router**: Routing library [Docs](https://reactrouter.com/start/library/installation) 🛣️
 
-#### Install necessary packages
+#### Data Fetching
 
-Install the necessary packages to develop your front-end application, like:
+- **axios**: HTTP client [Docs](https://axios-http.com/docs/intro) ⚡
+- **react-query**: Server-state management [Docs](https://tanstack.com/query/latest/docs/framework/react/installation) 📡
 
-- [lodash](https://github.com/lodash/lodash?tab=readme-ov-file#installation)
-- [react-router](https://reactrouter.com/start/library/installation)
+#### Styling & Components
 
-If you want one for data fetching instead of using the native fetch, you can try:
+- **Material-UI**: Modern UI components [Docs](https://mui.com/material-ui/getting-started/installation) 🎨
+- **React Bootstrap**: Bootstrap components [Docs](https://react-bootstrap.netlify.app/docs/getting-started/introduction) 🅱️
+- **Reactstrap**: Bootstrap 4 components [Docs](https://reactstrap.github.io/?path=/docs/home-installation--page#getting-started) 🖼️
+- **Ant Design**: Enterprise UI [Docs](https://ant.design/docs/react/use-with-vite) 🏢
+- **Tailwind CSS**: Utility-first CSS [Docs](https://tailwindcss.com/docs/installation/using-vite) 🌬️
 
-- [axios](https://axios-http.com/docs/intro)
-- [react-query](https://tanstack.com/query/latest/docs/framework/react/installation)
+## 🖥️ API (`/api`)
 
-And a style/component library like:
+### 🐍 Pipenv
 
-- [material-ui](https://mui.com/material-ui/getting-started/installation/)
-- [react-bootstrap](https://react-bootstrap.netlify.app/docs/getting-started/introduction)
-- [reactstrap](https://reactstrap.github.io/?path=/docs/home-installation--page#getting-started)
-- [ant-design](https://ant.design/docs/react/use-with-vite)
-- [tailwind](https://tailwindcss.com/docs/installation/using-vite)
+Back-end uses **Pipenv** for dependency management.  
+Installation reference: [Pipenv Docs](https://pipenv.pypa.io/en/latest/installation.html#preferred-installation-of-pipenv)  
 
-## API
+### 📦 Necessary Packages for BE
 
-Inside the api subdirectories
+- **Flask**: Web framework [Docs](https://flask.palletsprojects.com/en/stable/installation/) 🌐
+- **Flask-CORS**: Cross-origin requests [PyPI](https://pypi.org/project/Flask-Cors/) 🌏
+- **Flask-Migrate**: DB migrations [Docs](https://flask-migrate.readthedocs.io/en/latest/#installation) 🗄️
+- **Flask-SQLAlchemy**: ORM for Flask [Docs](https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/#installation) 🐘
+- **Gunicorn**: WSGI server [Docs](https://gunicorn.org/) 🚀
+- **SQLAlchemy**: Database toolkit [Docs](https://docs.sqlalchemy.org/en/20/intro.html#installation) 🛠️
 
-### Install Pipenv
+### 🔑 Environment Variables
 
-From the [docs](https://pipenv.pypa.io/en/latest/installation.html#preferred-installation-of-pipenv)
+Make sure your environment variables are correctly set for **development** (Codespaces) and **deployment** (Render).  
 
-```shell
-pip install --user pipenv
-```
+- `DATABASE_URL` 🌐 → Your external database URL from the DB in the Render project 
+- `JWT_SECRET_KEY` 🔑 → Your generated secret string  
 
-#### Install necessary packages
+---
 
-Install the necessary packages to develop your back-end application, like:
-
-- [flask](https://flask.palletsprojects.com/en/stable/installation/)
-- [flask-admin](https://flask-admin.readthedocs.io/en/latest/introduction/#getting-started)
-- [flask-cors](https://pypi.org/project/Flask-Cors/)
-- [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/#installation)
-- [flask-sqlalchemy](https://flask-sqlalchemy.readthedocs.io/en/stable/quickstart/#installation)
-- [gunicorn](https://gunicorn.org/)
-- [sqlalchemy](https://docs.sqlalchemy.org/en/20/intro.html#installation)
+💡 **Tip:** Keep this README handy as your **quick-start guide** for both front-end and back-end setup!  

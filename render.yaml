@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: react-frontend
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    rootDir: web
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: my_api.com
+      - type: rewrite
+        source: /*
+        destination: /
+
+  - type: web
+    name: flask-backend
+    runtime: python
+    plan: free
+    rootDir: api
+    buildCommand: pip install pipenv && pipenv install
+    startCommand: pipenv run deploy
+    envVars:
+      - key: DATABASE_URL
+        value: "postgresql://username:password@host:port/dbname"
+      - key: JWT_SECRET_KEY
+        value: "supersecretkey"
+
+databases:
+  - name: mydb
+    plan: free

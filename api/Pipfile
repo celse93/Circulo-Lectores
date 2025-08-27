@@ -15,6 +15,7 @@ bcrypt = "*"
 psycopg2-binary = "*"
 python-dotenv = "*"
 cloudinary = "*"
+flask-admin = "*"
 
 [dev-packages]
 
@@ -22,8 +23,9 @@ cloudinary = "*"
 python_version = "3.12"
 
 [scripts]
-start="flask --app src/app run"
+start="flask --app src.app run"
 deploy="gunicorn -w 4 -b 0.0.0.0:$PORT src.app:app"
+reset = "bash ./scripts/reset_migrations.sh"
 init="flask --app src/app db init"
 migrate="flask --app src/app db migrate"
 upgrade="flask --app src/app db upgrade"

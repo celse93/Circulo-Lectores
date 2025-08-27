@@ -1,0 +1,40 @@
+{
+  "name": "Capstone Project Boilerplate",
+  "dockerFile": "Dockerfile",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "22.18"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true
+      },
+      "extensions": [
+        "eamodio.gitlens",
+        "dsznajder.es7-react-js-snippets",
+        "esbenp.prettier-vscode",
+        "ms-python.python",
+        "oderwat.indent-rainbow",
+        "christian-kohler.path-intellisense",
+        "christian-kohler.npm-intellisense",
+        "Zignd.html-css-class-completion",
+        "DavidAnson.vscode-markdownlint",
+        "dbaeumer.vscode-eslint",
+        "formulahendry.auto-complete-tag",
+        "charliermarsh.ruff"
+      ]
+    }
+  },
+  "forwardPorts": [5000, 3000],
+  "postCreateCommand": "bash .devcontainer/setup.sh"
+}
