@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from src.db import db
-from src.admin.setup_admin import setup_admin
 from flask_cors import CORS
 
 from flask_jwt_extended import (
@@ -14,6 +13,7 @@ from flask_jwt_extended import (
 )
 
 load_dotenv()
+
 app = Flask(__name__)
 start_time = time.time()
 
