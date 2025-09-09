@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: 67ea6a2ab16b
+Revision ID: b08d32aabae0
 Revises:
-Create Date: 2025-09-09 13:11:27.667989
+Create Date: 2025-09-09 20:31:52.795679
 
 """
 
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "67ea6a2ab16b"
+revision = "b08d32aabae0"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,7 +30,7 @@ def upgrade():
     op.create_table(
         "profiles",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("name", sa.String(length=100), nullable=False),
+        sa.Column("name", sa.String(length=50), nullable=False),
         sa.Column("avatar", sa.String(length=150), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
@@ -40,10 +40,39 @@ def upgrade():
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
+        "follows",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("follower_id", sa.Integer(), nullable=False),
+        sa.Column("following_id", sa.Integer(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["follower_id"],
+            ["profiles.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["following_id"],
+            ["profiles.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
+        "quotes",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("text", sa.String(length=500), nullable=False),
+        sa.Column("book_id", sa.String(length=50), nullable=False),
+        sa.Column("profile_id", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DATE(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["profile_id"],
+            ["profiles.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
         "readinglist",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("book_id", sa.String(length=50), nullable=False),
         sa.Column("profile_id", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DATE(), nullable=False),
         sa.ForeignKeyConstraint(
             ["profile_id"],
             ["profiles.id"],
@@ -55,6 +84,7 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("book_id", sa.String(length=50), nullable=False),
         sa.Column("profile_id", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DATE(), nullable=False),
         sa.ForeignKeyConstraint(
             ["profile_id"],
             ["profiles.id"],
@@ -68,6 +98,7 @@ def upgrade():
         sa.Column("ratings", sa.Integer(), nullable=False),
         sa.Column("book_id", sa.String(length=50), nullable=False),
         sa.Column("profile_id", sa.Integer(), nullable=False),
+        sa.Column("created_at", sa.DATE(), nullable=False),
         sa.ForeignKeyConstraint(
             ["profile_id"],
             ["profiles.id"],
@@ -82,6 +113,8 @@ def downgrade():
     op.drop_table("reviews")
     op.drop_table("recommendations")
     op.drop_table("readinglist")
+    op.drop_table("quotes")
+    op.drop_table("follows")
     op.drop_table("profiles")
     op.drop_table("users")
     # ### end Alembic commands ###
