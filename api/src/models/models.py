@@ -39,10 +39,11 @@ class Follows(db.Model):
 class Profiles(db.Model):
     __tablename__ = "profiles"
 
-    id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
-    name: Mapped[str] = mapped_column(String(50), nullable=False)
-    avatar: Mapped[str] = mapped_column(String(150), nullable=False)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"), primary_key=True, nullable=False
+    )
+    name: Mapped[str] = mapped_column(String(50), nullable=True)
+    avatar: Mapped[str] = mapped_column(String(150), nullable=True)
     user: Mapped["Users"] = relationship(back_populates="profile")
     recommendation: Mapped["Recommendations"] = relationship(back_populates="profile")
     readinglist: Mapped["ReadingList"] = relationship(back_populates="profile")
