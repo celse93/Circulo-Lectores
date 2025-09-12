@@ -3,7 +3,7 @@ import requests
 
 
 def author_detail_route(app):
-    @app.route("/author/<author_id>", methods=["GET"])
+    @app.route("/author/<path:author_id>", methods=["GET"])
     def author_detail(author_id):
         response_body = {}
         url = f"https://openlibrary.org/authors/{author_id}.json"
