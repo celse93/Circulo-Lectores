@@ -3,9 +3,7 @@ import time
 from src.utils import generate_sitemap
 from src.routes.auth import auth_routes
 from src.routes.book_detail import book_detail_route
-from src.routes.author_detail import (
-    author_detail_route,
-)  # Asegúrate de importar la ruta de autor
+from src.routes.author_detail import author_detail_route
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_migrate import Migrate
