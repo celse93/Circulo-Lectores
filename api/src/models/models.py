@@ -74,7 +74,6 @@ class Profiles(db.Model):
             "id": self.id,
             "name": self.name,
             "avatar": self.avatar,
-            "user_id": self.user_id,
         }
 
 
