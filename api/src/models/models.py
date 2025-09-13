@@ -1,4 +1,5 @@
-from sqlalchemy import String, VARCHAR, ForeignKey, DATE
+from sqlalchemy import String, VARCHAR, ForeignKey, Date
+from datetime import date
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.db import db
 from typing import List
@@ -82,19 +83,19 @@ class ReadingList(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     book_id: Mapped[str] = mapped_column(String(50), nullable=False)
-    profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
-    created_at: Mapped[DATE] = mapped_column(DATE, default=DATE)
+    user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
+    created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="readinglist")
 
     def __repr__(self):
-        return f"<Profile: {self.profile_id}>"
+        return f"<Profile {self.id} for user {self.user_id}>"
 
     def serialize(self):
         return {
             "id": self.id,
             "book_id": self.book_id,
-            "profile_id": self.profile_id,
-            "created_at": self.created_at,
+            "user_id": self.user_id,
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -103,19 +104,19 @@ class Recommendations(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     book_id: Mapped[str] = mapped_column(String(50), nullable=False)
-    profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
-    created_at: Mapped[DATE] = mapped_column(DATE, default=DATE)
+    user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
+    created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="recommendation")
 
     def __repr__(self):
-        return f"<Profile: {self.profile_id}>"
+        return f"<Profile: {self.user_id}>"
 
     def serialize(self):
         return {
             "id": self.id,
             "book_id": self.book_id,
-            "profile_id": self.profile_id,
-            "created_at": self.created_at,
+            "user_id": self.user_id,
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -126,12 +127,12 @@ class Reviews(db.Model):
     text: Mapped[str] = mapped_column(String(500), nullable=False)
     ratings: Mapped[int] = mapped_column(nullable=False)
     book_id: Mapped[str] = mapped_column(String(50), nullable=False)
-    profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
-    created_at: Mapped[DATE] = mapped_column(DATE, default=DATE)
+    user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
+    created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="review")
 
     def __repr__(self):
-        return f"<Profile: {self.profile_id}>"
+        return f"<Profile: {self.user_id}>"
 
     def serialize(self):
         return {
@@ -139,8 +140,8 @@ class Reviews(db.Model):
             "text": self.text,
             "ratings": self.ratings,
             "book_id": self.book_id,
-            "profile_id": self.profile_id,
-            "created_at": self.created_at,
+            "user_id": self.user_id,
+            "created_at": self.created_at.isoformat(),
         }
 
 
@@ -150,18 +151,18 @@ class Quotes(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     text: Mapped[str] = mapped_column(String(500), nullable=False)
     book_id: Mapped[str] = mapped_column(String(50), nullable=False)
-    profile_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
-    created_at: Mapped[DATE] = mapped_column(DATE, default=DATE)
+    user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
+    created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="quote")
 
     def __repr__(self):
-        return f"<Profile: {self.profile_id}>"
+        return f"<Profile: {self.user_id}>"
 
     def serialize(self):
         return {
             "id": self.id,
             "text": self.text,
             "book_id": self.book_id,
-            "profile_id": self.profile_id,
-            "created_at": self.created_at,
+            "user_id": self.user_id,
+            "created_at": self.created_at.isoformat(),
         }

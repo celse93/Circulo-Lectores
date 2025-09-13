@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from src.db import db
 from src.models.models import Profiles
+from sqlalchemy import select
 from flask_jwt_extended import (
     jwt_required,
     get_jwt_identity,
@@ -8,35 +9,41 @@ from flask_jwt_extended import (
 
 
 def profiles_routes(app):
-    @app.route("/profiles", methods=["PATCH"])
+    @app.route("/profiles", methods=["PATCH", "GET"])
     @jwt_required()
     def profile():
-        data = request.get_json()
-        required_fields = ["name", "avatar"]
+        # method for updating profile
+        if request.method == "PATCH":
+            data = request.get_json()
+            required_fields = ["name", "avatar"]
 
-        if not any(field in data for field in required_fields):
-            return jsonify({"error": "Missing required fields"}), 400
+            if not any(field in data for field in required_fields):
+                return jsonify({"error": "Missing required fields"}), 400
 
-        name = data["name"]
-        avatar = data["avatar"]
-        user_id = get_jwt_identity()
+            name = data["name"]
+            avatar = data["avatar"]
+            user_id = get_jwt_identity()
 
-        update_profile = db.session.get(Profiles, user_id)
-        update_profile.name = name
-        update_profile.avatar = avatar
-        db.session.commit()
+            update_profile = db.session.get(Profiles, user_id)
+            update_profile.name = name
+            update_profile.avatar = avatar
+            db.session.commit()
 
-        return jsonify({"message": "Profile updated successfully"}), 201
+            return jsonify({"message": "Profile updated successfully"}), 201
 
-    @app.route("/profiles/<int:user_id>", methods=["GET"])
-    @jwt_required()
-    def profile_by_user(user_id):
-        response_body = {}
-        profile = db.session.get(Profiles, user_id)
+        # method to get profiles by name
+        elif request.method == "GET":
+            data = request.get_json()
+            name = data["name"]
+            profiles = (
+                db.session.execute(select(Profiles).where(Profiles.name == name))
+                .scalars()
+                .all()
+            )
 
-        if not profile:
-            response_body["error"] = f"Profile ID:{user_id} does not exist."
-        else:
-            response_body["result"] = profile.serialize()
+            if not profiles:
+                return jsonify({"error": f'Profile with name "{name}" was not found.'})
 
-        return jsonify(response_body), 200
+            response_body = [profile.serialize() for profile in profiles]
+
+            return jsonify(response_body), 200

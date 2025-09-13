@@ -1,7 +1,6 @@
 from src.db import db
 from flask import request, jsonify
 from src.models.models import Users, Profiles
-from sqlalchemy import or_
 import bcrypt
 from flask_jwt_extended import (
     create_access_token,
