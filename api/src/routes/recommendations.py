@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from src.db import db
-from src.models.models import ReadingList
+from src.models.models import Recommendations
 from sqlalchemy import select, and_
 from flask_jwt_extended import (
     jwt_required,
@@ -8,11 +8,11 @@ from flask_jwt_extended import (
 )
 
 
-def reading_list_routes(app):
-    @app.route("/reading_list", methods=["POST", "DELETE", "GET"])
+def recommendations_routes(app):
+    @app.route("/recommendations", methods=["POST", "DELETE", "GET"])
     @jwt_required()
-    def reading_list():
-        # method to save book in ReadingList
+    def recommendations():
+        # method to save book in Recommendation
         if request.method == "POST":
             data = request.get_json()
             book_id = data["book_id"]
@@ -22,57 +22,60 @@ def reading_list_routes(app):
                 return jsonify({"error": "Missing book ID"}), 400
 
             existing_book = db.session.execute(
-                select(ReadingList).where(
-                    and_(ReadingList.user_id == user_id, ReadingList.book_id == book_id)
+                select(Recommendations).where(
+                    and_(
+                        Recommendations.user_id == user_id,
+                        Recommendations.book_id == book_id,
+                    )
                 )
             ).scalar_one_or_none()
 
             if existing_book:
                 return jsonify({"error": "Book already registered"}), 400
 
-            new_book = ReadingList(book_id=book_id, user_id=user_id)
+            new_book = Recommendations(book_id=book_id, user_id=user_id)
             db.session.add(new_book)
             db.session.commit()
-
             return jsonify({"message": "Book saved successfully"}), 201
 
-        # method to delete book from ReadingList
+        # method to delete book from Recommendation
         elif request.method == "DELETE":
             data = request.get_json()
             book_id = data["book_id"]
             user_id = get_jwt_identity()
 
             existing_book = db.session.execute(
-                select(ReadingList).where(
-                    and_(ReadingList.user_id == user_id, ReadingList.book_id == book_id)
+                select(Recommendations).where(
+                    and_(
+                        Recommendations.user_id == user_id,
+                        Recommendations.book_id == book_id,
+                    )
                 )
             ).scalar_one_or_none()
 
             if not existing_book:
                 return jsonify(
-                    {"error": f"Book ID {book_id}  isn't on this user's list."}
+                    {"error": f"Book ID {book_id} isn't on this user's list."}
                 ), 404
 
-            delete_book = db.session.get(ReadingList, existing_book.id)
+            delete_book = db.session.get(Recommendations, existing_book.id)
             db.session.delete(delete_book)
             db.session.commit()
-
             return jsonify({"message": "Book deleted successfully"}), 200
 
-        # method to get all books from ReadingList of a user
+        # method to get all books from Recommendation list of a user
         elif request.method == "GET":
             user_id = get_jwt_identity()
-            reading_list = (
+            recommendations = (
                 db.session.execute(
-                    select(ReadingList).where(ReadingList.user_id == user_id)
+                    select(Recommendations).where(Recommendations.user_id == user_id)
                 )
                 .scalars()
                 .all()
             )
 
-            if not reading_list:
-                return jsonify({"error": "Reading list not found"}), 404
+            if not recommendations:
+                return jsonify({"error": "Recommendation list not found"}), 404
 
-            response_body = [item.serialize() for item in reading_list]
-
+            response_body = [item.serialize() for item in recommendations]
             return jsonify(response_body), 200

@@ -40,7 +40,6 @@ def profiles_routes(app):
                 .scalars()
                 .all()
             )
-
             if not profiles:
                 return jsonify({"error": f'Profile with name "{name}" was not found.'})
 
