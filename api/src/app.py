@@ -6,6 +6,7 @@ from src.routes.book_detail import book_detail_route
 from src.routes.profiles import profiles_routes
 from src.routes.reading_list import reading_list_routes
 from src.routes.recommendations import recommendations_routes
+from src.routes.reviews import reviews_routes
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_migrate import Migrate
@@ -61,6 +62,7 @@ book_detail_route(app)
 profiles_routes(app)
 reading_list_routes(app)
 recommendations_routes(app)
+reviews_routes(app)
 
 
 if __name__ == "__main__":

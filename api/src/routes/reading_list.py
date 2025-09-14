@@ -69,7 +69,6 @@ def reading_list_routes(app):
                 .scalars()
                 .all()
             )
-
             if not reading_list:
                 return jsonify({"error": "Reading list not found"}), 404
 
