@@ -53,8 +53,8 @@ def reviews_routes(app):
                 return jsonify({"error": "Missing at least one required field"}), 400
 
             book_id = data["book_id"]
-            text = data["text"] if data["text"] else None
-            ratings = data["ratings"] if data["ratings"] else None
+            text = data["text"]
+            ratings = data["ratings"]
             user_id = get_jwt_identity()
 
             existing_review = db.session.execute(

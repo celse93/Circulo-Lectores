@@ -82,7 +82,7 @@ class ReadingList(db.Model):
     __tablename__ = "readinglist"
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
-    book_id: Mapped[str] = mapped_column(String(50), nullable=False)
+    book_id: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="readinglist")
@@ -103,7 +103,7 @@ class Recommendations(db.Model):
     __tablename__ = "recommendations"
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
-    book_id: Mapped[str] = mapped_column(String(50), nullable=False)
+    book_id: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="recommendation")
@@ -126,7 +126,7 @@ class Reviews(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     text: Mapped[str] = mapped_column(String(500), nullable=False)
     ratings: Mapped[int] = mapped_column(nullable=False)
-    book_id: Mapped[str] = mapped_column(String(50), nullable=False)
+    book_id: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="review")
