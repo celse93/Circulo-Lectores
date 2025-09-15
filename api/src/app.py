@@ -3,6 +3,7 @@ import time
 from src.utils import generate_sitemap
 from src.routes.auth import auth_routes
 from src.routes.book_detail import book_detail_route
+from src.routes.book_search import books_search_routes
 from src.routes.author_detail import author_detail_route
 from dotenv import load_dotenv
 from flask import Flask, jsonify
@@ -58,6 +59,7 @@ def health_check():
 
 auth_routes(app)
 book_detail_route(app)
+books_search_routes(app)
 author_detail_route(app)
 
 
