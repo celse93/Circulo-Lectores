@@ -8,6 +8,7 @@ from src.routes.reading_list import reading_list_routes
 from src.routes.recommendations import recommendations_routes
 from src.routes.reviews import reviews_routes
 from src.routes.quotes import quotes_routes
+from src.routes.book_search import books_search_routes
 from src.routes.author_detail import author_detail_route
 from dotenv import load_dotenv
 from flask import Flask, jsonify
@@ -68,6 +69,7 @@ reading_list_routes(app)
 recommendations_routes(app)
 reviews_routes(app)
 quotes_routes(app)
+books_search_routes(app)
 author_detail_route(app)
 
 
