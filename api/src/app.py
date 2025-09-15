@@ -8,20 +8,20 @@ from src.routes.reading_list import reading_list_routes
 from src.routes.recommendations import recommendations_routes
 from src.routes.reviews import reviews_routes
 from src.routes.quotes import quotes_routes
+from src.routes.author_detail import author_detail_route
 from dotenv import load_dotenv
 from flask import Flask, jsonify
 from flask_migrate import Migrate
 from src.db import db
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 
-from flask_jwt_extended import (
-    JWTManager,
-)
 
 load_dotenv()
 
 app = Flask(__name__)
 start_time = time.time()
+
 
 db_url = os.getenv("DATABASE_URL")
 
@@ -31,19 +31,22 @@ else:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////tmp/test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-jwt_key = os.getenv("JWT_SECRET_KEY")
 
-# JWT
+jwt_key = os.getenv("JWT_SECRET_KEY")
 app.config["JWT_SECRET_KEY"] = jwt_key
 app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_COOKIE_CSRF_PROTECT"] = True
 app.config["JWT_CSRF_IN_COOKIES"] = True
 app.config["JWT_COOKIE_SECURE"] = True
 
+
 jwt = JWTManager(app)
+
 
 MIGRATE = Migrate(app, db)
 db.init_app(app)
+
+
 app.config["CORS_HEADERS"] = "Content-Type"
 CORS(app, supports_credentials=True)
 
@@ -65,6 +68,7 @@ reading_list_routes(app)
 recommendations_routes(app)
 reviews_routes(app)
 quotes_routes(app)
+author_detail_route(app)
 
 
 if __name__ == "__main__":
