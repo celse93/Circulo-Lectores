@@ -1,7 +1,6 @@
 from src.db import db
 from flask import request, jsonify
-from src.models.models import Users
-from sqlalchemy import or_
+from src.models.models import Users, Profiles
 import bcrypt
 from flask_jwt_extended import (
     create_access_token,
@@ -26,9 +25,7 @@ def auth_routes(app):
         password = data["password"]
 
         # Check for existing user
-        existing_user = (
-            db.session.query(Users).filter(or_(Users.email == email)).first()
-        )
+        existing_user = db.session.query(Users).filter((Users.email == email)).first()
 
         if existing_user:
             return jsonify({"error": "Email already registered"}), 400
@@ -41,6 +38,10 @@ def auth_routes(app):
         # Create user
         new_user = Users(email=email, password=hashed_password)
         db.session.add(new_user)
+        db.session.commit()
+
+        new_profile = Profiles(id=new_user.id)
+        db.session.add(new_profile)
         db.session.commit()
 
         return jsonify({"message": "User registered successfully"}), 201
@@ -91,4 +92,5 @@ def auth_routes(app):
         user = Users.query.get(user_id)
         if not user:
             return jsonify({"error": "User not found"}), 404
+
         return jsonify(user.serialize()), 200
