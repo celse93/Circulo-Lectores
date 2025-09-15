@@ -1,17 +1,8 @@
-import { useContext, useState } from "react";
-import { isEmpty } from "lodash";
-import { NavLink } from "react-router";
-import {
-  AppBar,
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-} from "@mui/material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-
-import { UserContext } from "../context/User";
+import { useContext, useState } from 'react';
+import { isEmpty } from 'lodash';
+import { NavLink } from 'react-router';
+import { UserContext } from '../context/User';
+import { routesConfig } from '../services/routing/routes';
 
 export const NavBar = () => {
   const { user, logout } = useContext(UserContext);
@@ -30,44 +21,27 @@ export const NavBar = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <NavLink to={"/"}>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Home
-          </Typography>
-        </NavLink>
-        {user.user_name}
-        <div>
-          <IconButton
-            size="large"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleMenu}
-            color="inherit"
-          >
-            <AccountCircle />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
-          </Menu>
-        </div>
-      </Toolbar>
-    </AppBar>
+    <nav className="navbar bg-primary">
+      {routesConfig.map((route) => {
+        return (
+          <>
+            <NavLink to={route.path}>
+              <button type="button" className="btn btn-primary navbar-brand">
+                {route.name}
+              </button>
+            </NavLink>
+          </>
+        );
+      })}
+      <div>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="btn btn-primary navbar-brand"
+        >
+          Logout
+        </button>
+      </div>
+    </nav>
   );
 };

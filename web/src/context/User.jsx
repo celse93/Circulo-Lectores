@@ -1,6 +1,6 @@
-import { createContext, useState } from "react";
-import { postLogin, postLogout, postRegister } from "../services/api/auth";
-import { useNavigate } from "react-router";
+import { createContext, useState } from 'react';
+import { postLogin, postLogout, postRegister } from '../services/api/auth';
+import { useNavigate } from 'react-router';
 
 export const UserContext = createContext({
   user: {},
@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   const login = (email, password) => {
     postLogin(email, password).then((data) => {
       setUser(data.user);
-      navigate("/");
+      navigate('/');
     });
   };
 
@@ -26,8 +26,8 @@ export const UserProvider = ({ children }) => {
     });
   };
 
-  const register = (username, email, password) => {
-    postRegister(username, email, password).then(() => {
+  const register = (email, password) => {
+    postRegister(email, password).then(() => {
       login(email, password);
     });
   };
