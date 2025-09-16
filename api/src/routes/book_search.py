@@ -2,18 +2,17 @@ import requests
 from flask import request, jsonify
 from urllib.parse import quote
 
+open_library_url = "https://openlibrary.org/"
+
 
 def books_search_routes(app):
-    @app.route("/books/search", methods=["GET"])
-    def search_books():
-        query = request.args.get("q", "").strip()
-        if not query:
-            return jsonify({"error": "Missing search query (use ?q=title)"}), 400
+    @app.route("/books_search/<path:path>", methods=["GET"])
+    def search_books(path):
+        url = f"{open_library_url}{path}"
+        params = dict(request.args)
 
         try:
-            encoded_query = quote(query)
-            url = f"https://openlibrary.org/search.json?title={encoded_query}"
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, params=params, timeout=10)
 
             if response.status_code != 200:
                 return jsonify(
@@ -26,6 +25,7 @@ def books_search_routes(app):
             for book in data.get("docs", []):
                 author_names = book.get("author_name", [])
                 author = author_names[0] if author_names else "Unknown"
+                book_id = book.get("key").split("/")[-1]
 
                 results.append(
                     {
@@ -33,11 +33,11 @@ def books_search_routes(app):
                         "author": author,
                         "first_publish_year": book.get("first_publish_year"),
                         "cover_id": book.get("cover_i"),
-                        "openlibrary_id": book.get("key"),
+                        "openlibrary_id": book_id,
                     }
                 )
 
-            return jsonify({"results": results})
+            return jsonify(results), response.status_code
 
         except Exception as e:
             return jsonify({"error": f"Unexpected error: {str(e)}"}), 500

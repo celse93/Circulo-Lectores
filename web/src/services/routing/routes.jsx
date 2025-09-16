@@ -13,6 +13,7 @@ import { ProgressBar } from '../../components/ProgressBar';
 import { ReviewCard } from '../../components/ReviewCard';
 import { SplashScreen } from '../../components/SplashScreen';
 import { UserCard } from '../../components/UserCard';
+import { BookSearch } from '../../pages/BookSearch';
 
 export const routesConfig = [
   {
@@ -89,6 +90,11 @@ export const routesConfig = [
     name: 'UserCard',
     path: '/user_card',
     component: <UserCard />,
+  },
+  {
+    name: 'BookSearch',
+    path: '/book_search',
+    component: <BookSearch />,
   },
   {
     name: 'All',
