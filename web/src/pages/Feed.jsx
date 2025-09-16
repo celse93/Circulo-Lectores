@@ -3,6 +3,24 @@ export const Feed = () => {
     <>
       <div>
         <h1 className="mb-3">Feed</h1>
+        <div className="btn-group my-3" role="group" aria-label="Basic example">
+          <button type="button" className="btn btn-primary">
+            <i className="fa-solid fa-plus" />
+            Recommendations
+          </button>
+          <button type="button" className="btn btn-primary">
+            <i className="fa-solid fa-plus" />
+            Reading List
+          </button>
+          <button type="button" className="btn btn-primary">
+            <i className="fa-solid fa-plus" />
+            Reviews
+          </button>
+          <button type="button" className="btn btn-primary">
+            <i className="fa-solid fa-plus" />
+            Quotes
+          </button>
+        </div>
         <div className="mb-3">
           <h4>Recommendations</h4>
           <div className="d-flex">
