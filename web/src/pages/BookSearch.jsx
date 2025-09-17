@@ -1,5 +1,6 @@
 import { getBooksSearch } from '../services/api/books';
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { BookCard } from '../components/BookCard';
 
 export const BookSearch = () => {
   const [inputName, setInputName] = useState('');
@@ -9,9 +10,9 @@ export const BookSearch = () => {
     setInputName(e.target.value);
   };
 
-  const handleOnClick = () => {
+  const refreshData = () => {
     getBooksSearch(inputName).then((data) => {
-      setBooks([...books, data]);
+      setBooks(data);
       console.log(books);
     });
   };
@@ -30,33 +31,13 @@ export const BookSearch = () => {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={handleOnClick}
+            onClick={refreshData}
           >
             Search
           </button>
         </div>
-
-        <div className="container text-center">
-          {books.map((book) => (
-            <div key={book.openlibrary_id} className="row align-items-start">
-              <div className="col">
-                <div className="card">
-                  <img
-                    src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
-                    className="img-fluid"
-                    alt="placeholder"
-                  />
-                  <div className="card-body">
-                    <h5 className="card-title">{book.title}</h5>
-                    <p className="card-text">{book.author}</p>
-                    <a href="#" className="btn btn-primary">
-                      Go somewhere
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="container">
+          <BookCard books={books} />
         </div>
       </div>
     </>

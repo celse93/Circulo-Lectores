@@ -1,6 +1,5 @@
 import requests
 from flask import request, jsonify
-from urllib.parse import quote
 
 open_library_url = "https://openlibrary.org/"
 
@@ -20,23 +19,20 @@ def books_search_routes(app):
                 ), 500
 
             data = response.json()
+            books = data["docs"]
             results = []
 
-            for book in data.get("docs", []):
-                author_names = book.get("author_name", [])
-                author = author_names[0] if author_names else "Unknown"
-                book_id = book.get("key").split("/")[-1]
-
+            for x in range(6):
+                book_id = books[x]["key"].split("/")[-1]
                 results.append(
                     {
-                        "title": book.get("title", "Unknown Title"),
-                        "author": author,
-                        "first_publish_year": book.get("first_publish_year"),
-                        "cover_id": book.get("cover_i"),
+                        "title": books[x]["title"],
+                        "author": books[x]["author_name"][0],
+                        "first_publish_year": books[x]["first_publish_year"],
+                        "cover_id": books[x]["cover_i"],
                         "openlibrary_id": book_id,
                     }
                 )
-
             return jsonify(results), response.status_code
 
         except Exception as e:
