@@ -11,7 +11,7 @@ export const UserContext = createContext({
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const login = (email, password) => {
     postLogin(email, password).then((data) => {
