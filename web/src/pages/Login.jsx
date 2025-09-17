@@ -9,11 +9,7 @@ export const Login = () => {
       >
         <div className="container">
           <Link className="navbar-brand d-flex align-items-center" to="/login">
-            <img
-              src="web/public/lol.png"
-              alt="logo"
-              className="logo-icon me-2"
-            />
+            <img src="/astro.jpg" alt="logo" className="logo-icon me-2" />
             <span className="brand-text">Circulo Lectores</span>
           </Link>
 
