@@ -10,7 +10,7 @@ export const Login = () => {
         <div className="container">
           <Link className="navbar-brand d-flex align-items-center" to="/login">
             <img
-              src="/workspaces/Circulo-Lectores/web/public/lol.png"
+              src="web/public/lol.png"
               alt="logo"
               className="logo-icon me-2"
             />

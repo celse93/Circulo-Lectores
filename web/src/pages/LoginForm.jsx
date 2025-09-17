@@ -27,9 +27,9 @@ export const LoginForm = () => {
                     Email
                   </label>
                   <input
-                    type="email"
+                    type="text"
                     className="form-control"
-                    id="email"
+                    id="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
