@@ -6,9 +6,9 @@ export const BookCard = ({ books }) => {
       <div className="container">
         {books.length > 0
           ? books.map((book) => (
-              <div key={book.openlibrary_id} className="card">
+              <div key={book.openlibrary_id} className="card w-25 mb-3">
                 <img
-                  src={`https://placehold.co/600x400`}
+                  src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
                   className="img-fluid"
                   alt="placeholder"
                 />

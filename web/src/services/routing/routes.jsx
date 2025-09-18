@@ -28,7 +28,7 @@ export const routesConfig = [
   },
   {
     name: 'Book',
-    path: '/books',
+    path: '/book',
     component: <Book />,
   },
   {

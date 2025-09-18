@@ -1,4 +1,9 @@
+import { useContext } from 'react';
+import { UserContext } from '../context/User';
+
 export const Book = () => {
+  const { book } = useContext(UserContext);
+
   return (
     <>
       <div className="d-flex">
@@ -11,12 +16,12 @@ export const Book = () => {
         </div>
         <div className="container">
           <div>
-            <h3>Title</h3>
+            <h3>{book.title}</h3>
           </div>
           <div>
             <div className="d-flex">
               <i className="fa-solid fa-star"></i>
-              <h6>Author</h6>
+              <h6>{book.author}</h6>
             </div>
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

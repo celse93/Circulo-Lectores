@@ -1,8 +1,7 @@
 import { Routes, Route } from 'react-router';
 
-{
-  /* import { NavBar } from "./components/NavBar"; */
-}
+import { NavBar } from './components/NavBar';
+
 import { routesConfig } from './services/routing/routes';
 import { GuardedRoute } from './components/routing/GuardedRoute';
 import { LoginRedirect } from './components/routing/LoginRedirect';
@@ -14,7 +13,7 @@ import './App.css';
 export const App = () => {
   return (
     <>
-      {/*<NavBar />*/}
+      <NavBar />
       <Routes>
         <Route path="/login" element={<LoginRedirect />} />
         <Route path="/login-form" element={<LoginForm />} />
