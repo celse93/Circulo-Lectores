@@ -14,11 +14,12 @@ def book_detail_route(app):
             proxy_request = requests.get(url, params=params, timeout=10)
 
             data = proxy_request.json()
-            author = data["authors"][0]["author"]["key"]
+            author_id = data["authors"][0]["author"]["key"].split("/")[-1]
             results = {
-                "author": author,
+                "author_id": author_id,
                 "description": data["description"],
                 "title": data["title"],
+                "cover_id": data["covers"][0],
             }
             return jsonify(results), proxy_request.status_code
         except requests.RequestException:

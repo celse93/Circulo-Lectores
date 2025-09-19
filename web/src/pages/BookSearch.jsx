@@ -6,7 +6,7 @@ import { UserContext } from '../context/User';
 export const BookSearch = () => {
   const [inputName, setInputName] = useState('');
   const [books, setBooks] = useState([]);
-  const { getBook } = useContext(UserContext);
+  const { getBook, setBookDetails } = useContext(UserContext);
 
   const handleChangeInput = (e) => {
     setInputName(e.target.value);
@@ -15,12 +15,20 @@ export const BookSearch = () => {
   const refreshData = () => {
     getBooksSearch(inputName).then((data) => {
       setBooks(data);
-      console.log(books);
     });
   };
 
   const handleBookClick = (e) => {
     getBook(e.target.id);
+    const selectedBook = books.filter((item) => {
+      return item.openlibrary_id == e.target.id;
+    });
+    console.log(selectedBook[0]);
+    setBookDetails({
+      authorName: selectedBook[0]['author'],
+      year: selectedBook[0]['first_publish_year'],
+      cover_id: selectedBook[0]['cover_id'],
+    });
   };
 
   return (

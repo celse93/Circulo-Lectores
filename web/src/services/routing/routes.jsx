@@ -1,19 +1,14 @@
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
-import { Book } from '../../pages/BookDetail';
+import { BookDetail } from '../../pages/BookDetail';
 import { Quote } from '../../pages/Quote';
 import { Feed } from '../../pages/Feed';
 import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
 import { ReviewForm } from '../../pages/ReviewForm';
-import { ReviewPage } from '../../pages/ReviewsPage';
-import { BookCard } from '../../components/BookCard';
 import { Footer } from '../../components/Footer';
-import { ProgressBar } from '../../components/ProgressBar';
-import { ReviewCard } from '../../components/ReviewCard';
 import { SplashScreen } from '../../components/SplashScreen';
 import { UserCard } from '../../components/UserCard';
-import { BookSearch } from '../../pages/BookSearch';
 
 export const routesConfig = [
   {
@@ -27,9 +22,9 @@ export const routesConfig = [
     component: <Login />,
   },
   {
-    name: 'Book',
+    name: 'Book Detail',
     path: '/book',
-    component: <Book />,
+    component: <BookDetail />,
   },
   {
     name: 'Quotes',
@@ -52,19 +47,9 @@ export const routesConfig = [
     component: <Register />,
   },
   {
-    name: 'ReviewForm',
+    name: 'Review Form',
     path: '/review_form',
     component: <ReviewForm />,
-  },
-  {
-    name: 'ReviewPage',
-    path: '/review_page',
-    component: <ReviewPage />,
-  },
-  {
-    name: 'BookCard',
-    path: '/book_card',
-    component: <BookCard />,
   },
   {
     name: 'Footer',
@@ -72,29 +57,14 @@ export const routesConfig = [
     component: <Footer />,
   },
   {
-    name: 'ProgressBar',
-    path: '/progress_bar',
-    component: <ProgressBar />,
-  },
-  {
-    name: 'ReviewCard',
-    path: '/review_card',
-    component: <ReviewCard />,
-  },
-  {
-    name: 'SplashScreen',
+    name: 'Splash Screen',
     path: '/splash_screen',
     component: <SplashScreen />,
   },
   {
-    name: 'UserCard',
+    name: 'User Card',
     path: '/user_card',
     component: <UserCard />,
-  },
-  {
-    name: 'BookSearch',
-    path: '/book_search',
-    component: <BookSearch />,
   },
   {
     name: 'All',

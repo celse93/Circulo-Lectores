@@ -1,38 +1,34 @@
+import { getAllRecommendations } from '../services/api/feed';
+import { getBooksDetail } from '../services/api/books';
+import { useEffect, useState } from 'react';
+
 export const Feed = () => {
+  const [recommendations, setRecommendations] = useState([]);
+
+  useEffect(() => {
+    getAllRecommendations().then((data) => {
+      setRecommendations(data);
+    });
+  }, []);
+
   return (
     <>
       <div>
-        <h1 className="mb-3">Feed</h1>
-        <div className="btn-group my-3" role="group" aria-label="Basic example">
-          <button type="button" className="btn btn-primary">
-            <i className="fa-solid fa-plus" />
-            Recommendations
-          </button>
-          <button type="button" className="btn btn-primary">
-            <i className="fa-solid fa-plus" />
-            Reading List
-          </button>
-          <button type="button" className="btn btn-primary">
-            <i className="fa-solid fa-plus" />
-            Reviews
-          </button>
-          <button type="button" className="btn btn-primary">
-            <i className="fa-solid fa-plus" />
-            Quotes
-          </button>
-        </div>
         <div className="mb-3">
           <h4>Recommendations</h4>
           <div className="d-flex">
-            <div className="card w-25 p-3 m-3">
-              <img src="https://placehold.co/600x400/png" alt="placeholder" />
-            </div>
-            <div className="card w-25 p-3 m-3">
-              <img src="https://placehold.co/600x400/png" alt="placeholder" />
-            </div>
-            <div className="card w-25 p-3 m-3">
-              <img src="https://placehold.co/600x400/png" alt="placeholder" />
-            </div>
+            {recommendations.map((book) =>
+              getBooksDetail(book.book_id).then((data) => (
+                <div key={data.cover_id}>
+                  <div className="card w-25 p-3 m-3">
+                    <img
+                      src={`https://covers.openlibrary.org/b/id/${data.cover_id}-M.jpg`}
+                      alt="placeholder"
+                    />
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
         <div className="mb-3">
