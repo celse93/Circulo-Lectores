@@ -15,9 +15,13 @@ def book_detail_route(app):
 
             data = proxy_request.json()
             author_id = data["authors"][0]["author"]["key"].split("/")[-1]
+            description = data.get("description")
+
             results = {
                 "author_id": author_id,
-                "description": data["description"],
+                "description": description.get("value")
+                if isinstance(description, dict)
+                else description,
                 "title": data["title"],
                 "cover_id": data["covers"][0],
             }

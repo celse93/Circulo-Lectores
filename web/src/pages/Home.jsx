@@ -26,9 +26,8 @@ export const Home = () => {
 
   const handleSearch = async () => {
     setLoading(true);
-    getBooksSearch(inputValue).then((data) => {
-      setBooks(data);
-    });
+    const data = await getBooksSearch(inputValue);
+    setBooks(data);
     setLoading(false);
   };
 

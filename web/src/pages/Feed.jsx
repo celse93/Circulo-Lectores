@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 export const Feed = () => {
   const [recommendations, setRecommendations] = useState([]);
+  const [bookDetails, setBookDetails] = useState([]);
 
   useEffect(() => {
     getAllRecommendations().then((data) => {
@@ -11,24 +12,32 @@ export const Feed = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (recommendations.length > 0) {
+      recommendations.map((book) =>
+        getBooksDetail(book.book_id).then((data) => {
+          setBookDetails([...bookDetails, data.cover_id]);
+        })
+      );
+    }
+  }, [recommendations]);
+
   return (
     <>
       <div>
         <div className="mb-3">
           <h4>Recommendations</h4>
           <div className="d-flex">
-            {recommendations.map((book) =>
-              getBooksDetail(book.book_id).then((data) => (
-                <div key={data.cover_id}>
-                  <div className="card w-25 p-3 m-3">
-                    <img
-                      src={`https://covers.openlibrary.org/b/id/${data.cover_id}-M.jpg`}
-                      alt="placeholder"
-                    />
-                  </div>
+            {bookDetails.map((cover) => (
+              <div key={cover}>
+                <div className="card w-25 p-3 m-3">
+                  <img
+                    src={`https://covers.openlibrary.org/b/id/${cover}-M.jpg`}
+                    alt="Book cover"
+                  />
                 </div>
-              ))
-            )}
+              </div>
+            ))}
           </div>
         </div>
         <div className="mb-3">
