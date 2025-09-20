@@ -9,6 +9,7 @@ import { ReviewForm } from '../../pages/ReviewForm';
 import { Footer } from '../../components/Footer';
 import { SplashScreen } from '../../components/SplashScreen';
 import { UserCard } from '../../components/UserCard';
+import { Author } from '../../pages/Author';
 
 export const routesConfig = [
   {
@@ -60,6 +61,11 @@ export const routesConfig = [
     name: 'Splash Screen',
     path: '/splash_screen',
     component: <SplashScreen />,
+  },
+  {
+    name: 'Auhtor',
+    path: '/auhtor',
+    component: <Author />,
   },
   {
     name: 'User Card',

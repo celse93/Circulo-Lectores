@@ -3,11 +3,13 @@ import { postLogin, postLogout, postRegister } from '../services/api/auth';
 import { useNavigate } from 'react-router';
 import { getBooksDetail } from '../services/api/books';
 import { getCurrentUser } from '../services/api/users';
+import { getAuthorDetail } from '../services/api/books';
 
 export const UserContext = createContext({
   user: {},
   book: {},
   bookDetails: {},
+  author: {},
   login: () => {},
   logout: () => {},
   register: () => {},
@@ -18,12 +20,8 @@ export const UserContext = createContext({
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [book, setBook] = useState({});
+  const [author, setAuthor] = useState({});
   const navigate = useNavigate();
-  const [bookDetails, setBookDetails] = useState({
-    authorName: '',
-    year: '',
-    cover_id: '',
-  });
 
   const login = (email, password) => {
     postLogin(email, password).then((data) => {
@@ -51,6 +49,12 @@ export const UserProvider = ({ children }) => {
     });
   };
 
+  const getAuthor = (id) => {
+    getAuthorDetail(id).then((data) => {
+      setAuthor(data);
+    });
+  };
+
   const currentUser = () => {
     getCurrentUser().then((data) => {
       setUser(data.user);
@@ -62,12 +66,13 @@ export const UserProvider = ({ children }) => {
       value={{
         user,
         book,
+        author,
+        setAuthor,
         login,
         logout,
         register,
         getBook,
-        bookDetails,
-        setBookDetails,
+        getAuthor,
         currentUser,
       }}
     >

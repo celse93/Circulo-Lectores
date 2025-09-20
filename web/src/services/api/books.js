@@ -18,3 +18,11 @@ export const getBooksDetail = async (id) => {
     return data;
   });
 };
+
+export const getAuthorDetail = async (id) => {
+  return await fetchWrapper(`${baseUrl}author/authors/${id}.json`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};

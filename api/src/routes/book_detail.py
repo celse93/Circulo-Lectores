@@ -16,6 +16,7 @@ def book_detail_route(app):
             data = proxy_request.json()
             author_id = data["authors"][0]["author"]["key"].split("/")[-1]
             description = data.get("description")
+            cover_id = data.get("covers")[0]
 
             results = {
                 "author_id": author_id,
@@ -23,7 +24,7 @@ def book_detail_route(app):
                 if isinstance(description, dict)
                 else description,
                 "title": data["title"],
-                "cover_id": data["covers"][0],
+                "cover_id": cover_id,
                 "book_id": data["key"].split("/")[-1],
             }
             return jsonify(results), proxy_request.status_code

@@ -1,11 +1,13 @@
 import { getAllRecommendations } from '../services/api/feed';
 import { getBooksDetail } from '../services/api/books';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../context/User';
 
 export const Recommendations = () => {
   const [recommendations, setRecommendations] = useState([]);
-  const [bookCover, setBookCover] = useState([]);
+  const [bookDetails, setBookDetails] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { getBook, getAuthor, book } = useContext(UserContext);
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -28,8 +30,8 @@ export const Recommendations = () => {
             getBooksDetail(book.book_id)
           );
           const bookDetails = await Promise.all(bookDetailPromises);
-          const coverIds = bookDetails.map((book) => book.cover_id);
-          setBookCover(coverIds);
+
+          setBookDetails(bookDetails);
           setLoading(false);
         } catch (error) {
           console.error('Failed to fetch book details:', error);
@@ -39,16 +41,57 @@ export const Recommendations = () => {
     fetchBookCovers();
   }, [recommendations]);
 
+  const handleBookClick = (e) => {
+    getBook(e.target.id);
+    getAuthor(book['author_id']);
+    console.log(book['author_id']);
+  };
+
+  /*
+  const handleBookClick = async (e) => {
+    const fetchBook = await getBook(e.target.id);
+    const fetchAuthorDetails = await getAuthor(fetchBook["author_id"]);
+    setAuthor(fetchAuthorDetails)
+    console.log(selectedBook[0]);
+  };
+
+  const handleBookClick = (e) => {
+    getBook(e.target.id);
+    const selectedBook = books.filter((item) => {
+      return item.openlibrary_id == e.target.id;
+    });
+    console.log(selectedBook[0]);
+    setBookDetails({
+      authorName: selectedBook[0]['author'],
+      year: selectedBook[0]['first_publish_year'],
+      cover_id: selectedBook[0]['cover_id'],
+    });
+  };
+
+  */
+
   return loading ? (
     <p>Cargando... </p>
   ) : (
     <div className="container-books d-flex flex-row overflow-auto">
-      {bookCover.map((cover) => (
-        <div key={cover} className="card-books me-3">
+      {bookDetails.map((book) => (
+        <div
+          onClick={handleBookClick}
+          key={book.cover_id}
+          className="card-books me-3"
+        >
           <img
-            src={`https://covers.openlibrary.org/b/id/${cover}-M.jpg`}
+            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
             alt="Book cover"
           />
+          <button
+            id={book.book_id}
+            type="button"
+            className="btn btn-primary"
+            onClick={handleBookClick}
+          >
+            Learn more
+          </button>
         </div>
       ))}
     </div>

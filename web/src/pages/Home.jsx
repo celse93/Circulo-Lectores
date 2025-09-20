@@ -9,7 +9,7 @@ export const Home = () => {
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [books, setBooks] = useState([]);
-  const { getBook, setBookDetails, currentUser, user } =
+  const { getBook, setBookDetails, user, getAuthor, book } =
     useContext(UserContext);
 
   /*
@@ -37,15 +37,7 @@ export const Home = () => {
 
   const handleBookClick = (e) => {
     getBook(e.target.id);
-    const selectedBook = books.filter((item) => {
-      return item.openlibrary_id == e.target.id;
-    });
-    console.log(selectedBook[0]);
-    setBookDetails({
-      authorName: selectedBook[0]['author'],
-      year: selectedBook[0]['first_publish_year'],
-      cover_id: selectedBook[0]['cover_id'],
-    });
+    getAuthor(book['author_id']);
   };
 
   /*
