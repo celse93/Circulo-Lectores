@@ -375,3 +375,12 @@
     padding: 0 0.5rem;
   }
 }
+
+.container-books {
+  height: 250px;
+  width: auto;
+}
+
+.card-books {
+  min-width: 200px;
+}

@@ -24,6 +24,7 @@ def book_detail_route(app):
                 else description,
                 "title": data["title"],
                 "cover_id": data["covers"][0],
+                "book_id": data["key"].split("/")[-1],
             }
             return jsonify(results), proxy_request.status_code
         except requests.RequestException:
