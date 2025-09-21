@@ -1,14 +1,11 @@
 import { createContext, useState } from 'react';
 import { postLogin, postLogout, postRegister } from '../services/api/auth';
 import { useNavigate } from 'react-router';
-import { getBooksDetail } from '../services/api/books';
 import { getCurrentUser } from '../services/api/users';
-import { getAuthorDetail } from '../services/api/books';
 
 export const UserContext = createContext({
   user: {},
   book: {},
-  bookDetails: {},
   author: {},
   login: () => {},
   logout: () => {},
@@ -42,19 +39,6 @@ export const UserProvider = ({ children }) => {
     });
   };
 
-  const getBook = (id) => {
-    getBooksDetail(id).then((data) => {
-      setBook(data);
-      navigate('/book');
-    });
-  };
-
-  const getAuthor = (id) => {
-    getAuthorDetail(id).then((data) => {
-      setAuthor(data);
-    });
-  };
-
   const currentUser = () => {
     getCurrentUser().then((data) => {
       setUser(data.user);
@@ -68,11 +52,10 @@ export const UserProvider = ({ children }) => {
         book,
         author,
         setAuthor,
+        setBook,
         login,
         logout,
         register,
-        getBook,
-        getAuthor,
         currentUser,
       }}
     >

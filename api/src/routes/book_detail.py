@@ -14,7 +14,8 @@ def book_detail_route(app):
             proxy_request = requests.get(url, params=params, timeout=10)
 
             data = proxy_request.json()
-            author_id = data["authors"][0]["author"]["key"].split("/")[-1]
+            author = data.get("authors")
+            author_id = author[0]["author"]["key"].split("/")[-1]
             description = data.get("description")
             cover_id = data.get("covers")[0]
 

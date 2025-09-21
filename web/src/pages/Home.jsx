@@ -1,16 +1,20 @@
 import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { UserContext } from '../context/User';
-import { getBooksSearch } from '../services/api/books';
+import {
+  getBooksSearch,
+  getBooksDetail,
+  getAuthorDetail,
+} from '../services/api/books';
 import { Feed } from './Feed';
 import file from '../utils/constant.json' with { type: 'json' };
-console.log(file);
 
 export const Home = () => {
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [books, setBooks] = useState([]);
-  const { getBook, setBookDetails, user, getAuthor, book } =
-    useContext(UserContext);
+  const navigate = useNavigate();
+  const { user, setBook, setAuthor } = useContext(UserContext);
 
   /*
   useEffect(() => {
@@ -35,17 +39,13 @@ export const Home = () => {
     setInputValue(e.target.value);
   };
 
-  const handleBookClick = (e) => {
-    getBook(e.target.id);
-    getAuthor(book['author_id']);
+  const handleBookClick = async (e) => {
+    const fetchBook = await getBooksDetail(e.target.id);
+    setBook(fetchBook);
+    const fetchAuthor = await getAuthorDetail(fetchBook['author_id']);
+    setAuthor(fetchAuthor);
+    navigate('/book');
   };
-
-  /*
-  const handleSaveBook = (book) => {
-    console.log('Guardar libro', book.title);
-    alert(`Libro "${book.title}" guardado en tu biblioteca.`);
-  };
-  */
 
   return (
     <div className="container">
@@ -97,24 +97,6 @@ export const Home = () => {
       )}
 
       <h1 className="mb-3">Feed</h1>
-      <div className="btn-group my-3" role="group" aria-label="Basic example">
-        <button type="button" className="btn btn-primary">
-          <i className="fa-solid fa-plus" />
-          Recommendations
-        </button>
-        <button type="button" className="btn btn-primary">
-          <i className="fa-solid fa-plus" />
-          Reading List
-        </button>
-        <button type="button" className="btn btn-primary">
-          <i className="fa-solid fa-plus" />
-          Reviews
-        </button>
-        <button type="button" className="btn btn-primary">
-          <i className="fa-solid fa-plus" />
-          Quotes
-        </button>
-      </div>
       <Feed />
     </div>
   );
