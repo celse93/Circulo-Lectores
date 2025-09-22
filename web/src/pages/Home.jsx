@@ -97,7 +97,7 @@ export const Home = () => {
       )}
 
       <h1 className="mb-3">Feed</h1>
-      <Feed />
+      <Feed className="feed" />
     </div>
   );
 };

@@ -376,11 +376,21 @@
   }
 }
 
+.feed {
+  height: auto;
+}
+
 .container-books {
-  height: 250px;
+  height: 350px;
   width: auto;
 }
 
 .card-books {
-  min-width: 200px;
+  width: 250px;
+  height: 250px;
+}
+
+.book-covers {
+  width: 200px;
+  height: 200px;
 }

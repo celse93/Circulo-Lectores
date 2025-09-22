@@ -16,7 +16,6 @@ export const Quotes = () => {
         setLoading(true);
         const data = await getAllQuotes();
         setQuotes(data);
-        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch recommendations:', error);
       }
@@ -24,26 +23,54 @@ export const Quotes = () => {
     fetchQuotes();
   }, []);
 
+  useEffect(() => {
+    const fetchBookCovers = async () => {
+      if (quotes.length > 0) {
+        try {
+          const bookDetailPromises = quotes.map((quote) =>
+            getBooksDetail(quote.book_id)
+          );
+          const bookDetails = await Promise.all(bookDetailPromises);
+
+          setBookDetails(bookDetails);
+
+          setLoading(false);
+        } catch (error) {
+          console.error('Failed to fetch book details:', error);
+        }
+      }
+    };
+    fetchBookCovers();
+    console.log(bookDetails);
+  }, [quotes]);
+
   return loading ? (
     <p>Cargando... </p>
   ) : (
     <div className="container-books d-flex flex-row overflow-auto">
-      {quotes.map((quote) => (
-        <div key={quote.id} className="card card-books m-3 overflow-scroll">
-          <div className="card-header">{quote.user_id}</div>
-          <div className="card-body">
-            <figure>
-              <blockquote className="blockquote">
-                <p>{quote.text}</p>
-              </blockquote>
-              <br />
-              <figcaption className="blockquote-footer">
-                Author in <cite title="Source Title">{quote.book_id}</cite>
-              </figcaption>
-            </figure>
+      {quotes.map((quote) => {
+        const associatedBook = bookDetails.find(
+          (book) => book.book_id == quote.book?.id
+        );
+        return (
+          <div key={quote.id} className="card card-books m-3 overflow-scroll">
+            <div className="card-header">{quote.user_id}</div>
+            <div className="card-body">
+              <figure>
+                <blockquote className="blockquote">
+                  <p>{quote.text}</p>
+                </blockquote>
+                <br />
+                <figcaption className="blockquote-footer">
+                  <cite title="Source Title">
+                    {associatedBook ? associatedBook.title : 'Sin titulo'}
+                  </cite>
+                </figcaption>
+              </figure>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

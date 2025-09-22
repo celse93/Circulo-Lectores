@@ -7,12 +7,12 @@ export const Feed = () => {
     <>
       <div>
         <div>
-          <div className="mb-3">
+          <div className="container-books mb-5">
             <h4>Leídos</h4>
             <Recommendations />
           </div>
         </div>
-        <div className="mb-3">
+        <div className="container-books mb-5">
           <h4>Por leer</h4>
           <ReadingLists />
         </div>

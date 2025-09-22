@@ -33,11 +33,6 @@ export const routesConfig = [
     component: <Quote />,
   },
   {
-    name: 'Feed',
-    path: '/feed',
-    component: <Feed />,
-  },
-  {
     name: 'Profile',
     path: '/profile',
     component: <Profile />,

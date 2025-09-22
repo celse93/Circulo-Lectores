@@ -1,6 +1,20 @@
 from flask import jsonify, request
 import requests
 
+
+from ratelimit import limits, sleep_and_retry
+
+
+CALLS = 6
+PERIOD = 1
+
+
+@sleep_and_retry
+@limits(calls=CALLS, period=PERIOD)
+def fetch_openlibrary(url, params):
+    return requests.get(url, params=params, timeout=10)
+
+
 open_library_url = "https://openlibrary.org/"
 
 
@@ -11,7 +25,7 @@ def book_detail_route(app):
         params = dict(request.args)
 
         try:
-            proxy_request = requests.get(url, params=params, timeout=10)
+            proxy_request = fetch_openlibrary(url=url, params=params)
 
             data = proxy_request.json()
             author = data.get("authors")
@@ -19,6 +33,7 @@ def book_detail_route(app):
             description = data.get("description")
             cover_id = data.get("covers")[0]
 
+            print(data, author_id)
             results = {
                 "author_id": author_id,
                 "description": description.get("value")

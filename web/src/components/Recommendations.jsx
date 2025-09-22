@@ -54,21 +54,24 @@ export const Recommendations = () => {
   return loading ? (
     <p>Cargando... </p>
   ) : (
-    <div className="container-books d-flex flex-row overflow-auto">
+    <div className="d-flex flex-row overflow-auto">
       {bookDetails.map((book) => (
         <div key={book.book_id} className="card-books me-3">
           <img
+            className="book-covers"
             src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
             alt="Book cover"
           />
-          <button
-            id={book.book_id}
-            type="button"
-            className="btn btn-primary"
-            onClick={handleBookClick}
-          >
-            Learn more
-          </button>
+          <div className="card-body d-flex justify-content-center">
+            <button
+              id={book.book_id}
+              type="button"
+              className="btn btn-primary"
+              onClick={handleBookClick}
+            >
+              Aprende más
+            </button>
+          </div>
         </div>
       ))}
     </div>
