@@ -9,7 +9,7 @@ from flask_jwt_extended import (
 
 
 def reviews_routes(app):
-    @app.route("/reviews", methods=["POST", "DELETE", "GET", "PATCH"])
+    @app.route("/reviews/user", methods=["POST", "DELETE", "GET", "PATCH"])
     @jwt_required()
     def reviews():
         # method to save review in Review list

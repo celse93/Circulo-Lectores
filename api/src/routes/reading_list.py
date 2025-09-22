@@ -9,7 +9,7 @@ from flask_jwt_extended import (
 
 
 def reading_list_routes(app):
-    @app.route("/reading_list", methods=["POST", "DELETE", "GET"])
+    @app.route("/reading_list/user", methods=["POST", "DELETE", "GET"])
     @jwt_required()
     def reading_list():
         # method to save book in ReadingList

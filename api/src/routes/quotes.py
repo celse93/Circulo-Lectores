@@ -9,7 +9,7 @@ from flask_jwt_extended import (
 
 
 def quotes_routes(app):
-    @app.route("/quotes", methods=["POST", "DELETE", "GET"])
+    @app.route("/quotes/user", methods=["POST", "DELETE", "GET"])
     @jwt_required()
     def quotes():
         # method to save book in Quote list
