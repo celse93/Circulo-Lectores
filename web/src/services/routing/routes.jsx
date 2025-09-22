@@ -11,7 +11,6 @@ import { BookCard } from '../../components/BookCard';
 import { Footer } from '../../components/Footer';
 import { ProgressBar } from '../../components/ProgressBar';
 import { ReviewCard } from '../../components/ReviewCard';
-import { SplashScreen } from '../../components/SplashScreen';
 import { UserCard } from '../../components/UserCard';
 import { BookSearch } from '../../pages/BookSearch';
 
@@ -27,6 +26,11 @@ export const routesConfig = [
     component: <Login />,
   },
   {
+    name: 'Profile',
+    path: '/profile',
+    component: <Profile />,
+  },
+  {
     name: 'Book',
     path: '/books',
     component: <Book />,
@@ -40,11 +44,6 @@ export const routesConfig = [
     name: 'Feed',
     path: '/feed',
     component: <Feed />,
-  },
-  {
-    name: 'Profile',
-    path: '/profile',
-    component: <Profile />,
   },
   {
     name: 'Register',
@@ -82,11 +81,6 @@ export const routesConfig = [
     component: <ReviewCard />,
   },
   {
-    name: 'SplashScreen',
-    path: '/splash_screen',
-    component: <SplashScreen />,
-  },
-  {
     name: 'UserCard',
     path: '/user_card',
     component: <UserCard />,
@@ -97,8 +91,8 @@ export const routesConfig = [
     component: <BookSearch />,
   },
   {
-    name: 'All',
+    name: 'NotFound',
     path: '*',
-    component: <Home />,
+    component: <Login />,
   },
 ];
