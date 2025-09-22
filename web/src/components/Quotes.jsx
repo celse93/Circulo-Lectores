@@ -50,7 +50,7 @@ export const Quotes = () => {
     <div className="container-books d-flex flex-row overflow-auto">
       {quotes.map((quote) => {
         const associatedBook = bookDetails.find(
-          (book) => book.book_id == quote.book?.id
+          (book) => book.book_id == quote.book_id
         );
         return (
           <div key={quote.id} className="card card-books m-3 overflow-scroll">
