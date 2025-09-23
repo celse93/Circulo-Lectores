@@ -8,6 +8,8 @@ import { Register } from '../../pages/Register';
 import { ReviewForm } from '../../pages/ReviewForm';
 import { Footer } from '../../components/Footer';
 import { SplashScreen } from '../../components/SplashScreen';
+import { ProgressBar } from '../../components/ProgressBar';
+import { ReviewCard } from '../../components/ReviewCard';
 import { UserCard } from '../../components/UserCard';
 import { Author } from '../../pages/Author';
 
@@ -28,14 +30,19 @@ export const routesConfig = [
     component: <BookDetail />,
   },
   {
+    name: 'Profile',
+    path: '/profile',
+    component: <Profile />,
+  },
+  {
     name: 'Quotes',
     path: '/quotes',
     component: <Quote />,
   },
   {
-    name: 'Profile',
-    path: '/profile',
-    component: <Profile />,
+    name: 'Feed',
+    path: '/feed',
+    component: <Feed />,
   },
   {
     name: 'Register',
@@ -63,13 +70,18 @@ export const routesConfig = [
     component: <Author />,
   },
   {
+    name: 'ReviewCard',
+    path: '/review_card',
+    component: <ReviewCard />,
+  },
+  {
     name: 'User Card',
     path: '/user_card',
     component: <UserCard />,
   },
   {
-    name: 'All',
+    name: 'NotFound',
     path: '*',
-    component: <Home />,
+    component: <Login />,
   },
 ];

@@ -1,7 +1,49 @@
-import { Routes, Route } from 'react-router';
+import { Routes, Route, Navigate } from 'react-router';
 
+import { routesConfig } from './services/routing/routes';
+import { GuardedRoute } from './components/routing/GuardedRoute';
+import { LoginRedirect } from './components/routing/LoginRedirect';
+import { Register } from './pages/Register';
+import { LoginForm } from './pages/LoginForm';
+
+import './App.css';
+
+export const App = () => {
+  return (
+    <>
+      <Routes>
+        {/* Rutas públicas específicas */}
+        <Route path="/login" element={<LoginRedirect />} />
+        <Route path="/login-form" element={<LoginForm />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Rutas protegidas */}
+        <Route element={<GuardedRoute />}>
+          {routesConfig
+            .filter(
+              (route) =>
+                route.path !== '/login' &&
+                route.path !== '/register' &&
+                route.path !== '*'
+            )
+            .map((route) => (
+              <Route
+                key={route.name}
+                path={route.path}
+                element={route.component}
+              />
+            ))}
+        </Route>
+
+        {/* Ruta comodín */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </>
+  );
+};
+
+/* import { Routes, Route } from 'react-router';
 import { NavBar } from './components/NavBar';
-
 import { routesConfig } from './services/routing/routes';
 import { GuardedRoute } from './components/routing/GuardedRoute';
 import { LoginRedirect } from './components/routing/LoginRedirect';
@@ -32,4 +74,4 @@ export const App = () => {
       </Routes>
     </>
   );
-};
+}; */
