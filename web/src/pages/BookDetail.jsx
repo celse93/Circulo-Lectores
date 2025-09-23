@@ -26,7 +26,6 @@ export const BookDetail = () => {
           </div>
           <div>
             <div>
-              <i className="fa-solid fa-star"></i>
               <h6>{author.author_name}</h6>
             </div>
             <p>{book.description}</p>

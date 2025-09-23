@@ -9,6 +9,11 @@
   --text-gray: #a1a1aa;
 }
 
+body {
+  background-color: var(--dark-bg);
+  color: var(--text-light);
+}
+
 .splash-container {
   font-family:
     'Inter',
@@ -390,7 +395,17 @@
   height: 250px;
 }
 
+.card-reviews,
+.card-quotes {
+  width: 400px;
+  height: 250px;
+}
+
 .book-covers {
   width: 200px;
   height: 200px;
+}
+
+.fa-star {
+  color: #ffd43b;
 }

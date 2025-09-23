@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { getCurrentUser } from '../services/api/users';
 
 export const UserContext = createContext({
-  user: {},
+  user: '',
   book: {},
   author: {},
   login: () => {},
@@ -14,7 +14,7 @@ export const UserContext = createContext({
 });
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState('');
   const [book, setBook] = useState({});
   const [author, setAuthor] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -23,9 +23,7 @@ export const UserProvider = ({ children }) => {
   const login = async (email, password) => {
     setIsLoading(true);
     try {
-      console.log('Intentando login con:', { email });
       const data = await postLogin(email, password);
-      console.log('Login exitoso:', data);
       setUser(data.user);
       navigate('/profile');
       return data;
@@ -52,20 +50,14 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, password) => {
+  const register = async (name, email, password) => {
     setIsLoading(true);
     try {
-      console.log('Iniciando registro con:', { email });
+      await postRegister(name, email, password);
 
-      const registerResult = await postRegister(email, password);
-      console.log('Registro exitoso:', registerResult);
+      //Login automático
+      await postLogin(email, password);
 
-      console.log('Iniciando login automático...');
-      const loginData = await postLogin(email, password);
-      console.log('Login automático exitoso:', loginData);
-
-      setUser(loginData.user);
-      console.log('Usuario establecido, navegando a /profile');
       navigate('/profile');
     } catch (error) {
       console.error('Register error:', error.message);

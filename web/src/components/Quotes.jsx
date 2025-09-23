@@ -3,12 +3,14 @@ import { getBooksDetail, getAuthorDetail } from '../services/api/books';
 import { useNavigate } from 'react-router';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/User';
+import { getProfileNames } from '../services/api/users';
 
 export const Quotes = () => {
   const [quotes, setQuotes] = useState([]);
   const [bookDetails, setBookDetails] = useState([]);
+  const [profileNames, setProfileNames] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { setBook, setAuthor } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchQuotes = async () => {
@@ -24,7 +26,7 @@ export const Quotes = () => {
   }, []);
 
   useEffect(() => {
-    const fetchBookCovers = async () => {
+    const fetchBookAndProfile = async () => {
       if (quotes.length > 0) {
         try {
           const bookDetailPromises = quotes.map((quote) =>
@@ -32,7 +34,13 @@ export const Quotes = () => {
           );
           const bookDetails = await Promise.all(bookDetailPromises);
 
+          const profileDetailPromises = quotes.map((quote) =>
+            getProfileNames(quote.user_id)
+          );
+          const profileDetails = await Promise.all(profileDetailPromises);
+
           setBookDetails(bookDetails);
+          setProfileNames(profileDetails);
 
           setLoading(false);
         } catch (error) {
@@ -40,28 +48,32 @@ export const Quotes = () => {
         }
       }
     };
-    fetchBookCovers();
-    console.log(bookDetails);
+    fetchBookAndProfile();
   }, [quotes]);
 
   return loading ? (
     <p>Cargando... </p>
   ) : (
-    <div className="container-books d-flex flex-row overflow-auto">
+    <div className="d-flex flex-row overflow-auto">
       {quotes.map((quote) => {
         const associatedBook = bookDetails.find(
           (book) => book.book_id == quote.book_id
         );
+        const associatedProfile = profileNames.find(
+          (profile) => profile.id == quote.user_id
+        );
         return (
-          <div key={quote.id} className="card card-books m-3 overflow-scroll">
-            <div className="card-header">{quote.user_id}</div>
+          <div key={quote.id} className="card card-quotes m-3 overflow-scroll">
+            <div className="card-header">
+              {associatedProfile ? associatedProfile.name : 'Sin nombre'}
+            </div>
             <div className="card-body">
               <figure>
-                <blockquote className="blockquote">
+                <blockquote className="blockquote mb-5">
                   <p>{quote.text}</p>
                 </blockquote>
                 <br />
-                <figcaption className="blockquote-footer">
+                <figcaption className="blockquote-footer mb-0">
                   <cite title="Source Title">
                     {associatedBook ? associatedBook.title : 'Sin titulo'}
                   </cite>

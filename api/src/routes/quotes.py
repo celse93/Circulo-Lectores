@@ -73,3 +73,13 @@ def quotes_routes(app):
 
             response_body = [item.serialize() for item in quote_list]
             return jsonify(response_body), 200
+
+    @app.route("/quotes", methods=["GET"])
+    @jwt_required()
+    def all_quotes():
+        quote_list = db.session.execute(select(Quotes)).scalars().all()
+        if not quote_list:
+            return jsonify({"error": "Reading list not found"}), 404
+
+        response_body = [item.serialize() for item in quote_list]
+        return jsonify(response_body), 200

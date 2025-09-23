@@ -121,3 +121,14 @@ def reviews_routes(app):
             response_body = [item.serialize() for item in review_list]
 
             return jsonify(response_body), 200
+
+    @app.route("/reviews", methods=["GET"])
+    @jwt_required()
+    def all_reviews():
+        review_list = db.session.execute(select(Reviews)).scalars().all()
+        if not review_list:
+            return jsonify({"error": "Review list not found"}), 404
+
+        response_body = [item.serialize() for item in review_list]
+
+        return jsonify(response_body), 200

@@ -16,11 +16,12 @@ def auth_routes(app):
     @app.route("/register", methods=["POST"])
     def register():
         data = request.get_json()
-        required_fields = ["email", "password"]
+        required_fields = ["name", "email", "password"]
 
         if not all(field in data for field in required_fields):
             return jsonify({"error": "Missing required fields"}), 400
 
+        name = data["name"]
         email = data["email"]
         password = data["password"]
 
@@ -40,7 +41,8 @@ def auth_routes(app):
         db.session.add(new_user)
         db.session.commit()
 
-        new_profile = Profiles(id=new_user.id)
+        # Create profile
+        new_profile = Profiles(id=new_user.id, name=name)
         db.session.add(new_profile)
         db.session.commit()
 
@@ -58,6 +60,7 @@ def auth_routes(app):
         password = data["password"]
 
         user = Users.query.filter_by(email=email).first()
+        name = Profiles.query.filter_by(id=user.id).first()
         if not user:
             return jsonify({"error": "User not found"}), 400
 
@@ -72,6 +75,7 @@ def auth_routes(app):
             {
                 "msg": "login successful",
                 "user": user.serialize(),
+                "name": name.serialize(),
                 "csrf_token": csrf_token,
             }
         )
