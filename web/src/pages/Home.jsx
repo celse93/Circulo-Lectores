@@ -1,4 +1,3 @@
-import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { getCurrentUser } from '../services/api/users';
@@ -247,12 +246,6 @@ export const Home = () => {
   );
 };
 
-
-
-
-
-
-
 /* import { useContext, useEffect, useState } from 'react';
 import { getCurrentUser } from '../services/api/users';
 
@@ -344,5 +337,5 @@ export const Home = () => {
       <Feed className="feed" />
     </div>
   );
-}; 
+};
 */
