@@ -33,7 +33,6 @@ def book_detail_route(app):
             description = data.get("description")
             cover_id = data.get("covers")[0]
 
-            print(data, author_id)
             results = {
                 "author_id": author_id,
                 "description": description.get("value")

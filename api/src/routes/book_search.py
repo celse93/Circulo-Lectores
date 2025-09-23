@@ -30,7 +30,7 @@ def books_search_routes(app):
                         "author": books[x]["author_name"][0],
                         "first_publish_year": books[x]["first_publish_year"],
                         "cover_id": books[x]["cover_i"],
-                        "openlibrary_id": book_id,
+                        "book_id": book_id,
                     }
                 )
             return jsonify(results), response.status_code

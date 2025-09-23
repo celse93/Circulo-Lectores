@@ -2,23 +2,10 @@ import { useNavigate } from 'react-router';
 import { useContext, useEffect, useState, useCallback } from 'react';
 import { getCurrentUser } from '../services/api/users';
 import { UserContext } from '../context/User';
-
-const searchBooks = async (query) => {
-  if (!query) return [];
-  try {
-    const response = await fetch(
-      `https://openlibrary.org/search.json?q=${query}`
-    );
-    if (!response.ok) {
-      throw new Error('Error en la búsqueda');
-    }
-    const data = await response.json();
-    return data.docs.slice(0, 12);
-  } catch (error) {
-    console.error('Error searching books:', error);
-    throw error;
-  }
-};
+import { getBooksSearch } from '../services/api/books';
+import { getBooksDetail } from '../services/api/books';
+import { getAuthorDetail } from '../services/api/books';
+import { postBook } from '../services/api/books';
 
 export const Home = () => {
   const { user, setUser } = useContext(UserContext);
@@ -26,6 +13,8 @@ export const Home = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { setBook, setAuthor } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const loadUserData = useCallback(async () => {
     try {
@@ -52,7 +41,7 @@ export const Home = () => {
     setError('');
 
     try {
-      const result = await searchBooks(query);
+      const result = await getBooksSearch(query);
       setBooks(result);
     } catch (error) {
       console.error(error);
@@ -69,9 +58,21 @@ export const Home = () => {
     }
   };
 
-  const handleSaveBook = (book) => {
-    console.log('Guardar libro', book.title);
-    alert(`Libro "${book.title}" guardado en tu biblioteca.`);
+  const handleBookClick = async (bookId) => {
+    const fetchBook = await getBooksDetail(bookId);
+    setBook(fetchBook);
+    const fetchAuthor = await getAuthorDetail(fetchBook['author_id']);
+    setAuthor(fetchAuthor);
+    navigate('/book');
+  };
+
+  const handleSaveBook = async (book) => {
+    try {
+      const saveBook = await postBook(book.book_id);
+      alert(`Libro "${book.title}": ${saveBook['message']}`);
+    } catch {
+      alert('¡Error! Libro ya registrado');
+    }
   };
 
   return (
@@ -117,7 +118,6 @@ export const Home = () => {
                       <span
                         className="spinner-border spinner-border-sm"
                         role="status"
-                        aria-hidden="true"
                       ></span>
                     ) : (
                       <i className="fa-solid fa-search"></i>
@@ -161,9 +161,9 @@ export const Home = () => {
                 <div className="card bg-dark border border-secondary h-100">
                   {/* Imagen del libro */}
                   <div className="position-relative">
-                    {book.cover_i ? (
+                    {book.cover_id ? (
                       <img
-                        src={`https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`}
+                        src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
                         className="card-img-top"
                         alt={book.title}
                         style={{ height: '300px', objectFit: 'cover' }}
@@ -201,6 +201,14 @@ export const Home = () => {
                     )}
 
                     {/* Botón de acción */}
+                    <div className="mt-auto mb-2">
+                      <button
+                        className="btn btn-primary btn-sm w-100"
+                        onClick={() => handleBookClick(book.book_id)}
+                      >
+                        Aprende más
+                      </button>
+                    </div>
                     <div className="mt-auto">
                       <button
                         className="btn btn-primary btn-sm w-100"
