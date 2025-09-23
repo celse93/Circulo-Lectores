@@ -1,10 +1,12 @@
 import { getBooksSearch } from '../services/api/books';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { BookCard } from '../components/BookCard';
+import { UserContext } from '../context/User';
 
 export const BookSearch = () => {
   const [inputName, setInputName] = useState('');
   const [books, setBooks] = useState([]);
+  const { getBook, setBookDetails } = useContext(UserContext);
 
   const handleChangeInput = (e) => {
     setInputName(e.target.value);
@@ -13,7 +15,19 @@ export const BookSearch = () => {
   const refreshData = () => {
     getBooksSearch(inputName).then((data) => {
       setBooks(data);
-      console.log(books);
+    });
+  };
+
+  const handleBookClick = (e) => {
+    getBook(e.target.id);
+    const selectedBook = books.filter((item) => {
+      return item.openlibrary_id == e.target.id;
+    });
+    console.log(selectedBook[0]);
+    setBookDetails({
+      authorName: selectedBook[0]['author'],
+      year: selectedBook[0]['first_publish_year'],
+      cover_id: selectedBook[0]['cover_id'],
     });
   };
 
@@ -37,7 +51,29 @@ export const BookSearch = () => {
           </button>
         </div>
         <div className="container">
-          <BookCard books={books} />
+          {books.length > 0
+            ? books.map((book) => (
+                <div key={book.openlibrary_id} className="card w-25 mb-3">
+                  <img
+                    src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
+                    className="img-fluid"
+                    alt="placeholder"
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">{book.title}</h5>
+                    <p className="card-text">{book.author}</p>
+                    <button
+                      id={book.openlibrary_id}
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={handleBookClick}
+                    >
+                      Learn more
+                    </button>
+                  </div>
+                </div>
+              ))
+            : 'No books'}
         </div>
       </div>
     </>

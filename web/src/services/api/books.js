@@ -10,3 +10,19 @@ export const getBooksSearch = async (input) => {
     return data;
   });
 };
+
+export const getBooksDetail = async (id) => {
+  return await fetchWrapper(`${baseUrl}book_detail/works/${id}.json`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getAuthorDetail = async (id) => {
+  return await fetchWrapper(`${baseUrl}author/authors/${id}.json`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};

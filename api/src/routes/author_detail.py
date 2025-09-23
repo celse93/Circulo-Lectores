@@ -1,23 +1,30 @@
-from flask import jsonify
+from flask import jsonify, request
 import requests
+
+open_library_url = "https://openlibrary.org/"
 
 
 def author_detail_route(app):
-    @app.route("/author/<path:author_id>", methods=["GET"])
-    def author_detail(author_id):
-        response_body = {}
-        url = f"https://openlibrary.org/authors/{author_id}.json"
-        try:
-            response = requests.get(url)
-            if response.status_code == 200:
-                data = response.json()
-                return jsonify(data), 200
-            else:
-                response_body["error"] = (
-                    f"Error retrieving OpenLibrary API data. Status code: {response.status_code}"
-                )
-                return jsonify(response_body), response.status_code
+    @app.route("/author/<path:path>", methods=["GET"])
+    def author_detail(path):
+        url = f"{open_library_url}{path}"
+        params = dict(request.args)
 
-        except requests.exceptions.RequestException as e:
-            response_body["error"] = f"Request failed: {str(e)}"
-            return (jsonify(response_body),)
+        try:
+            proxy_request = requests.get(url, params=params, timeout=10)
+            data = proxy_request.json()
+            author_name = data.get("name")
+            author_bio = data.get("bio")
+
+            results = {
+                "author_name": author_name,
+                "author_bio": author_bio.get("value")
+                if isinstance(author_bio, dict)
+                else author_bio,
+                "author_id": data["key"].split("/")[-1],
+            }
+
+            return jsonify(results), proxy_request.status_code
+
+        except requests.RequestException:
+            return jsonify({"error": "Failed to fetch from OpenLibrary."}), 502

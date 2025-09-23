@@ -9,7 +9,7 @@ from flask_jwt_extended import (
 
 
 def recommendations_routes(app):
-    @app.route("/recommendations", methods=["POST", "DELETE", "GET"])
+    @app.route("/recommendations/user", methods=["POST", "DELETE", "GET"])
     @jwt_required()
     def recommendations():
         # method to save book in Recommendation

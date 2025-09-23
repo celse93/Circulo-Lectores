@@ -1,18 +1,17 @@
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
-import { Book } from '../../pages/BookDetail';
+import { BookDetail } from '../../pages/BookDetail';
 import { Quote } from '../../pages/Quote';
 import { Feed } from '../../pages/Feed';
 import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
 import { ReviewForm } from '../../pages/ReviewForm';
-import { ReviewPage } from '../../pages/ReviewsPage';
-import { BookCard } from '../../components/BookCard';
 import { Footer } from '../../components/Footer';
+import { SplashScreen } from '../../components/SplashScreen';
 import { ProgressBar } from '../../components/ProgressBar';
 import { ReviewCard } from '../../components/ReviewCard';
 import { UserCard } from '../../components/UserCard';
-import { BookSearch } from '../../pages/BookSearch';
+import { Author } from '../../pages/Author';
 
 export const routesConfig = [
   {
@@ -26,14 +25,14 @@ export const routesConfig = [
     component: <Login />,
   },
   {
+    name: 'Book Detail',
+    path: '/book',
+    component: <BookDetail />,
+  },
+  {
     name: 'Profile',
     path: '/profile',
     component: <Profile />,
-  },
-  {
-    name: 'Book',
-    path: '/books',
-    component: <Book />,
   },
   {
     name: 'Quotes',
@@ -51,19 +50,9 @@ export const routesConfig = [
     component: <Register />,
   },
   {
-    name: 'ReviewForm',
+    name: 'Review Form',
     path: '/review_form',
     component: <ReviewForm />,
-  },
-  {
-    name: 'ReviewPage',
-    path: '/review_page',
-    component: <ReviewPage />,
-  },
-  {
-    name: 'BookCard',
-    path: '/book_card',
-    component: <BookCard />,
   },
   {
     name: 'Footer',
@@ -71,9 +60,14 @@ export const routesConfig = [
     component: <Footer />,
   },
   {
-    name: 'ProgressBar',
-    path: '/progress_bar',
-    component: <ProgressBar />,
+    name: 'Splash Screen',
+    path: '/splash_screen',
+    component: <SplashScreen />,
+  },
+  {
+    name: 'Auhtor',
+    path: '/auhtor',
+    component: <Author />,
   },
   {
     name: 'ReviewCard',
@@ -81,14 +75,9 @@ export const routesConfig = [
     component: <ReviewCard />,
   },
   {
-    name: 'UserCard',
+    name: 'User Card',
     path: '/user_card',
     component: <UserCard />,
-  },
-  {
-    name: 'BookSearch',
-    path: '/book_search',
-    component: <BookSearch />,
   },
   {
     name: 'NotFound',

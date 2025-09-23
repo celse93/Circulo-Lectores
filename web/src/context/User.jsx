@@ -1,9 +1,12 @@
 import { createContext, useState } from 'react';
 import { postLogin, postLogout, postRegister } from '../services/api/auth';
 import { useNavigate } from 'react-router';
+import { getCurrentUser } from '../services/api/users';
 
 export const UserContext = createContext({
   user: {},
+  book: {},
+  author: {},
   login: () => {},
   logout: () => {},
   register: () => {}, // will accept email, password
@@ -94,10 +97,14 @@ export const UserContext = createContext({
   login: () => {},
   logout: () => {},
   register: () => {},
+  getBook: () => {},
+  currentUser: () => {},
 });
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [book, setBook] = useState({});
+  const [author, setAuthor] = useState({});
   const navigate = useNavigate();
 
   const login = (email, password) => {
@@ -119,8 +126,26 @@ export const UserProvider = ({ children }) => {
     });
   };
 
+  const currentUser = () => {
+    getCurrentUser().then((data) => {
+      setUser(data.user);
+    });
+  };
+
   return (
-    <UserContext.Provider value={{ user, login, logout, register }}>
+    <UserContext.Provider
+      value={{
+        user,
+        book,
+        author,
+        setAuthor,
+        setBook,
+        login,
+        logout,
+        register,
+        currentUser,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
