@@ -15,6 +15,8 @@ export const UserContext = createContext({
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [book, setBook] = useState({});
+  const [author, setAuthor] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -81,6 +83,10 @@ export const UserProvider = ({ children }) => {
         logout,
         register,
         isLoading,
+        book,
+        author,
+        setAuthor,
+        setBook,
       }}
     >
       {children}

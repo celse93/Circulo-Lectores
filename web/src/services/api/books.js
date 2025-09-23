@@ -1,12 +1,9 @@
 import { baseUrl, fetchWrapper } from './config';
 
 export const getBooksSearch = async (input) => {
-  return await fetchWrapper(
-    `${baseUrl}books_search/search.json?title=${input}`,
-    {
-      credentials: 'include',
-    }
-  ).then((data) => {
+  return await fetchWrapper(`${baseUrl}books_search/search.json?q=${input}`, {
+    credentials: 'include',
+  }).then((data) => {
     return data;
   });
 };
@@ -22,6 +19,21 @@ export const getBooksDetail = async (id) => {
 export const getAuthorDetail = async (id) => {
   return await fetchWrapper(`${baseUrl}author/authors/${id}.json`, {
     credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const postBook = async (bookId) => {
+  return await fetchWrapper(`${baseUrl}reading_list/user`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      book_id: bookId,
+    }),
   }).then((data) => {
     return data;
   });

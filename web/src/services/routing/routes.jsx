@@ -7,8 +7,6 @@ import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
 import { ReviewForm } from '../../pages/ReviewForm';
 import { Footer } from '../../components/Footer';
-import { SplashScreen } from '../../components/SplashScreen';
-import { ProgressBar } from '../../components/ProgressBar';
 import { ReviewCard } from '../../components/ReviewCard';
 import { UserCard } from '../../components/UserCard';
 import { Author } from '../../pages/Author';
@@ -58,11 +56,6 @@ export const routesConfig = [
     name: 'Footer',
     path: '/footer',
     component: <Footer />,
-  },
-  {
-    name: 'Splash Screen',
-    path: '/splash_screen',
-    component: <SplashScreen />,
   },
   {
     name: 'Auhtor',
