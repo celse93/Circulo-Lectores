@@ -2,16 +2,9 @@ import { baseUrl, fetchWrapper } from './config';
 
 const usersEndpoint = `${baseUrl}favourites`;
 
-export const getProfileNames = async (id) => {
+export const getProfileNames = async () => {
   return await fetchWrapper(`${baseUrl}profiles`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     credentials: 'include',
-    body: JSON.stringify({
-      user_id: id,
-    }),
   }).then((data) => {
     return data;
   });

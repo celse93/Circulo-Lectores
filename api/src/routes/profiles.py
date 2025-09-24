@@ -9,7 +9,7 @@ from flask_jwt_extended import (
 
 
 def profiles_routes(app):
-    @app.route("/profiles", methods=["PATCH", "GET"])
+    @app.route("/profiles/user", methods=["PATCH", "GET"])
     @jwt_required()
     def profile():
         # method for updating profile
@@ -46,3 +46,15 @@ def profiles_routes(app):
             response_body = [profile.serialize() for profile in profiles]
 
             return jsonify(response_body), 200
+
+    @app.route("/profiles", methods=["GET"])
+    @jwt_required()
+    def all_profiles():
+        profiles = db.session.execute(select(Profiles)).scalars().all()
+
+        if not profiles:
+            return jsonify({"error": "Profiles list was not found."})
+
+        response_body = [profile.serialize() for profile in profiles]
+
+        return jsonify(response_body), 200

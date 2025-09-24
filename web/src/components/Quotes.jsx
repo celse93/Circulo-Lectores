@@ -34,10 +34,7 @@ export const Quotes = () => {
           );
           const bookDetails = await Promise.all(bookDetailPromises);
 
-          const profileDetailPromises = quotes.map((quote) =>
-            getProfileNames(quote.user_id)
-          );
-          const profileDetails = await Promise.all(profileDetailPromises);
+          const profileDetails = await getProfileNames();
 
           setBookDetails(bookDetails);
           setProfileNames(profileDetails);
@@ -63,9 +60,9 @@ export const Quotes = () => {
           (profile) => profile.id == quote.user_id
         );
         return (
-          <div key={quote.id} className="card card-quotes m-3 overflow-scroll">
+          <div key={quote.id} className="card card-quotes m-3 overflow-auto">
             <div className="card-header">
-              {associatedProfile ? associatedProfile.name : 'Sin nombre'}
+              {associatedProfile.name ? associatedProfile.name : 'Sin nombre'}
             </div>
             <div className="card-body">
               <figure>

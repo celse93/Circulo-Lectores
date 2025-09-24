@@ -30,7 +30,7 @@ body {
   transition: all 0.3s ease;
 }
 
-.splash-container .navbar .container {
+.splash-container .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -177,12 +177,6 @@ body {
   line-height: 1.6;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -305,7 +299,7 @@ body {
   width: 100%;
 }
 
-.navbar .container {
+.navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -385,9 +379,15 @@ body {
   height: auto;
 }
 
+.feed-container {
+  width: 100vw;
+  overflow-x: auto;
+}
+
 .container-books {
   height: 350px;
-  width: auto;
+  width: 100vw;
+  overflow-x: auto;
 }
 
 .card-books {
@@ -395,7 +395,11 @@ body {
   height: 250px;
 }
 
-.card-reviews,
+.card-reviews {
+  width: 400px;
+  height: 250px;
+}
+
 .card-quotes {
   width: 400px;
   height: 250px;

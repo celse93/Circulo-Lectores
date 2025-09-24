@@ -1,6 +1,6 @@
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
-import { BookDetail } from '../../pages/BookDetail';
+import { Book } from '../../pages/Book';
 import { Quote } from '../../pages/Quote';
 import { Feed } from '../../pages/Feed';
 import { Profile } from '../../pages/Profile';
@@ -25,7 +25,7 @@ export const routesConfig = [
   {
     name: 'Book Detail',
     path: '/book',
-    component: <BookDetail />,
+    component: <Book />,
   },
   {
     name: 'Profile',

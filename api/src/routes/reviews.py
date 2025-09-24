@@ -37,6 +37,9 @@ def reviews_routes(app):
             if existing_book:
                 return jsonify({"error": "Book already rated"}), 400
 
+            if ratings < 1 or ratings > 5:
+                return jsonify({"error": "Rating outside boundries"}), 400
+
             new_book = Reviews(
                 text=text, ratings=ratings, book_id=book_id, user_id=user_id
             )
@@ -67,6 +70,9 @@ def reviews_routes(app):
                 return jsonify(
                     {"error": "Book review doesn't exist for this user."}
                 ), 400
+
+            if ratings < 1 or ratings > 5:
+                return jsonify({"error": "Rating outside boundries"}), 400
 
             if not text:
                 existing_review.ratings = ratings

@@ -34,10 +34,7 @@ export const Reviews = () => {
           );
           const bookDetails = await Promise.all(bookDetailPromises);
 
-          const profileDetailPromises = reviews.map((review) =>
-            getProfileNames(review.user_id)
-          );
-          const profileDetails = await Promise.all(profileDetailPromises);
+          const profileDetails = await getProfileNames();
 
           setBookDetails(bookDetails);
           setProfileNames(profileDetails);
@@ -63,12 +60,9 @@ export const Reviews = () => {
           (profile) => profile.id == review.user_id
         );
         return (
-          <div
-            key={review.id}
-            className="card card-reviews m-3 overflow-scroll"
-          >
+          <div key={review.id} className="card card-reviews m-3 overflow-auto">
             <div className="card-header">
-              {associatedProfile ? associatedProfile.name : 'Sin nombre'}
+              {associatedProfile.name ? associatedProfile.name : 'Sin nombre'}
             </div>
             <div className="card-body">
               <h6 className="card-title">
