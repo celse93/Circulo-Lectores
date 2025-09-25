@@ -83,27 +83,22 @@ export const Book = () => {
 
       {/* Modal */}
       <div className="modal fade" id="exampleModal" tabIndex="-1">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div className="modal-content">
             <div className="modal-header">
+              <div className="me-2">
+                <img
+                  src={`https://covers.openlibrary.org/a/olid/${author.author_id}-M.jpg`}
+                  className="rounded-circle"
+                  alt="Author picture"
+                />
+              </div>
               <h1 className="modal-title fs-5" id="exampleModalLabel">
                 {author.author_name}
               </h1>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
             </div>
             <div className="modal-body">
               <div className="d-flex">
-                <div className="me-2">
-                  <img
-                    src={`https://covers.openlibrary.org/a/olid/${author.author_id}-M.jpg`}
-                    className="img-fluid"
-                    alt="Author picture"
-                  />
-                </div>
                 <div>
                   <p>{author.author_bio}</p>
                 </div>

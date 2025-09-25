@@ -410,6 +410,11 @@ body {
   height: 200px;
 }
 
+.modal-content {
+  background-color: var(--dark-bg);
+  color: var(--text-light);
+}
+
 .fa-star {
   color: #ffd43b;
 }
