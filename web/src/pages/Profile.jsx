@@ -2,10 +2,12 @@ import { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../context/User';
 import { getCurrentUser } from '../services/api/users';
 import { getBooksSearch } from '../services/api/books';
+import { postQuote } from '../services/api/books';
 
 export const Profile = () => {
   const { logout } = useContext(UserContext);
   const [query, setQuery] = useState('');
+  const [quote, setQuote] = useState('');
   const [profileData, setProfileData] = useState({
     name: '',
     avatar: '',
@@ -16,6 +18,7 @@ export const Profile = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [books, setBooks] = useState([]);
+  const [bookSelected, setBookSelected] = useState({});
 
   useEffect(() => {
     loadProfileData();
@@ -39,10 +42,26 @@ export const Profile = () => {
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+  const handleBookSelected = (book) => {
+    setQuery(book.title);
+    setBookSelected(book);
+  };
+
+  const handleSaveQuote = async () => {
+    try {
+      const saveQuote = await postQuote(bookSelected.book_id, quote.trim());
+      alert(`${saveQuote['message']}`);
+    } catch (error) {
+      console.error('Error: ', error);
+    } finally {
+      setQuery('');
+      setQuote('');
     }
+  };
+
+  const handleCloseQuoteModal = () => {
+    setQuery('');
+    setQuote('');
   };
 
   const loadProfileData = async () => {
@@ -324,46 +343,52 @@ export const Profile = () => {
               <form>
                 <div className="mb-3">
                   <label htmlFor="recipient-name" className="col-form-label">
-                    Libro
+                    Libro:
                   </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Buscar libros por título, autor..."
-                    id="recipient-name"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyDown={handleKeyPress}
-                  />
-                  <button
-                    onClick={handleSearch}
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    data-bs-toggle="dropdown"
-                  >
-                    Buscar
-                  </button>
-                  <ul className="dropdown-menu">
-                    {books.map((book) => (
-                      <li key={book.book_id}>
-                        <a className="dropdown-item d-flex">
-                          <img
-                            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
-                          />
-                          <p>{book.title}</p>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="input-group">
+                    <button
+                      onClick={handleSearch}
+                      type="button"
+                      className="btn btn-primary btn-sm dropdown-toggle-split"
+                      data-bs-toggle="dropdown"
+                    >
+                      Buscar
+                    </button>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar libros por título, autor..."
+                      id="recipient-name"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <ul className="dropdown-menu">
+                      {books.map((book) => (
+                        <li key={book.book_id}>
+                          <a
+                            onClick={() => handleBookSelected(book)}
+                            className="dropdown-item d-flex"
+                          >
+                            <img
+                              src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                            />
+                            <p>{book.title}</p>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
 
                 <div className="mb-3">
                   <label htmlFor="message-text" className="col-form-label">
-                    Message:
+                    Cita:
                   </label>
                   <textarea
                     className="form-control"
                     id="message-text"
+                    value={quote}
+                    onChange={(e) => setQuote(e.target.value)}
                   ></textarea>
                 </div>
               </form>
@@ -373,11 +398,17 @@ export const Profile = () => {
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
+                onClick={handleCloseQuoteModal}
               >
-                Close
+                Cerrar
               </button>
-              <button type="button" className="btn btn-primary">
-                Send message
+              <button
+                onClick={handleSaveQuote}
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Guardar
               </button>
             </div>
           </div>

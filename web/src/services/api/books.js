@@ -53,3 +53,19 @@ export const postRecommendations = async (bookId) => {
     return data;
   });
 };
+
+export const postQuote = async (bookId, text) => {
+  return await fetchWrapper(`${baseUrl}quotes/user`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      book_id: bookId,
+      text: text,
+    }),
+  }).then((data) => {
+    return data;
+  });
+};
