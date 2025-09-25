@@ -1,10 +1,18 @@
-import { baseUrl, fetchWrapper } from "./config";
+import { baseUrl, fetchWrapper } from './config';
 
 const usersEndpoint = `${baseUrl}favourites`;
 
+export const getProfileNames = async () => {
+  return await fetchWrapper(`${baseUrl}profiles`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
 export const getCurrentUser = async () => {
   return await fetchWrapper(`${baseUrl}me`, {
-    credentials: "include",
+    credentials: 'include',
   }).then((data) => {
     return data;
   });
@@ -12,7 +20,7 @@ export const getCurrentUser = async () => {
 
 export const getUserFavourites = async () => {
   return await fetchWrapper(usersEndpoint, {
-    credentials: "include",
+    credentials: 'include',
   }).then((data) => {
     return data;
   });
@@ -20,11 +28,11 @@ export const getUserFavourites = async () => {
 
 export const postUserFavourite = async (externalId, name, type) => {
   return await fetchWrapper(usersEndpoint, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    credentials: "include",
+    credentials: 'include',
     body: JSON.stringify({
       external_id: externalId,
       name: name,
@@ -37,11 +45,11 @@ export const postUserFavourite = async (externalId, name, type) => {
 
 export const deleteUserFavourite = async (favouriteId) => {
   return await fetchWrapper(usersEndpoint, {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    credentials: "include",
+    credentials: 'include',
     body: JSON.stringify({
       id: favouriteId,
     }),

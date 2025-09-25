@@ -1,6 +1,6 @@
 import { baseUrl, fetchWrapper } from './config';
 
-export const postRegister = async (email, password) => {
+export const postRegister = async (name, email, password) => {
   return await fetchWrapper(`${baseUrl}register`, {
     method: 'POST',
     credentials: 'include',
@@ -8,6 +8,7 @@ export const postRegister = async (email, password) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
+      name: name,
       email: email,
       password: password,
     }),

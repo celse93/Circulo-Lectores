@@ -4,6 +4,7 @@ import { UserContext } from '../context/User';
 
 export const Register = () => {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -30,7 +31,11 @@ export const Register = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Username is optional, no validation required
+    if (!formData.name) {
+      newErrors.name = 'El nombre es obligatorio';
+    } else if (formData.name.length > 10) {
+      newErrors.password = 'El nombre debe tener hasta 10 caracteres';
+    }
 
     if (!formData.email) {
       newErrors.email = 'El email es obligatorio';
@@ -63,7 +68,7 @@ export const Register = () => {
 
     setIsLoading(true);
     try {
-      await register(formData.email, formData.password);
+      await register(formData.name, formData.email, formData.password);
     } catch (error) {
       console.error(error);
       if (
@@ -97,6 +102,25 @@ export const Register = () => {
                     {errors.submit}
                   </div>
                 )}
+
+                <div className="mb-3">
+                  <label htmlFor="text" className="form-label text-white">
+                    Nombre *
+                  </label>
+                  <input
+                    type="text"
+                    className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Nombre"
+                    disabled={isLoading}
+                  />
+                  {errors.name && (
+                    <div className="invalid-feedback">{errors.name}</div>
+                  )}
+                </div>
 
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label text-white">

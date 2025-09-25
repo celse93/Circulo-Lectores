@@ -79,3 +79,13 @@ def recommendations_routes(app):
 
             response_body = [item.serialize() for item in recommendations]
             return jsonify(response_body), 200
+
+    @app.route("/recommendations", methods=["GET"])
+    @jwt_required()
+    def all_recommendations():
+        recommendations = db.session.execute(select(Recommendations)).scalars().all()
+        if not recommendations:
+            return jsonify({"error": "Recommendation list not found"}), 404
+
+        response_body = [item.serialize() for item in recommendations]
+        return jsonify(response_body), 200

@@ -3,13 +3,14 @@ import { getBooksDetail, getAuthorDetail } from '../services/api/books';
 import { useNavigate } from 'react-router';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/User';
+import { postReadingList, postRecommendations } from '../services/api/books';
 
 export const ReadingLists = () => {
   const [readingLists, setReadingLists] = useState([]);
   const [bookDetails, setBookDetails] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setBook, setAuthor } = useContext(UserContext);
+  const { selectBook } = useContext(UserContext);
 
   useEffect(() => {
     const fetchReadingLists = async () => {
@@ -43,18 +44,37 @@ export const ReadingLists = () => {
     fetchBookCovers();
   }, [readingLists]);
 
-  const handleBookClick = async (e) => {
-    const fetchBook = await getBooksDetail(e.target.id);
-    setBook(fetchBook);
-    const fetchAuthor = await getAuthorDetail(fetchBook['author_id']);
-    setAuthor(fetchAuthor);
-    navigate('/book');
+  const handleBookClick = async (bookId) => {
+    const fetchBook = await selectBook(bookId);
+    if (fetchBook) {
+      navigate('/book');
+    } else {
+      console.log('Could not navigate to book page');
+    }
+  };
+
+  const handleBookReadList = async (book) => {
+    try {
+      const saveBook = await postReadingList(book.book_id);
+      alert(`Libro "${book.title}": ${saveBook['message']}`);
+    } catch {
+      alert('¡Error! Libro ya registrado');
+    }
+  };
+
+  const handleRecommendations = async (book) => {
+    try {
+      const saveBook = await postRecommendations(book.book_id);
+      alert(`Libro "${book.title}": ${saveBook['message']}`);
+    } catch {
+      alert('¡Error! Libro ya registrado');
+    }
   };
 
   return loading ? (
     <p>Cargando... </p>
   ) : (
-    <div className="d-flex flex-row overflow-scroll">
+    <div className="d-flex flex-row overflow-auto">
       {bookDetails.map((book) => (
         <div key={book.book_id} className="card-books mx-3">
           <img
@@ -62,15 +82,36 @@ export const ReadingLists = () => {
             src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
             alt="Book cover"
           />
-          <div className="card-body d-flex justify-content-center">
-            <button
-              id={book.book_id}
-              type="button"
-              className="btn btn-primary"
-              onClick={handleBookClick}
-            >
-              Aprende más
-            </button>
+          <div className="card-body d-flex flex-column justify-content-center">
+            <div className="mt-auto mb-2">
+              <button
+                type="button"
+                className="btn btn-primary btn-sm w-100"
+                onClick={() => handleBookClick(book.book_id)}
+              >
+                Aprende más
+              </button>
+            </div>
+            <div className="mt-auto mb-2">
+              <button
+                type="button"
+                className="btn btn-primary btn-sm w-100"
+                onClick={() => handleBookReadList(book)}
+              >
+                <i className="fa-solid fa-plus me-2"></i>
+                Agregar a biblioteca
+              </button>
+            </div>
+            <div className="mt-auto mb-2">
+              <button
+                type="button"
+                className="btn btn-primary btn-sm w-100"
+                onClick={() => handleRecommendations(book)}
+              >
+                <i className="fa-solid fa-plus me-2"></i>
+                Agregar a leídos
+              </button>
+            </div>
           </div>
         </div>
       ))}

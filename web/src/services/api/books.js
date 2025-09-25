@@ -24,8 +24,23 @@ export const getAuthorDetail = async (id) => {
   });
 };
 
-export const postBook = async (bookId) => {
+export const postReadingList = async (bookId) => {
   return await fetchWrapper(`${baseUrl}reading_list/user`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      book_id: bookId,
+    }),
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const postRecommendations = async (bookId) => {
+  return await fetchWrapper(`${baseUrl}recommendations/user`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

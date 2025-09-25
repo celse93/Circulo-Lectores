@@ -2,31 +2,32 @@ import { createContext, useState } from 'react';
 import { postLogin, postLogout, postRegister } from '../services/api/auth';
 import { useNavigate } from 'react-router';
 import { getCurrentUser } from '../services/api/users';
+import { getAuthorDetail, getBooksDetail } from '../services/api/books';
 
 export const UserContext = createContext({
-  user: {},
-  book: {},
-  author: {},
+  user: '',
   login: () => {},
   logout: () => {},
+  selectBook: () => {},
+  selectedBook: { book: {}, author: {} },
   register: () => {}, // will accept email, password
   isLoading: false,
 });
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({});
-  const [book, setBook] = useState({});
-  const [author, setAuthor] = useState({});
+  const [user, setUser] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const [selectedBook, setSelectedBook] = useState({
+    book: null,
+    author: null,
+  });
 
   const login = async (email, password) => {
     setIsLoading(true);
     try {
-      console.log('Intentando login con:', { email });
       const data = await postLogin(email, password);
-      console.log('Login exitoso:', data);
-      setUser(data.user);
+      setUser(data);
       navigate('/profile');
       return data;
     } catch (error) {
@@ -52,26 +53,39 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, password) => {
+  const register = async (name, email, password) => {
     setIsLoading(true);
     try {
-      console.log('Iniciando registro con:', { email });
+      await postRegister(name, email, password);
 
-      const registerResult = await postRegister(email, password);
-      console.log('Registro exitoso:', registerResult);
+      //Login automático
+      const data = await postLogin(email, password);
 
-      console.log('Iniciando login automático...');
-      const loginData = await postLogin(email, password);
-      console.log('Login automático exitoso:', loginData);
-
-      setUser(loginData.user);
-      console.log('Usuario establecido, navegando a /profile');
+      setUser(data);
       navigate('/profile');
     } catch (error) {
       console.error('Register error:', error.message);
       throw error;
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const selectBook = async (bookID) => {
+    setIsLoading(true);
+    try {
+      const bookData = await getBooksDetail(bookID);
+      const authorData = await getAuthorDetail(bookData.author_id);
+
+      setSelectedBook({ book: bookData, author: authorData });
+      setIsLoading(false);
+      const data = await getCurrentUser();
+      setUser(data);
+      return true;
+    } catch (error) {
+      console.error('Failed to select book and author:', error);
+      setIsLoading(false);
+      return false;
     }
   };
 
@@ -83,76 +97,11 @@ export const UserProvider = ({ children }) => {
         logout,
         register,
         isLoading,
-        book,
-        author,
-        setAuthor,
-        setBook,
+        selectBook,
+        selectedBook,
       }}
     >
       {children}
     </UserContext.Provider>
   );
 };
-
-/*import { createContext, useState } from 'react';
-import { postLogin, postLogout, postRegister } from '../services/api/auth';
-import { useNavigate } from 'react-router';
-
-export const UserContext = createContext({
-  user: {},
-  login: () => {},
-  logout: () => {},
-  register: () => {},
-  getBook: () => {},
-  currentUser: () => {},
-});
-
-export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({});
-  const [book, setBook] = useState({});
-  const [author, setAuthor] = useState({});
-  const navigate = useNavigate();
-
-  const login = (email, password) => {
-    postLogin(email, password).then((data) => {
-      setUser(data.user);
-      navigate('/');
-    });
-  };
-
-  const logout = () => {
-    postLogout().then(() => {
-      setUser({});
-    });
-  };
-
-  const register = (email, password) => {
-    postRegister(email, password).then(() => {
-      login(email, password);
-    });
-  };
-
-  const currentUser = () => {
-    getCurrentUser().then((data) => {
-      setUser(data.user);
-    });
-  };
-
-  return (
-    <UserContext.Provider
-      value={{
-        user,
-        book,
-        author,
-        setAuthor,
-        setBook,
-        login,
-        logout,
-        register,
-        currentUser,
-      }}
-    >
-      {children}
-    </UserContext.Provider>
-  );
-}; */

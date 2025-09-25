@@ -9,7 +9,7 @@ export const LoginRedirect = () => {
   const { user } = useContext(UserContext);
 
   if (!isEmpty(user)) {
-    return <Navigate to="Profile" replace />;
+    return <Navigate to="/profile" replace />;
   }
 
   return <Login />;
