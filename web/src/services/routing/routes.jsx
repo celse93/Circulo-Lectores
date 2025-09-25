@@ -1,7 +1,6 @@
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
 import { Book } from '../../pages/Book';
-import { Quote } from '../../pages/Quote';
 import { Feed } from '../../pages/Feed';
 import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
@@ -30,11 +29,6 @@ export const routesConfig = [
     name: 'Profile',
     path: '/profile',
     component: <Profile />,
-  },
-  {
-    name: 'Quotes',
-    path: '/quotes',
-    component: <Quote />,
   },
   {
     name: 'Feed',

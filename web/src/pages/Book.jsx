@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { UserContext } from '../context/User';
+import { UserContext } from '../context/UserContext';
 import { Link } from 'react-router';
 import { NavLink } from 'react-router';
 import { useNavigate } from 'react-router';

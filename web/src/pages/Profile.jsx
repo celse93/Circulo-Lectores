@@ -1,28 +1,19 @@
-import { useState, useContext, useEffect } from 'react';
-import { UserContext } from '../context/User';
-import { getCurrentUser } from '../services/api/users';
+import { useState, useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 import { getBooksSearch } from '../services/api/books';
 import { postQuote } from '../services/api/books';
+import { updateProfile, getCurrentUser } from '../services/api/users';
 
 export const Profile = () => {
-  const { logout } = useContext(UserContext);
+  const { logout, profile, setUser, setProfile } = useContext(UserContext);
   const [query, setQuery] = useState('');
   const [quote, setQuote] = useState('');
-  const [profileData, setProfileData] = useState({
-    name: '',
-    avatar: '',
-    email: '',
-  });
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [books, setBooks] = useState([]);
   const [bookSelected, setBookSelected] = useState({});
-
-  useEffect(() => {
-    loadProfileData();
-  }, []);
+  const [newUsername, setNewUsername] = useState('');
 
   const handleSearch = async () => {
     if (!query.trim()) {
@@ -64,36 +55,15 @@ export const Profile = () => {
     setQuote('');
   };
 
-  const loadProfileData = async () => {
-    try {
-      const userData = await getCurrentUser();
-      setProfileData({
-        name: userData.name || '',
-        avatar: userData.avatar || '',
-        email: userData.email || '',
-      });
-    } catch (error) {
-      console.error(error);
-      setError('Error al cargar los datos del perfil');
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProfileData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSaveProfile = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleSaveProfile = async () => {
     setError('');
     setSuccess('');
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const profile = await updateProfile(newUsername);
+      setProfile(profile);
+      const user = await getCurrentUser();
+      setUser(user);
 
       setSuccess('Perfil actualizado correctamente');
       setIsEditing(false);
@@ -101,7 +71,8 @@ export const Profile = () => {
       console.error(error);
       setError('Error al actualizar el perfil');
     } finally {
-      setIsLoading(false);
+      setIsEditing(false);
+      setNewUsername('');
     }
   };
 
@@ -143,77 +114,41 @@ export const Profile = () => {
                     <div className="col-12 col-md-4 text-center mb-4 mb-md-0">
                       <div className="mb-3">
                         <img
-                          src={
-                            profileData.avatar ||
-                            'https://via.placeholder.com/150x150?text=Avatar'
-                          }
+                          src="src/assets/profile_icon.jpg"
                           alt="Avatar"
                           className="rounded-circle"
-                          width="150"
-                          height="150"
+                          width="100"
+                          height="100"
                           style={{ objectFit: 'cover' }}
                         />
                       </div>
-
-                      {isEditing && (
-                        <div className="mb-3">
-                          <label
-                            htmlFor="avatar"
-                            className="form-label text-white small"
-                          >
-                            URL del Avatar
-                          </label>
-                          <input
-                            type="url"
-                            className="form-control form-control-sm"
-                            id="avatar"
-                            name="avatar"
-                            value={profileData.avatar}
-                            onChange={handleInputChange}
-                            placeholder="https://ejemplo.com/avatar.jpg"
-                          />
-                        </div>
-                      )}
                     </div>
 
                     <div className="col-12 col-md-8">
-                      <div className="mb-3">
-                        <label
-                          htmlFor="email"
-                          className="form-label text-white"
-                        >
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          className="form-control"
-                          id="email"
-                          value={profileData.email}
-                          disabled
-                        />
-                        <small className="text-muted">
-                          El email no se puede modificar
-                        </small>
-                      </div>
-
-                      <div className="mb-4">
-                        <label htmlFor="name" className="form-label text-white">
-                          Nombre
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="name"
-                          name="name"
-                          value={profileData.name}
-                          onChange={handleInputChange}
-                          placeholder="Tu nombre"
-                          disabled={!isEditing}
-                        />
-                      </div>
+                      {isEditing ? (
+                        <div className="mb-4">
+                          <label
+                            htmlFor="name"
+                            className="form-label text-white"
+                          >
+                            Nombre
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="name"
+                            name="name"
+                            value={newUsername}
+                            onChange={(e) => setNewUsername(e.target.value)}
+                            placeholder={profile.name}
+                          />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <div className="d-flex gap-2">
-                        {!isEditing ? (
+                        {!isEditing && (
                           <button
                             type="button"
                             className="btn btn-primary"
@@ -221,34 +156,18 @@ export const Profile = () => {
                           >
                             Editar Perfil
                           </button>
-                        ) : (
+                        )}{' '}
+                        {isEditing && (
                           <>
-                            <button
-                              type="submit"
-                              className="btn btn-success"
-                              disabled={isLoading}
-                            >
-                              {isLoading ? (
-                                <>
-                                  <span
-                                    className="spinner-border spinner-border-sm me-2"
-                                    role="status"
-                                    aria-hidden="true"
-                                  ></span>
-                                  Guardando...
-                                </>
-                              ) : (
-                                'Guardar Cambios'
-                              )}
+                            <button type="submit" className="btn btn-success">
+                              Guardar
                             </button>
                             <button
                               type="button"
                               className="btn btn-secondary"
                               onClick={() => {
                                 setIsEditing(false);
-                                loadProfileData();
                               }}
-                              disabled={isLoading}
                             >
                               Cancelar
                             </button>
@@ -266,7 +185,6 @@ export const Profile = () => {
               className="btn btn-primary"
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
-              data-bs-whatever="@mdo"
             >
               Open modal
             </button>
