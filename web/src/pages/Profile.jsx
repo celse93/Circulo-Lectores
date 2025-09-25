@@ -1,9 +1,11 @@
 import { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../context/User';
 import { getCurrentUser } from '../services/api/users';
+import { getBooksSearch } from '../services/api/books';
 
 export const Profile = () => {
   const { logout } = useContext(UserContext);
+  const [query, setQuery] = useState('');
   const [profileData, setProfileData] = useState({
     name: '',
     avatar: '',
@@ -13,10 +15,35 @@ export const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [books, setBooks] = useState([]);
 
   useEffect(() => {
     loadProfileData();
   }, []);
+
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      setError('Por favor ingresa un término de búsqueda');
+      return;
+    }
+
+    setError('');
+
+    try {
+      const result = await getBooksSearch(query);
+      setBooks(result);
+    } catch (error) {
+      console.error(error);
+      setError('Error al buscar libros. Intenta de nuevo.');
+      setBooks([]);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   const loadProfileData = async () => {
     try {
@@ -215,6 +242,16 @@ export const Profile = () => {
               </div>
             </div>
 
+            <button
+              type="button"
+              className="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              data-bs-whatever="@mdo"
+            >
+              Open modal
+            </button>
+
             <div className="row g-4">
               <div className="col-12 col-md-6">
                 <div className="card bg-dark border border-secondary h-100">
@@ -271,6 +308,77 @@ export const Profile = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal */}
+      <div className="modal fade" id="exampleModal" tabIndex="-1">
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalLabel"></h1>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="recipient-name" className="col-form-label">
+                    Libro
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Buscar libros por título, autor..."
+                    id="recipient-name"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                  />
+                  <button
+                    onClick={handleSearch}
+                    type="button"
+                    className="btn btn-outline-secondary"
+                    data-bs-toggle="dropdown"
+                  >
+                    Buscar
+                  </button>
+                  <ul className="dropdown-menu">
+                    {books.map((book) => (
+                      <li key={book.book_id}>
+                        <a className="dropdown-item d-flex">
+                          <img
+                            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                          />
+                          <p>{book.title}</p>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="message-text" className="col-form-label">
+                    Message:
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="message-text"
+                  ></textarea>
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" className="btn btn-primary">
+                Send message
+              </button>
             </div>
           </div>
         </div>

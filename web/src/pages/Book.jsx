@@ -53,7 +53,7 @@ export const Book = () => {
           <div>
             <div>
               <h6>by</h6>
-              <NavLink data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <NavLink data-bs-toggle="modal" data-bs-target="#authorModal">
                 {author.author_name}
               </NavLink>
             </div>
@@ -82,7 +82,7 @@ export const Book = () => {
       </div>
 
       {/* Modal */}
-      <div className="modal fade" id="exampleModal" tabIndex="-1">
+      <div className="modal fade" id="authorModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div className="modal-content">
             <div className="modal-header">
