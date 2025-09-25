@@ -151,7 +151,7 @@ export const Home = () => {
             {books.map((book) => (
               <div
                 className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
-                key={book.key}
+                key={book.book_id}
               >
                 <div className="card bg-dark border border-secondary h-100">
                   {/* Imagen del libro */}

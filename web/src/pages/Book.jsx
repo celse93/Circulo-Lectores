@@ -53,7 +53,9 @@ export const Book = () => {
           <div>
             <div>
               <h6>by</h6>
-              <NavLink to="/author">{author.author_name}</NavLink>
+              <NavLink data-bs-toggle="modal" data-bs-target="#exampleModal">
+                {author.author_name}
+              </NavLink>
             </div>
             <p>{book.description}</p>
           </div>
@@ -76,6 +78,47 @@ export const Book = () => {
             </button>
           </div>
           <Link onClick={handleGoBack}>Volver</Link>
+        </div>
+      </div>
+
+      {/* Modal */}
+      <div className="modal fade" id="exampleModal" tabIndex="-1">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalLabel">
+                {author.author_name}
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div className="modal-body">
+              <div className="d-flex">
+                <div className="me-2">
+                  <img
+                    src={`https://covers.openlibrary.org/a/olid/${author.author_id}-M.jpg`}
+                    className="img-fluid"
+                    alt="Author picture"
+                  />
+                </div>
+                <div>
+                  <p>{author.author_bio}</p>
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </>

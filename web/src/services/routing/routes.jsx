@@ -9,7 +9,6 @@ import { ReviewForm } from '../../pages/ReviewForm';
 import { Footer } from '../../components/Footer';
 import { ReviewCard } from '../../components/ReviewCard';
 import { UserCard } from '../../components/UserCard';
-import { Author } from '../../pages/Author';
 
 export const routesConfig = [
   {
@@ -56,11 +55,6 @@ export const routesConfig = [
     name: 'Footer',
     path: '/footer',
     component: <Footer />,
-  },
-  {
-    name: 'Auhtor',
-    path: '/auhtor',
-    component: <Author />,
   },
   {
     name: 'ReviewCard',

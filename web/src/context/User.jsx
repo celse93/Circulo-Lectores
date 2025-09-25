@@ -79,8 +79,6 @@ export const UserProvider = ({ children }) => {
 
       setSelectedBook({ book: bookData, author: authorData });
       setIsLoading(false);
-      const data = await getCurrentUser();
-      setUser(data);
       return true;
     } catch (error) {
       console.error('Failed to select book and author:', error);

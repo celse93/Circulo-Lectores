@@ -25,7 +25,7 @@ export const NavBar = () => {
       {routesConfig.map((route) => {
         return (
           <>
-            <NavLink to={route.path}>
+            <NavLink key={route.name} to={route.path}>
               <button type="button" className="btn btn-primary navbar-brand">
                 {route.name}
               </button>
