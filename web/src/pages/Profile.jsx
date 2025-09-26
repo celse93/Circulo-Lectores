@@ -1,53 +1,69 @@
-import { useState, useContext, useEffect } from 'react';
-import { UserContext } from '../context/User';
-import { getCurrentUser } from '../services/api/users';
+import { useState, useContext } from 'react';
+import { UserContext } from '../context/UserContext';
+import { getBooksSearch } from '../services/api/books';
+import { postQuote } from '../services/api/books';
+import { updateProfile, getCurrentUser } from '../services/api/users';
 
 export const Profile = () => {
-  const { logout } = useContext(UserContext);
-  const [profileData, setProfileData] = useState({
-    name: '',
-    avatar: '',
-    email: '',
-  });
+  const { logout, profile, setUser, setProfile } = useContext(UserContext);
+  const [query, setQuery] = useState('');
+  const [quote, setQuote] = useState('');
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [books, setBooks] = useState([]);
+  const [bookSelected, setBookSelected] = useState({});
+  const [newUsername, setNewUsername] = useState('');
 
-  useEffect(() => {
-    loadProfileData();
-  }, []);
+  const handleSearch = async () => {
+    if (!query.trim()) {
+      setError('Por favor ingresa un término de búsqueda');
+      return;
+    }
 
-  const loadProfileData = async () => {
+    setError('');
+
     try {
-      const userData = await getCurrentUser();
-      setProfileData({
-        name: userData.name || '',
-        avatar: userData.avatar || '',
-        email: userData.email || '',
-      });
+      const result = await getBooksSearch(query);
+      setBooks(result);
     } catch (error) {
       console.error(error);
-      setError('Error al cargar los datos del perfil');
+      setError('Error al buscar libros. Intenta de nuevo.');
+      setBooks([]);
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProfileData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleBookSelected = (book) => {
+    setQuery(book.title);
+    setBookSelected(book);
   };
 
-  const handleSaveProfile = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  const handleSaveQuote = async () => {
+    try {
+      const saveQuote = await postQuote(bookSelected.book_id, quote.trim());
+      alert(`${saveQuote['message']}`);
+    } catch (error) {
+      console.error('Error: ', error);
+    } finally {
+      setQuery('');
+      setQuote('');
+    }
+  };
+
+  const handleCloseQuoteModal = () => {
+    setQuery('');
+    setQuote('');
+  };
+
+  const handleSaveProfile = async () => {
     setError('');
     setSuccess('');
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const profile = await updateProfile(newUsername);
+      setProfile(profile);
+      const user = await getCurrentUser();
+      setUser(user);
 
       setSuccess('Perfil actualizado correctamente');
       setIsEditing(false);
@@ -55,7 +71,8 @@ export const Profile = () => {
       console.error(error);
       setError('Error al actualizar el perfil');
     } finally {
-      setIsLoading(false);
+      setIsEditing(false);
+      setNewUsername('');
     }
   };
 
@@ -97,77 +114,41 @@ export const Profile = () => {
                     <div className="col-12 col-md-4 text-center mb-4 mb-md-0">
                       <div className="mb-3">
                         <img
-                          src={
-                            profileData.avatar ||
-                            'https://via.placeholder.com/150x150?text=Avatar'
-                          }
+                          src="src/assets/profile_icon.jpg"
                           alt="Avatar"
                           className="rounded-circle"
-                          width="150"
-                          height="150"
+                          width="100"
+                          height="100"
                           style={{ objectFit: 'cover' }}
                         />
                       </div>
-
-                      {isEditing && (
-                        <div className="mb-3">
-                          <label
-                            htmlFor="avatar"
-                            className="form-label text-white small"
-                          >
-                            URL del Avatar
-                          </label>
-                          <input
-                            type="url"
-                            className="form-control form-control-sm"
-                            id="avatar"
-                            name="avatar"
-                            value={profileData.avatar}
-                            onChange={handleInputChange}
-                            placeholder="https://ejemplo.com/avatar.jpg"
-                          />
-                        </div>
-                      )}
                     </div>
 
                     <div className="col-12 col-md-8">
-                      <div className="mb-3">
-                        <label
-                          htmlFor="email"
-                          className="form-label text-white"
-                        >
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          className="form-control"
-                          id="email"
-                          value={profileData.email}
-                          disabled
-                        />
-                        <small className="text-muted">
-                          El email no se puede modificar
-                        </small>
-                      </div>
-
-                      <div className="mb-4">
-                        <label htmlFor="name" className="form-label text-white">
-                          Nombre
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="name"
-                          name="name"
-                          value={profileData.name}
-                          onChange={handleInputChange}
-                          placeholder="Tu nombre"
-                          disabled={!isEditing}
-                        />
-                      </div>
+                      {isEditing ? (
+                        <div className="mb-4">
+                          <label
+                            htmlFor="name"
+                            className="form-label text-white"
+                          >
+                            Nombre
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="name"
+                            name="name"
+                            value={newUsername}
+                            onChange={(e) => setNewUsername(e.target.value)}
+                            placeholder={profile.name}
+                          />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <div className="d-flex gap-2">
-                        {!isEditing ? (
+                        {!isEditing && (
                           <button
                             type="button"
                             className="btn btn-primary"
@@ -175,34 +156,18 @@ export const Profile = () => {
                           >
                             Editar Perfil
                           </button>
-                        ) : (
+                        )}{' '}
+                        {isEditing && (
                           <>
-                            <button
-                              type="submit"
-                              className="btn btn-success"
-                              disabled={isLoading}
-                            >
-                              {isLoading ? (
-                                <>
-                                  <span
-                                    className="spinner-border spinner-border-sm me-2"
-                                    role="status"
-                                    aria-hidden="true"
-                                  ></span>
-                                  Guardando...
-                                </>
-                              ) : (
-                                'Guardar Cambios'
-                              )}
+                            <button type="submit" className="btn btn-success">
+                              Guardar
                             </button>
                             <button
                               type="button"
                               className="btn btn-secondary"
                               onClick={() => {
                                 setIsEditing(false);
-                                loadProfileData();
                               }}
-                              disabled={isLoading}
                             >
                               Cancelar
                             </button>
@@ -214,6 +179,15 @@ export const Profile = () => {
                 </form>
               </div>
             </div>
+
+            <button
+              type="button"
+              className="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              Open modal
+            </button>
 
             <div className="row g-4">
               <div className="col-12 col-md-6">
@@ -271,6 +245,89 @@ export const Profile = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal */}
+      <div className="modal fade" id="exampleModal" tabIndex="-1">
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalLabel"></h1>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="recipient-name" className="col-form-label">
+                    Libro:
+                  </label>
+                  <div className="input-group">
+                    <button
+                      onClick={handleSearch}
+                      type="button"
+                      className="btn btn-primary btn-sm dropdown-toggle-split"
+                      data-bs-toggle="dropdown"
+                    >
+                      Buscar
+                    </button>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar libros por título, autor..."
+                      id="recipient-name"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <ul className="dropdown-menu">
+                      {books.map((book) => (
+                        <li key={book.book_id}>
+                          <a
+                            onClick={() => handleBookSelected(book)}
+                            className="dropdown-item d-flex"
+                          >
+                            <img
+                              src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                            />
+                            <p>{book.title}</p>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="message-text" className="col-form-label">
+                    Cita:
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="message-text"
+                    value={quote}
+                    onChange={(e) => setQuote(e.target.value)}
+                  ></textarea>
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+                onClick={handleCloseQuoteModal}
+              >
+                Cerrar
+              </button>
+              <button
+                onClick={handleSaveQuote}
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Guardar
+              </button>
             </div>
           </div>
         </div>

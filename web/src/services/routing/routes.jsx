@@ -1,7 +1,6 @@
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
 import { Book } from '../../pages/Book';
-import { Quote } from '../../pages/Quote';
 import { Feed } from '../../pages/Feed';
 import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
@@ -9,7 +8,6 @@ import { ReviewForm } from '../../pages/ReviewForm';
 import { Footer } from '../../components/Footer';
 import { ReviewCard } from '../../components/ReviewCard';
 import { UserCard } from '../../components/UserCard';
-import { Author } from '../../pages/Author';
 
 export const routesConfig = [
   {
@@ -33,11 +31,6 @@ export const routesConfig = [
     component: <Profile />,
   },
   {
-    name: 'Quotes',
-    path: '/quotes',
-    component: <Quote />,
-  },
-  {
     name: 'Feed',
     path: '/feed',
     component: <Feed />,
@@ -56,11 +49,6 @@ export const routesConfig = [
     name: 'Footer',
     path: '/footer',
     component: <Footer />,
-  },
-  {
-    name: 'Auhtor',
-    path: '/auhtor',
-    component: <Author />,
   },
   {
     name: 'ReviewCard',

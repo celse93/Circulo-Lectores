@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { Link } from 'react-router';
-import { UserContext } from '../context/User';
+import { UserContext } from '../context/UserContext';
 
 export const LoginForm = () => {
   const [formData, setFormData] = useState({

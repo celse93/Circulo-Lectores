@@ -60,7 +60,7 @@ def auth_routes(app):
         password = data["password"]
 
         user = Users.query.filter_by(email=email).first()
-        name = Profiles.query.filter_by(id=user.id).first()
+
         if not user:
             return jsonify({"error": "User not found"}), 400
 
@@ -75,7 +75,6 @@ def auth_routes(app):
             {
                 "msg": "login successful",
                 "user": user.serialize(),
-                "name": name.serialize(),
                 "csrf_token": csrf_token,
             }
         )
@@ -93,7 +92,7 @@ def auth_routes(app):
     @jwt_required()
     def get_current_user():
         user_id = get_jwt_identity()
-        user = Users.query.get(user_id)
+        user = db.session.get(Users, user_id)
         if not user:
             return jsonify({"error": "User not found"}), 404
 

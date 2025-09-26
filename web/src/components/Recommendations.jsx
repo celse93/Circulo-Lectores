@@ -2,7 +2,7 @@ import { getAllRecommendations } from '../services/api/feed';
 import { getBooksDetail, getAuthorDetail } from '../services/api/books';
 import { useNavigate } from 'react-router';
 import { useEffect, useState, useContext } from 'react';
-import { UserContext } from '../context/User';
+import { UserContext } from '../context/UserContext';
 import { postReadingList, postRecommendations } from '../services/api/books';
 
 export const Recommendations = () => {

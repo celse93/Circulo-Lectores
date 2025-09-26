@@ -1,19 +1,15 @@
 import { useNavigate } from 'react-router';
-import { useContext, useEffect, useState, useCallback } from 'react';
-import { getCurrentUser } from '../services/api/users';
-import { UserContext } from '../context/User';
+import { useContext, useState } from 'react';
+import { UserContext } from '../context/UserContext';
 import { getBooksSearch } from '../services/api/books';
-import { getBooksDetail } from '../services/api/books';
-import { getAuthorDetail } from '../services/api/books';
 import { postReadingList, postRecommendations } from '../services/api/books';
 
 export const Home = () => {
-  const { user, setUser } = useContext(UserContext);
   const [query, setQuery] = useState('');
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { selectBook } = useContext(UserContext);
+  const { selectBook, profile } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleSearch = async () => {
@@ -21,10 +17,8 @@ export const Home = () => {
       setError('Por favor ingresa un término de búsqueda');
       return;
     }
-
     setLoading(true);
     setError('');
-
     try {
       const result = await getBooksSearch(query);
       setBooks(result);
@@ -77,8 +71,8 @@ export const Home = () => {
         <div className="row">
           <div className="col-12">
             <div className="text-center mb-4">
-              {user && user.email && (
-                <h2 className="text-white mb-3">Bienvenido, {user.email}</h2>
+              {profile.name && (
+                <h2 className="text-white mb-3">Bienvenido, {profile.name}</h2>
               )}
               <h1 className="text-white mb-0">Descubre tu próxima lectura</h1>
               <p className="text-muted mt-2">
@@ -151,7 +145,7 @@ export const Home = () => {
             {books.map((book) => (
               <div
                 className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4"
-                key={book.key}
+                key={book.book_id}
               >
                 <div className="card bg-dark border border-secondary h-100">
                   {/* Imagen del libro */}

@@ -21,29 +21,23 @@ def profiles_routes(app):
                 return jsonify({"error": "Missing required fields"}), 400
 
             name = data["name"]
-            avatar = data["avatar"]
             user_id = get_jwt_identity()
 
             update_profile = db.session.get(Profiles, user_id)
             update_profile.name = name
-            update_profile.avatar = avatar
             db.session.commit()
 
             return jsonify({"message": "Profile updated successfully"}), 201
 
         # method to get profiles by name
         elif request.method == "GET":
-            data = request.get_json()
-            user_id = data["user_id"]
-            profiles = (
-                db.session.execute(select(Profiles).where(Profiles.id == user_id))
-                .scalars()
-                .all()
-            )
-            if not profiles:
+            user_id = get_jwt_identity()
+            profile = db.session.get(Profiles, user_id)
+
+            if not profile:
                 return jsonify({"error": f"Profile with ID {user_id} was not found."})
 
-            response_body = [profile.serialize() for profile in profiles]
+            response_body = profile.serialize()
 
             return jsonify(response_body), 200
 
