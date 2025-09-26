@@ -375,34 +375,29 @@ body {
   }
 }
 
-.feed {
-  height: auto;
-}
-
 .feed-container {
+  height: 450px;
   width: 100vw;
-  overflow-x: auto;
-}
-
-.container-books {
-  height: 350px;
-  width: 100vw;
-  overflow-x: auto;
 }
 
 .card-books {
   width: 250px;
-  height: 250px;
+  height: 350px;
 }
 
 .card-reviews {
-  width: 400px;
-  height: 250px;
+  min-width: 275px;
+  height: 300px;
+  color: var(--text-light);
 }
 
 .card-quotes {
-  width: 400px;
-  height: 250px;
+  min-width: 275px;
+  height: 300px;
+  color: var(--text-light);
+}
+
+.card-body {
 }
 
 .book-covers {
@@ -417,4 +412,10 @@ body {
 
 .fa-star {
   color: #ffd43b;
+}
+
+.bg-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: white !important;
 }

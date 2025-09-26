@@ -1,6 +1,7 @@
 import { baseUrl, fetchWrapper } from './config';
 
 export const getBooksSearch = async (input) => {
+  if (input == '') return console.error('¡Sin query!');
   return await fetchWrapper(`${baseUrl}books_search/search.json?q=${input}`, {
     credentials: 'include',
   }).then((data) => {
@@ -9,6 +10,7 @@ export const getBooksSearch = async (input) => {
 };
 
 export const getBooksDetail = async (id) => {
+  if (id == '') return console.error('¡Sin libro ID!');
   return await fetchWrapper(`${baseUrl}book_detail/works/${id}.json`, {
     credentials: 'include',
   }).then((data) => {
@@ -17,6 +19,7 @@ export const getBooksDetail = async (id) => {
 };
 
 export const getAuthorDetail = async (id) => {
+  if (id == '') return console.error('¡Sin autor ID!');
   return await fetchWrapper(`${baseUrl}author/authors/${id}.json`, {
     credentials: 'include',
   }).then((data) => {
@@ -25,6 +28,7 @@ export const getAuthorDetail = async (id) => {
 };
 
 export const postReadingList = async (bookId) => {
+  if (bookId == '') return alert('¡Sin libro!');
   return await fetchWrapper(`${baseUrl}reading_list/user`, {
     method: 'POST',
     headers: {
@@ -40,6 +44,7 @@ export const postReadingList = async (bookId) => {
 };
 
 export const postRecommendations = async (bookId) => {
+  if (bookId == '') return alert('¡Sin libro!');
   return await fetchWrapper(`${baseUrl}recommendations/user`, {
     method: 'POST',
     headers: {
@@ -55,6 +60,7 @@ export const postRecommendations = async (bookId) => {
 };
 
 export const postQuote = async (bookId, text) => {
+  if (text == '') return alert('¡Texto vacío!');
   return await fetchWrapper(`${baseUrl}quotes/user`, {
     method: 'POST',
     headers: {

@@ -1,5 +1,5 @@
 import { getAllRecommendations } from '../services/api/feed';
-import { getBooksDetail, getAuthorDetail } from '../services/api/books';
+import { getBooksDetail } from '../services/api/books';
 import { useNavigate } from 'react-router';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
@@ -44,8 +44,8 @@ export const Recommendations = () => {
     fetchBookCovers();
   }, [recommendations]);
 
-  const handleBookClick = async (book) => {
-    const fetchBook = await selectBook(book.book_id);
+  const handleBookClick = async (bookId) => {
+    const fetchBook = await selectBook(bookId);
     if (fetchBook) {
       navigate('/book');
     } else {
@@ -55,7 +55,7 @@ export const Recommendations = () => {
 
   const handleBookReadList = async (book) => {
     try {
-      const saveBook = await postReadingList(book);
+      const saveBook = await postReadingList(book.book_id);
       alert(`Libro "${book.title}": ${saveBook['message']}`);
     } catch {
       alert('¡Error! Libro ya registrado');
@@ -76,14 +76,16 @@ export const Recommendations = () => {
   ) : (
     <div className="d-flex flex-row overflow-auto">
       {bookDetails.map((book) => (
-        <div key={book.book_id} className="card-books me-3">
-          <img
-            className="book-covers"
-            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
-            alt="Book cover"
-          />
+        <div key={book.book_id} className="card-books mx-3">
+          <div className="mb-1">
+            <img
+              className="book-covers rounded-3"
+              src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
+              alt="Book cover"
+            />
+          </div>
           <div className="card-body d-flex flex-column justify-content-center">
-            <div className="mt-auto mb-2">
+            <div className="mb-2">
               <button
                 type="button"
                 className="btn btn-primary btn-sm w-100"
@@ -92,7 +94,7 @@ export const Recommendations = () => {
                 Aprende más
               </button>
             </div>
-            <div className="mt-auto mb-2">
+            <div className="mb-2">
               <button
                 type="button"
                 className="btn btn-primary btn-sm w-100"
@@ -102,7 +104,7 @@ export const Recommendations = () => {
                 Agregar a biblioteca
               </button>
             </div>
-            <div className="mt-auto mb-2">
+            <div>
               <button
                 type="button"
                 className="btn btn-primary btn-sm w-100"

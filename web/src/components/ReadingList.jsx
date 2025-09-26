@@ -1,5 +1,5 @@
 import { getAllReadingLists } from '../services/api/feed';
-import { getBooksDetail, getAuthorDetail } from '../services/api/books';
+import { getBooksDetail } from '../services/api/books';
 import { useNavigate } from 'react-router';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
@@ -40,6 +40,9 @@ export const ReadingLists = () => {
           console.error('Failed to fetch book details:', error);
         }
       }
+      return () => {
+        setBookDetails([]);
+      };
     };
     fetchBookCovers();
   }, [readingLists]);
@@ -56,6 +59,7 @@ export const ReadingLists = () => {
   const handleBookReadList = async (book) => {
     try {
       const saveBook = await postReadingList(book.book_id);
+      console.log(book.book_id);
       alert(`Libro "${book.title}": ${saveBook['message']}`);
     } catch {
       alert('¡Error! Libro ya registrado');
@@ -65,6 +69,7 @@ export const ReadingLists = () => {
   const handleRecommendations = async (book) => {
     try {
       const saveBook = await postRecommendations(book.book_id);
+      console.log(book.book_id);
       alert(`Libro "${book.title}": ${saveBook['message']}`);
     } catch {
       alert('¡Error! Libro ya registrado');
@@ -77,13 +82,15 @@ export const ReadingLists = () => {
     <div className="d-flex flex-row overflow-auto">
       {bookDetails.map((book) => (
         <div key={book.book_id} className="card-books mx-3">
-          <img
-            className="book-covers"
-            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
-            alt="Book cover"
-          />
+          <div className="mb-1">
+            <img
+              className="book-covers rounded-3"
+              src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
+              alt="Book cover"
+            />
+          </div>
           <div className="card-body d-flex flex-column justify-content-center">
-            <div className="mt-auto mb-2">
+            <div className="mb-2">
               <button
                 type="button"
                 className="btn btn-primary btn-sm w-100"
@@ -92,7 +99,7 @@ export const ReadingLists = () => {
                 Aprende más
               </button>
             </div>
-            <div className="mt-auto mb-2">
+            <div className="mb-2">
               <button
                 type="button"
                 className="btn btn-primary btn-sm w-100"
@@ -102,7 +109,7 @@ export const ReadingLists = () => {
                 Agregar a biblioteca
               </button>
             </div>
-            <div className="mt-auto mb-2">
+            <div>
               <button
                 type="button"
                 className="btn btn-primary btn-sm w-100"

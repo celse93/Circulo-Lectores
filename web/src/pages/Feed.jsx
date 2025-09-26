@@ -6,20 +6,20 @@ import { Reviews } from '../components/Reviews';
 export const Feed = () => {
   return (
     <>
-      <div className="feed-container">
-        <div className="container-books mb-5">
+      <div>
+        <div className="feed-container mt-4">
           <h4>Leídos</h4>
           <Recommendations />
         </div>
-        <div className="container-books mb-5">
+        <div className="feed-container">
           <h4>Por leer</h4>
           <ReadingLists />
         </div>
-        <div className="container-books mb-5">
+        <div className="feed-container">
           <h4>Reseñas</h4>
           <Reviews />
         </div>
-        <div className="container-books">
+        <div className="feed-container">
           <h4>Citaciones</h4>
           <Quotes />
         </div>
