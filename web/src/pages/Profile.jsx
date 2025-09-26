@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
-import { getBooksSearch } from '../services/api/books';
+import { getBooksSearch, postRecommendations } from '../services/api/books';
 import { postQuote } from '../services/api/books';
 import { updateProfile, getCurrentUser } from '../services/api/users';
 
@@ -50,7 +50,20 @@ export const Profile = () => {
     }
   };
 
-  const handleCloseQuoteModal = () => {
+  const handleSaveRecommendation = async () => {
+    try {
+      const saveRecommendation = await postRecommendations(
+        bookSelected.book_id
+      );
+      alert(`${saveRecommendation['message']}`);
+    } catch (error) {
+      console.error('Error: ', error);
+    } finally {
+      setQuery('');
+    }
+  };
+
+  const handleCloseModals = () => {
     setQuery('');
     setQuote('');
   };
@@ -184,9 +197,17 @@ export const Profile = () => {
               type="button"
               className="btn btn-primary"
               data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
+              data-bs-target="#quoteModal"
             >
-              Open modal
+              + Cita
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#readModal"
+            >
+              + Leído
             </button>
 
             <div className="row g-4">
@@ -250,8 +271,8 @@ export const Profile = () => {
         </div>
       </div>
 
-      {/* Modal */}
-      <div className="modal fade" id="exampleModal" tabIndex="-1">
+      {/* Modal Citas */}
+      <div className="modal fade" id="quoteModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div className="modal-content">
             <div className="modal-header">
@@ -316,12 +337,83 @@ export const Profile = () => {
                 type="button"
                 className="btn btn-secondary"
                 data-bs-dismiss="modal"
-                onClick={handleCloseQuoteModal}
+                onClick={handleCloseModals}
               >
                 Cerrar
               </button>
               <button
                 onClick={handleSaveQuote}
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal Leído */}
+      <div className="modal fade" id="readModal" tabIndex="-1">
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalLabel"></h1>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="recipient-name" className="col-form-label">
+                    Libro:
+                  </label>
+                  <div className="input-group">
+                    <button
+                      onClick={handleSearch}
+                      type="button"
+                      className="btn btn-primary btn-sm dropdown-toggle-split"
+                      data-bs-toggle="dropdown"
+                    >
+                      Buscar
+                    </button>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar libros por título, autor..."
+                      id="recipient-name"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <ul className="dropdown-menu">
+                      {books.map((book) => (
+                        <li key={book.book_id}>
+                          <a
+                            onClick={() => handleBookSelected(book)}
+                            className="dropdown-item d-flex"
+                          >
+                            <img
+                              src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                            />
+                            <p>{book.title}</p>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+                onClick={handleCloseModals}
+              >
+                Cerrar
+              </button>
+              <button
+                onClick={handleSaveRecommendation}
                 type="button"
                 className="btn btn-primary"
                 data-bs-dismiss="modal"

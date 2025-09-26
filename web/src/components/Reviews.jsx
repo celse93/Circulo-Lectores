@@ -1,8 +1,6 @@
 import { getAllReviews } from '../services/api/feed';
-import { getBooksDetail, getAuthorDetail } from '../services/api/books';
-import { useNavigate } from 'react-router';
-import { useEffect, useState, useContext } from 'react';
-import { UserContext } from '../context/UserContext';
+import { getBooksDetail } from '../services/api/books';
+import { useEffect, useState } from 'react';
 import { getProfileNames } from '../services/api/users';
 
 export const Reviews = () => {
@@ -10,7 +8,6 @@ export const Reviews = () => {
   const [bookDetails, setBookDetails] = useState([]);
   const [profileNames, setProfileNames] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -44,6 +41,9 @@ export const Reviews = () => {
           console.error('Failed to fetch book details:', error);
         }
       }
+      return () => {
+        setReviews([]);
+      };
     };
     fetchBookAndProfile();
   }, [reviews]);
@@ -60,11 +60,22 @@ export const Reviews = () => {
           (profile) => profile.id == review.user_id
         );
         return (
-          <div key={review.id} className="card card-reviews m-3 overflow-auto">
-            <div className="card-header">
+          <div
+            key={review.id}
+            className="card card-reviews m-3 bg-transparent rounded-3 border border-light border-2"
+          >
+            <div className="card-header bg-primary">
+              <img
+                src="src/assets/profile_icon.jpg"
+                alt="Avatar"
+                className="rounded-circle me-2"
+                width="25"
+                height="25"
+                style={{ objectFit: 'cover' }}
+              />
               {associatedProfile.name ? associatedProfile.name : 'Sin nombre'}
             </div>
-            <div className="card-body">
+            <div className="card-body overflow-auto border border-light">
               <h6 className="card-title">
                 {review.ratings}
                 <i className="fa-solid fa-star ms-1"></i>

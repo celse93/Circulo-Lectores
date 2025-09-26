@@ -1,6 +1,8 @@
 import { baseUrl, fetchWrapper } from './config';
 
 export const postRegister = async (name, email, password) => {
+  if (email == '' || password == '' || name == '')
+    return alert('¡Faltan campos obligatorios!');
   return await fetchWrapper(`${baseUrl}register`, {
     method: 'POST',
     credentials: 'include',
@@ -18,6 +20,7 @@ export const postRegister = async (name, email, password) => {
 };
 
 export const postLogin = async (email, password) => {
+  if (email == '' || password == '') return alert('¡Sin email o password!');
   return await fetchWrapper(`${baseUrl}login`, {
     method: 'POST',
     headers: {

@@ -1,8 +1,6 @@
 import { getAllQuotes } from '../services/api/feed';
-import { getBooksDetail, getAuthorDetail } from '../services/api/books';
-import { useNavigate } from 'react-router';
-import { useEffect, useState, useContext } from 'react';
-import { UserContext } from '../context/UserContext';
+import { getBooksDetail } from '../services/api/books';
+import { useEffect, useState } from 'react';
 import { getProfileNames } from '../services/api/users';
 
 export const Quotes = () => {
@@ -10,7 +8,6 @@ export const Quotes = () => {
   const [bookDetails, setBookDetails] = useState([]);
   const [profileNames, setProfileNames] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchQuotes = async () => {
@@ -44,6 +41,9 @@ export const Quotes = () => {
           console.error('Failed to fetch book details:', error);
         }
       }
+      return () => {
+        setQuotes([]);
+      };
     };
     fetchBookAndProfile();
   }, [quotes]);
@@ -60,22 +60,32 @@ export const Quotes = () => {
           (profile) => profile.id == quote.user_id
         );
         return (
-          <div key={quote.id} className="card card-quotes m-3 overflow-auto">
-            <div className="card-header">
+          <div
+            key={quote.id}
+            className="card card-quotes m-3 rounded-3 bg-transparent border border-light border-2"
+          >
+            <div className="card-header bg-primary">
+              <img
+                src="src/assets/profile_icon.jpg"
+                alt="Avatar"
+                className="rounded-circle me-2"
+                width="25"
+                height="25"
+                style={{ objectFit: 'cover' }}
+              />
               {associatedProfile.name ? associatedProfile.name : 'Sin nombre'}
             </div>
-            <div className="card-body">
-              <figure>
-                <blockquote className="blockquote mb-5">
-                  <p>{quote.text}</p>
-                </blockquote>
-                <br />
-                <figcaption className="blockquote-footer mb-0">
-                  <cite title="Source Title">
-                    {associatedBook ? associatedBook.title : 'Sin titulo'}
-                  </cite>
-                </figcaption>
-              </figure>
+            <div className="card-body overflow-auto border border-light">
+              <blockquote>
+                <p className="card-text">
+                  <q>{quote.text}</q>
+                </p>
+              </blockquote>
+            </div>
+            <div className="card-footer">
+              <cite title="Source Title">
+                {associatedBook ? associatedBook.title : 'Sin titulo'}
+              </cite>
             </div>
           </div>
         );
