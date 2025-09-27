@@ -11,7 +11,7 @@ export const UserContext = createContext({
   logout: () => {},
   selectBook: () => {},
   selectedBook: { book: {}, author: {} },
-  register: () => {}, // will accept email, password
+  register: () => {},
   isLoading: false,
 });
 
@@ -32,7 +32,7 @@ export const UserProvider = ({ children }) => {
       setUser(user);
       const profile = await getCurrentProfile();
       setProfile(profile);
-      navigate('/');
+      navigate('/profile');
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -61,8 +61,11 @@ export const UserProvider = ({ children }) => {
     try {
       await postRegister(name, email, password);
 
-      //Login automático
-      await postLogin(email, password);
+      const userData = await postLogin(email, password);
+      setUser(userData);
+
+      const profileData = await getCurrentProfile();
+      setProfile(profileData);
 
       navigate('/profile');
     } catch (error) {

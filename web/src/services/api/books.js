@@ -27,6 +27,38 @@ export const getAuthorDetail = async (id) => {
   });
 };
 
+export const getUserReadingList = async () => {
+  return await fetchWrapper(`${baseUrl}reading_list/user`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getUserRecommendations = async () => {
+  return await fetchWrapper(`${baseUrl}recommendations`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getUserQuotes = async () => {
+  return await fetchWrapper(`${baseUrl}quotes/user`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getUserReviews = async () => {
+  return await fetchWrapper(`${baseUrl}reviews/user`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
 export const postReadingList = async (bookId) => {
   if (bookId == '') return alert('¡Sin libro!');
   return await fetchWrapper(`${baseUrl}reading_list/user`, {
@@ -75,3 +107,150 @@ export const postQuote = async (bookId, text) => {
     return data;
   });
 };
+
+export const postReview = async (bookId, text, rating) => {
+  if (text == '' || rating == 0) return alert('¡Rellena todos los campos!');
+  return await fetchWrapper(`${baseUrl}reviews/user`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      book_id: bookId,
+      text: text,
+      rating: rating,
+    }),
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const deleteReadingList = async (bookId) => {
+  if (bookId == '') return alert('¡Sin libro!');
+  return await fetchWrapper(`${baseUrl}reading_list/user`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      book_id: bookId,
+    }),
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const deleteRecommendations = async (bookId) => {
+  if (bookId == '') return alert('¡Sin libro!');
+  return await fetchWrapper(`${baseUrl}recommendations/user`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      book_id: bookId,
+    }),
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const deleteQuote = async (quoteId) => {
+  if (quoteId == '') return alert('¡Sin cita!');
+  return await fetchWrapper(`${baseUrl}quotes/user`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      quote_id: quoteId,
+    }),
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const deleteReview = async (reviewId) => {
+  if (reviewId == '') return alert('¡Sin reseña!');
+  return await fetchWrapper(`${baseUrl}reviews/user`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({
+      review_id: reviewId,
+    }),
+  }).then((data) => {
+    return data;
+  });
+};
+
+/*export const getAllRecommendations = async () => {
+  return await fetchWrapper(`${baseUrl}recommendations`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getAllReadingLists = async () => {
+  return await fetchWrapper(`${baseUrl}reading_list`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getAllQuotes = async () => {
+  return await fetchWrapper(`${baseUrl}quotes`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getAllReviews = async () => {
+  return await fetchWrapper(`${baseUrl}reviews`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+};
+
+export const getUserRecommendations = async () => {
+  return await fetchWrapper(`${baseUrl}recommendations/user`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getUserReadingLists = async () => {
+  return await fetchWrapper(`${baseUrl}reading_list/user`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getUserQuotes = async () => {
+  return await fetchWrapper(`${baseUrl}quotes/user`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};
+
+export const getUserlReviews = async () => {
+  return await fetchWrapper(`${baseUrl}reviews/user`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+}; */
