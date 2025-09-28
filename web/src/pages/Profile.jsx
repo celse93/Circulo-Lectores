@@ -1,11 +1,18 @@
 import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router';
 import { UserContext } from '../context/UserContext';
-import { getBooksSearch, postRecommendations } from '../services/api/books';
+import {
+  getBooksSearch,
+  postRecommendations,
+  postReadingList,
+  postReview,
+} from '../services/api/books';
 import { postQuote } from '../services/api/books';
 import { updateProfile, getCurrentUser } from '../services/api/users';
 
 export const Profile = () => {
   const { logout, profile, setUser, setProfile } = useContext(UserContext);
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [quote, setQuote] = useState('');
   const [isEditing, setIsEditing] = useState(false);
@@ -14,6 +21,23 @@ export const Profile = () => {
   const [books, setBooks] = useState([]);
   const [bookSelected, setBookSelected] = useState({});
   const [newUsername, setNewUsername] = useState('');
+
+  // MODAL PRINCIPAL
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showReadingListModal, setShowReadingListModal] = useState(false);
+  const [showRecommendationModal, setShowRecommendationModal] = useState(false);
+  const [showNewQuoteModal, setShowNewQuoteModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+
+  // NUEVOS ESTADOS PARA RESEÑAS
+  const [review, setReview] = useState('');
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const getProfileAvatar = () => {
+    const userName = profile?.name || 'Usuario';
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=7c3aed&color=fff&size=100&bold=true&rounded=true`;
+  };
 
   const handleSearch = async () => {
     if (!query.trim()) {
@@ -36,6 +60,7 @@ export const Profile = () => {
   const handleBookSelected = (book) => {
     setQuery(book.title);
     setBookSelected(book);
+    setBooks([]);
   };
 
   const handleSaveQuote = async () => {
@@ -93,6 +118,113 @@ export const Profile = () => {
     logout();
   };
 
+  // FUNCIONES PARA EL MODAL PRINCIPAL
+  const handleShowAddModal = () => setShowAddModal(true);
+  const handleCloseAddModal = () => setShowAddModal(false);
+
+  const handleOptionSelect = (option) => {
+    setShowAddModal(false);
+    switch (option) {
+      case 'reading_list':
+        setShowReadingListModal(true);
+        break;
+      case 'recommendation':
+        setShowRecommendationModal(true);
+        break;
+      case 'quote':
+        setShowNewQuoteModal(true);
+        break;
+      case 'review':
+        setShowReviewModal(true);
+        break;
+    }
+  };
+
+  const handleSaveReadingList = async () => {
+    try {
+      const saveReadingList = await postReadingList(bookSelected.book_id);
+      alert(`${saveReadingList['message']}`);
+      setShowReadingListModal(false);
+    } catch (error) {
+      console.error('Error: ', error);
+    } finally {
+      setQuery('');
+      setBooks([]);
+      setBookSelected({});
+    }
+  };
+
+  const handleSaveNewRecommendation = async () => {
+    try {
+      const saveRecommendation = await postRecommendations(
+        bookSelected.book_id
+      );
+      alert(`${saveRecommendation['message']}`);
+      setShowRecommendationModal(false);
+    } catch (error) {
+      console.error('Error: ', error);
+    } finally {
+      setQuery('');
+      setBooks([]);
+      setBookSelected({});
+    }
+  };
+
+  const handleSaveNewQuote = async () => {
+    try {
+      const saveQuote = await postQuote(bookSelected.book_id, quote.trim());
+      alert(`${saveQuote['message']}`);
+      setShowNewQuoteModal(false);
+    } catch (error) {
+      console.error('Error: ', error);
+    } finally {
+      setQuery('');
+      setQuote('');
+      setBooks([]);
+      setBookSelected({});
+    }
+  };
+
+  const handleSaveReview = async () => {
+    try {
+      const saveReview = await postReview(
+        bookSelected.book_id,
+        review.trim(),
+        rating
+      );
+      alert(`${saveReview['message']}`);
+      setShowReviewModal(false);
+    } catch (error) {
+      console.error('Error: ', error);
+    } finally {
+      setQuery('');
+      setReview('');
+      setRating(0);
+      setBooks([]);
+      setBookSelected({});
+    }
+  };
+
+  const handleCloseNewModals = () => {
+    setShowReadingListModal(false);
+    setShowRecommendationModal(false);
+    setShowNewQuoteModal(false);
+    setShowReviewModal(false);
+    setQuery('');
+    setQuote('');
+    setReview('');
+    setRating(0);
+    setHoverRating(0);
+    setBooks([]);
+    setBookSelected({});
+  };
+
+  // FUNCIONES DE NAVEGACIÓN
+  const handleNavigateToLibrary = () => navigate('/my_library');
+  const handleNavigateToReviews = () => navigate('/my_reviews');
+  const handleNavigateToQuotes = () => navigate('/my_quotes');
+  const handleNavigateToRecommendations = () => navigate('/my_recommendations');
+
   return (
     <div className="container-fluid bg-dark min-vh-100 py-4">
       <div className="container">
@@ -127,7 +259,7 @@ export const Profile = () => {
                     <div className="col-12 col-md-4 text-center mb-4 mb-md-0">
                       <div className="mb-3">
                         <img
-                          src="src/assets/profile_icon.jpg"
+                          src={getProfileAvatar()}
                           alt="Avatar"
                           className="rounded-circle"
                           width="100"
@@ -135,6 +267,13 @@ export const Profile = () => {
                           style={{ objectFit: 'cover' }}
                         />
                       </div>
+
+                      <h5 className="text-white">
+                        {profile?.name || 'Usuario'}
+                      </h5>
+                      <p className="text-muted small">
+                        Miembro de Círculo Lectores
+                      </p>
                     </div>
 
                     <div className="col-12 col-md-8">
@@ -169,7 +308,7 @@ export const Profile = () => {
                           >
                             Editar Perfil
                           </button>
-                        )}{' '}
+                        )}
                         {isEditing && (
                           <>
                             <button type="submit" className="btn btn-success">
@@ -193,32 +332,59 @@ export const Profile = () => {
               </div>
             </div>
 
-            <button
-              type="button"
-              className="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#quoteModal"
-            >
-              + Cita
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#readModal"
-            >
-              + Leído
-            </button>
+            {/* Sección de botones */}
+            <div className="row mb-3">
+              <div className="col-12">
+                <button
+                  type="button"
+                  className="btn btn-primary w-100 py-3"
+                  onClick={handleShowAddModal}
+                >
+                  <i className="fa-solid fa-plus me-2"></i>
+                  Añadir
+                </button>
+              </div>
+            </div>
+
+            {/* Botones secundarios debajo */}
+            <div className="row mb-4">
+              <div className="col-12">
+                <div className="d-flex gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#quoteModal"
+                  >
+                    + Cita
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#readModal"
+                  >
+                    + Leído
+                  </button>
+                </div>
+              </div>
+            </div>
 
             <div className="row g-4">
               <div className="col-12 col-md-6">
                 <div className="card bg-dark border border-secondary h-100">
                   <div className="card-header bg-secondary text-white">
-                    <h5 className="mb-0">📚 Mi Biblioteca</h5>
+                    <h5 className="mb-0">
+                      <i className="fa-solid fa-book-open me-2 text-success"></i>
+                      Mi Biblioteca
+                    </h5>
                   </div>
                   <div className="card-body text-center">
                     <p className="text-muted mb-3">Lista de lectura</p>
-                    <button className="btn btn-outline-primary btn-sm">
+                    <button
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={handleNavigateToLibrary}
+                    >
                       Ver Libros
                     </button>
                   </div>
@@ -228,11 +394,17 @@ export const Profile = () => {
               <div className="col-12 col-md-6">
                 <div className="card bg-dark border border-secondary h-100">
                   <div className="card-header bg-secondary text-white">
-                    <h5 className="mb-0">⭐ Mis Reseñas</h5>
+                    <h5 className="mb-0">
+                      <i className="fa-solid fa-star me-2 text-info"></i>
+                      Mis Reseñas
+                    </h5>
                   </div>
                   <div className="card-body text-center">
                     <p className="text-muted mb-3">Libros reseñados</p>
-                    <button className="btn btn-outline-primary btn-sm">
+                    <button
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={handleNavigateToReviews}
+                    >
                       Ver Reseñas
                     </button>
                   </div>
@@ -242,11 +414,17 @@ export const Profile = () => {
               <div className="col-12 col-md-6">
                 <div className="card bg-dark border border-secondary h-100">
                   <div className="card-header bg-secondary text-white">
-                    <h5 className="mb-0">💭 Mis Citas</h5>
+                    <h5 className="mb-0">
+                      <i className="fa-solid fa-quote-left me-2 text-warning"></i>
+                      Mis Citas
+                    </h5>
                   </div>
                   <div className="card-body text-center">
                     <p className="text-muted mb-3">Frases favoritas</p>
-                    <button className="btn btn-outline-primary btn-sm">
+                    <button
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={handleNavigateToQuotes}
+                    >
                       Ver Citas
                     </button>
                   </div>
@@ -256,11 +434,17 @@ export const Profile = () => {
               <div className="col-12 col-md-6">
                 <div className="card bg-dark border border-secondary h-100">
                   <div className="card-header bg-secondary text-white">
-                    <h5 className="mb-0">🎯 Recomendaciones</h5>
+                    <h5 className="mb-0">
+                      <i className="fa-solid fa-heart me-2 text-danger"></i>
+                      Recomendaciones
+                    </h5>
                   </div>
                   <div className="card-body text-center">
                     <p className="text-muted mb-3">Libros recomendados</p>
-                    <button className="btn btn-outline-primary btn-sm">
+                    <button
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={handleNavigateToRecommendations}
+                    >
                       Ver Recomendaciones
                     </button>
                   </div>
@@ -271,7 +455,7 @@ export const Profile = () => {
         </div>
       </div>
 
-      {/* Modal Citas */}
+      {/* Modal Citas ORIGINAL */}
       <div className="modal fade" id="quoteModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div className="modal-content">
@@ -304,15 +488,23 @@ export const Profile = () => {
                     <ul className="dropdown-menu">
                       {books.map((book) => (
                         <li key={book.book_id}>
-                          <a
+                          <button
+                            type="button"
                             onClick={() => handleBookSelected(book)}
-                            className="dropdown-item d-flex"
+                            className="dropdown-item d-flex align-items-center"
                           >
                             <img
                               src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                              alt={book.title}
+                              style={{
+                                width: '30px',
+                                height: '45px',
+                                objectFit: 'cover',
+                                marginRight: '8px',
+                              }}
                             />
-                            <p>{book.title}</p>
-                          </a>
+                            <span>{book.title}</span>
+                          </button>
                         </li>
                       ))}
                     </ul>
@@ -354,7 +546,7 @@ export const Profile = () => {
         </div>
       </div>
 
-      {/* Modal Leído */}
+      {/* Modal Leído ORIGINAL */}
       <div className="modal fade" id="readModal" tabIndex="-1">
         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div className="modal-content">
@@ -387,15 +579,23 @@ export const Profile = () => {
                     <ul className="dropdown-menu">
                       {books.map((book) => (
                         <li key={book.book_id}>
-                          <a
+                          <button
+                            type="button"
                             onClick={() => handleBookSelected(book)}
-                            className="dropdown-item d-flex"
+                            className="dropdown-item d-flex align-items-center"
                           >
                             <img
                               src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                              alt={book.title}
+                              style={{
+                                width: '30px',
+                                height: '45px',
+                                objectFit: 'cover',
+                                marginRight: '8px',
+                              }}
                             />
-                            <p>{book.title}</p>
-                          </a>
+                            <span>{book.title}</span>
+                          </button>
                         </li>
                       ))}
                     </ul>
@@ -424,6 +624,503 @@ export const Profile = () => {
           </div>
         </div>
       </div>
+
+      {/* MODAL PRINCIPAL - OPCIONES DE AÑADIR */}
+      {showAddModal && (
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content bg-dark border border-secondary">
+              <div className="modal-header bg-primary text-white">
+                <h5 className="modal-title">Añadir contenido</h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
+                  onClick={handleCloseAddModal}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="row g-3">
+                  <div className="col-12 col-md-6">
+                    <button
+                      className="btn btn-outline-secondary w-100 h-100 p-3 text-start"
+                      onClick={() => handleOptionSelect('reading_list')}
+                    >
+                      <div className="d-flex align-items-center">
+                        <i className="fa-solid fa-book-open fa-2x me-3 text-success"></i>
+                        <div>
+                          <div className="text-white fw-bold mb-1">
+                            Lista de lectura
+                          </div>
+                          <small className="text-white">
+                            Agregar libro para leer después
+                          </small>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className="col-12 col-md-6">
+                    <button
+                      className="btn btn-outline-secondary w-100 h-100 p-3 text-start"
+                      onClick={() => handleOptionSelect('recommendation')}
+                    >
+                      <div className="d-flex align-items-center">
+                        <i className="fa-solid fa-heart fa-2x me-3 text-danger"></i>
+                        <div>
+                          <div className="text-white fw-bold mb-1">
+                            Recomendación
+                          </div>
+                          <small className="text-white">
+                            Recomendar un libro a la comunidad
+                          </small>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className="col-12 col-md-6">
+                    <button
+                      className="btn btn-outline-secondary w-100 h-100 p-3 text-start"
+                      onClick={() => handleOptionSelect('quote')}
+                    >
+                      <div className="d-flex align-items-center">
+                        <i className="fa-solid fa-quote-left fa-2x me-3 text-warning"></i>
+                        <div>
+                          <div className="text-white fw-bold mb-1">Cita</div>
+                          <small className="text-white">
+                            Compartir una frase que te gustó
+                          </small>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className="col-12 col-md-6">
+                    <button
+                      className="btn btn-outline-secondary w-100 h-100 p-3 text-start"
+                      onClick={() => handleOptionSelect('review')}
+                    >
+                      <div className="d-flex align-items-center">
+                        <i className="fa-solid fa-star fa-2x me-3 text-info"></i>
+                        <div>
+                          <div className="text-white fw-bold mb-1">Reseña</div>
+                          <small className="text-white">
+                            Escribir tu opinión sobre un libro
+                          </small>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL LISTA DE LECTURA */}
+      {showReadingListModal && (
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div className="modal-content bg-dark border border-secondary">
+              <div className="modal-header bg-success text-white">
+                <h5 className="modal-title">Añadir a lista de lectura</h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
+                  onClick={handleCloseNewModals}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="col-form-label text-white">Libro:</label>
+                  <div className="input-group">
+                    <button
+                      onClick={handleSearch}
+                      type="button"
+                      className="btn btn-success btn-sm"
+                    >
+                      Buscar
+                    </button>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar libros por título, autor..."
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </div>
+                  {books.length > 0 && (
+                    <ul className="list-group mt-2">
+                      {books.map((book) => (
+                        <li
+                          key={book.book_id}
+                          className="list-group-item list-group-item-action d-flex"
+                        >
+                          <img
+                            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                            className="me-3"
+                            style={{
+                              width: '40px',
+                              height: '60px',
+                              objectFit: 'cover',
+                            }}
+                          />
+                          <div className="flex-grow-1">
+                            <h6 className="mb-1">{book.title}</h6>
+                            <small className="text-muted">{book.author}</small>
+                          </div>
+                          <button
+                            className="btn btn-sm btn-outline-success"
+                            onClick={() => handleBookSelected(book)}
+                          >
+                            Seleccionar
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCloseNewModals}
+                >
+                  Cerrar
+                </button>
+                <button
+                  onClick={handleSaveReadingList}
+                  type="button"
+                  className="btn btn-success"
+                  disabled={!bookSelected.book_id}
+                >
+                  Añadir a lista
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL RECOMENDACIÓN */}
+      {showRecommendationModal && (
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div className="modal-content bg-dark border border-secondary">
+              <div className="modal-header bg-danger text-white">
+                <h5 className="modal-title">Añadir recomendación</h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
+                  onClick={handleCloseNewModals}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="col-form-label text-white">Libro:</label>
+                  <div className="input-group">
+                    <button
+                      onClick={handleSearch}
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                    >
+                      Buscar
+                    </button>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar libros por título, autor..."
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </div>
+                  {books.length > 0 && (
+                    <ul className="list-group mt-2">
+                      {books.map((book) => (
+                        <li
+                          key={book.book_id}
+                          className="list-group-item list-group-item-action d-flex"
+                        >
+                          <img
+                            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                            className="me-3"
+                            style={{
+                              width: '40px',
+                              height: '60px',
+                              objectFit: 'cover',
+                            }}
+                          />
+                          <div className="flex-grow-1">
+                            <h6 className="mb-1">{book.title}</h6>
+                            <small className="text-muted">{book.author}</small>
+                          </div>
+                          <button
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() => handleBookSelected(book)}
+                          >
+                            Seleccionar
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCloseNewModals}
+                >
+                  Cerrar
+                </button>
+                <button
+                  onClick={handleSaveNewRecommendation}
+                  type="button"
+                  className="btn btn-danger"
+                  disabled={!bookSelected.book_id}
+                >
+                  Recomendar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL NUEVA CITA */}
+      {showNewQuoteModal && (
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div className="modal-content bg-dark border border-secondary">
+              <div className="modal-header bg-warning text-dark">
+                <h5 className="modal-title">Añadir cita</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={handleCloseNewModals}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="col-form-label text-white">Libro:</label>
+                  <div className="input-group">
+                    <button
+                      onClick={handleSearch}
+                      type="button"
+                      className="btn btn-warning btn-sm"
+                    >
+                      Buscar
+                    </button>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar libros por título, autor..."
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </div>
+                  {books.length > 0 && (
+                    <ul className="list-group mt-2">
+                      {books.map((book) => (
+                        <li
+                          key={book.book_id}
+                          className="list-group-item list-group-item-action d-flex"
+                        >
+                          <img
+                            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                            className="me-3"
+                            style={{
+                              width: '40px',
+                              height: '60px',
+                              objectFit: 'cover',
+                            }}
+                          />
+                          <div className="flex-grow-1">
+                            <h6 className="mb-1">{book.title}</h6>
+                            <small className="text-muted">{book.author}</small>
+                          </div>
+                          <button
+                            className="btn btn-sm btn-outline-warning"
+                            onClick={() => handleBookSelected(book)}
+                          >
+                            Seleccionar
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                <div className="mb-3">
+                  <label className="col-form-label text-white">Cita:</label>
+                  <textarea
+                    className="form-control"
+                    rows="4"
+                    value={quote}
+                    onChange={(e) => setQuote(e.target.value)}
+                    placeholder="Escribe la cita que te gustó..."
+                  ></textarea>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCloseNewModals}
+                >
+                  Cerrar
+                </button>
+                <button
+                  onClick={handleSaveNewQuote}
+                  type="button"
+                  className="btn btn-warning"
+                  disabled={!bookSelected.book_id || !quote.trim()}
+                >
+                  Guardar cita
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL RESEÑA */}
+      {showReviewModal && (
+        <div
+          className="modal show d-block"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+        >
+          <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div className="modal-content bg-dark border border-secondary">
+              <div className="modal-header bg-info text-white">
+                <h5 className="modal-title">Añadir reseña</h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
+                  onClick={handleCloseNewModals}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="col-form-label text-white">Libro:</label>
+                  <div className="input-group">
+                    <button
+                      onClick={handleSearch}
+                      type="button"
+                      className="btn btn-info btn-sm"
+                    >
+                      Buscar
+                    </button>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar libros por título, autor..."
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                  </div>
+                  {books.length > 0 && (
+                    <ul className="list-group mt-2">
+                      {books.map((book) => (
+                        <li
+                          key={book.book_id}
+                          className="list-group-item list-group-item-action d-flex"
+                        >
+                          <img
+                            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                            className="me-3"
+                            style={{
+                              width: '40px',
+                              height: '60px',
+                              objectFit: 'cover',
+                            }}
+                          />
+                          <div className="flex-grow-1">
+                            <h6 className="mb-1">{book.title}</h6>
+                            <small className="text-muted">{book.author}</small>
+                          </div>
+                          <button
+                            className="btn btn-sm btn-outline-info"
+                            onClick={() => handleBookSelected(book)}
+                          >
+                            Seleccionar
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                <div className="mb-3">
+                  <label className="col-form-label text-white">
+                    Calificación:
+                  </label>
+                  <div className="d-flex align-items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <i
+                        key={star}
+                        className={'fa-solid fa-star fa-lg text-warning'}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                      ></i>
+                    ))}
+                    <span className="text-white ms-2">
+                      {rating > 0 ? `${rating}/5 estrellas` : 'Sin calificar'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <label className="col-form-label text-white">Reseña:</label>
+                  <textarea
+                    className="form-control"
+                    rows="5"
+                    value={review}
+                    onChange={(e) => setReview(e.target.value)}
+                    placeholder="Escribe tu opinión sobre este libro..."
+                  ></textarea>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCloseNewModals}
+                >
+                  Cerrar
+                </button>
+                <button
+                  onClick={handleSaveReview}
+                  type="button"
+                  className="btn btn-info"
+                  disabled={
+                    !bookSelected.book_id || !review.trim() || rating === 0
+                  }
+                >
+                  Guardar reseña
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
