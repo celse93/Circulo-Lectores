@@ -63,8 +63,6 @@ export const UserProvider = ({ children }) => {
 
       //Login automático
       await postLogin(email, password);
-
-      navigate('/profile');
     } catch (error) {
       console.error('Register error:', error.message);
       throw error;
