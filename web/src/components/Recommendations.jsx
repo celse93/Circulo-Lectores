@@ -90,7 +90,10 @@ export const Recommendations = () => {
         <div className="d-flex flex-row overflow-auto">
           {bookDetails.map((book) => (
             <div key={book.book_id} className="card-books mx-3">
-              <div className="mb-1">
+              <div
+                className="mb-1 clickable-item"
+                onClick={() => handleBookClick(book.book_id)}
+              >
                 <img
                   className="book-covers rounded-3"
                   src={
@@ -102,15 +105,6 @@ export const Recommendations = () => {
                 />
               </div>
               <div className="card-body d-flex flex-column justify-content-center">
-                <div className="mb-2">
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-sm w-100"
-                    onClick={() => handleBookClick(book.book_id)}
-                  >
-                    Aprende más
-                  </button>
-                </div>
                 <div className="mb-2">
                   <button
                     type="button"

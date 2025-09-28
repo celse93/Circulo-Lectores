@@ -459,3 +459,7 @@ body {
     padding: 0 0.5rem;
   }
 }
+
+.clickable-item {
+  cursor: pointer;
+}
