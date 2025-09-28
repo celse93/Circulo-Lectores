@@ -66,7 +66,7 @@ export const MyReviews = () => {
                   <div className="card-body py-5">
                     <i className="fa-solid fa-star fa-3x text-muted mb-3"></i>
                     <h5 className="text-white">No tienes reseñas</h5>
-                    <p className="text-muted">
+                    <p className="text-white">
                       Comparte tu opinión sobre los libros que has leído
                     </p>
                   </div>
@@ -92,7 +92,7 @@ export const MyReviews = () => {
                           </h6>
                           <p className="card-text text-white">{review.text}</p>
                         </div>
-                        <div className="card-footer text-muted small">
+                        <div className="card-footer small text-white">
                           Reseñada:{' '}
                           {new Date(review.created_at).toLocaleDateString()}
                         </div>

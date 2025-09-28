@@ -20,6 +20,7 @@ export const ReadingLists = () => {
         setReadingLists(data);
       } catch (error) {
         console.error('Failed to fetch recommendations:', error);
+        setLoading(false);
       }
     };
     fetchReadingLists();
@@ -38,6 +39,7 @@ export const ReadingLists = () => {
           setLoading(false);
         } catch (error) {
           console.error('Failed to fetch book details:', error);
+          setLoading(false);
         }
       }
       return () => {
@@ -76,52 +78,71 @@ export const ReadingLists = () => {
     }
   };
 
-  return loading ? (
-    <p>Cargando... </p>
-  ) : (
-    <div className="d-flex flex-row overflow-auto">
-      {bookDetails.map((book) => (
-        <div key={book.book_id} className="card-books mx-3">
-          <div className="mb-1">
-            <img
-              className="book-covers rounded-3"
-              src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
-              alt="Book cover"
-            />
-          </div>
-          <div className="card-body d-flex flex-column justify-content-center">
-            <div className="mb-2">
-              <button
-                type="button"
-                className="btn btn-primary btn-sm w-100"
-                onClick={() => handleBookClick(book.book_id)}
-              >
-                Aprende más
-              </button>
-            </div>
-            <div className="mb-2">
-              <button
-                type="button"
-                className="btn btn-primary btn-sm w-100"
-                onClick={() => handleBookReadList(book)}
-              >
-                <i className="fa-solid fa-plus me-2"></i>
-                Agregar a biblioteca
-              </button>
-            </div>
-            <div>
-              <button
-                type="button"
-                className="btn btn-primary btn-sm w-100"
-                onClick={() => handleRecommendations(book)}
-              >
-                <i className="fa-solid fa-plus me-2"></i>
-                Agregar a leídos
-              </button>
+  return (
+    <>
+      {readingLists.length == 0 && !loading ? (
+        <div className="text-center">
+          <div className="card bg-dark border border-secondary">
+            <div className="card-body py-5">
+              <i className="fa-solid fa-star fa-3x text-muted mb-3"></i>
+              <h5 className="text-white">
+                La biblioteca todavía está vacía hoy
+              </h5>
             </div>
           </div>
         </div>
-      ))}
-    </div>
+      ) : loading ? (
+        <p>Cargando... </p>
+      ) : (
+        <div className="d-flex flex-row overflow-auto">
+          {bookDetails.map((book) => (
+            <div key={book.book_id} className="card-books mx-3">
+              <div className="mb-1">
+                <img
+                  className="book-covers rounded-3"
+                  src={
+                    book.cover_id != ''
+                      ? `https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`
+                      : 'https://imageplaceholder.net/300x300/eeeeee/131313?text=sin+portada+de+libro'
+                  }
+                  alt="Book cover"
+                />
+              </div>
+              <div className="card-body d-flex flex-column justify-content-center">
+                <div className="mb-2">
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm w-100"
+                    onClick={() => handleBookClick(book.book_id)}
+                  >
+                    Aprende más
+                  </button>
+                </div>
+                <div className="mb-2">
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm w-100"
+                    onClick={() => handleBookReadList(book)}
+                  >
+                    <i className="fa-solid fa-plus me-2"></i>
+                    Agregar a biblioteca
+                  </button>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm w-100"
+                    onClick={() => handleRecommendations(book)}
+                  >
+                    <i className="fa-solid fa-plus me-2"></i>
+                    Agregar a leídos
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
   );
 };

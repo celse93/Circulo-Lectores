@@ -355,21 +355,29 @@ body {
 }
 
 .feed-container {
-  height: 450px;
-  width: 100vw;
+  height: 600px;
+  width: 95%;
 }
 
 .card-books {
   width: 250px;
   height: 350px;
 }
+
+.book-covers {
+  width: 250px;
+  height: 250px;
+}
+
 .card-reviews {
-  min-width: 275px;
+  min-width: 350px;
+  max-width: 350px;
   height: 300px;
   color: var(--text-light);
 }
 .card-quotes {
-  min-width: 275px;
+  min-width: 350px;
+  max-width: 350px;
   height: 300px;
   color: var(--text-light);
 }

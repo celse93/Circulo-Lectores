@@ -55,7 +55,7 @@ export const MyRecommendations = () => {
                   <div className="card-body py-5">
                     <i className="fa-solid fa-heart fa-3x text-muted mb-3"></i>
                     <h5 className="text-white">No tienes recomendaciones</h5>
-                    <p className="text-muted">
+                    <p className="text-white">
                       Recomienda libros que creas que otros disfrutarán
                     </p>
                   </div>
@@ -88,10 +88,10 @@ export const MyRecommendations = () => {
                               <h6 className="card-title text-white">
                                 {book?.title || 'Título desconocido'}
                               </h6>
-                              <p className="card-text text-muted small flex-grow-1">
+                              <p className="card-text text-white small flex-grow-1">
                                 {book?.author_name?.[0] || 'Autor desconocido'}
                               </p>
-                              <small className="text-muted">
+                              <small className="text-white">
                                 Recomendado:{' '}
                                 {new Date(rec.created_at).toLocaleDateString()}
                               </small>

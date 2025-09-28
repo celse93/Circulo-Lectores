@@ -55,7 +55,7 @@ export const MyLibrary = () => {
                   <div className="card-body py-5">
                     <i className="fa-solid fa-book-open fa-3x text-muted mb-3"></i>
                     <h5 className="text-white">Tu biblioteca está vacía</h5>
-                    <p className="text-muted">
+                    <p className="text-white">
                       Comienza añadiendo libros a tu lista de lectura
                     </p>
                   </div>
@@ -83,10 +83,10 @@ export const MyLibrary = () => {
                             <h6 className="card-title text-white">
                               {book.title}
                             </h6>
-                            <p className="card-text text-muted small flex-grow-1">
+                            <p className="card-text text-white small flex-grow-1">
                               {book.author_name?.[0] || 'Autor desconocido'}
                             </p>
-                            <small className="text-muted">
+                            <small className="text-white">
                               Añadido:{' '}
                               {new Date(
                                 readingList[index].created_at

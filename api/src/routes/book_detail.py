@@ -31,7 +31,10 @@ def book_detail_route(app):
             author = data.get("authors")
             author_id = author[0]["author"]["key"].split("/")[-1]
             description = data.get("description")
-            cover_id = data.get("covers")[0]
+            cover = data.get("covers")
+            cover_id = (
+                cover and len(cover) > 0 and cover[0] is not None and cover[0]
+            ) or ""
 
             results = {
                 "author_id": author_id,

@@ -6,6 +6,9 @@ export const ProtectedNavBar = () => {
   return (
     <>
       <NavBarFinal />
+      <br />
+      <br />
+      <br />
       <Outlet />
     </>
   );

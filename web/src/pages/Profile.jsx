@@ -233,12 +233,6 @@ export const Profile = () => {
             <div className="card bg-dark border border-secondary mb-4">
               <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h2 className="mb-0">Mi Perfil</h2>
-                <button
-                  className="btn btn-outline-light btn-sm"
-                  onClick={handleLogout}
-                >
-                  Cerrar Sesión
-                </button>
               </div>
 
               <div className="card-body">
