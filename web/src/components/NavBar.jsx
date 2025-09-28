@@ -22,17 +22,19 @@ export const NavBar = () => {
 
   return (
     <nav className="navbar bg-primary">
-      {routesConfig.map((route) => {
-        return (
-          <>
-            <NavLink key={route.name} to={route.path}>
-              <button type="button" className="btn btn-primary navbar-brand">
-                {route.name}
-              </button>
-            </NavLink>
-          </>
-        );
-      })}
+      {routesConfig
+        .filter((route) => route.showInNavbar)
+        .map((route) => {
+          return (
+            <>
+              <NavLink key={route.name} to={route.path}>
+                <button type="button" className="btn btn-primary navbar-brand">
+                  {route.name}
+                </button>
+              </NavLink>
+            </>
+          );
+        })}
       <div>
         <button
           type="button"
