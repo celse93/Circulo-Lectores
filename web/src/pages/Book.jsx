@@ -37,8 +37,8 @@ export const Book = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center mt-5">
-      <div className="d-flex book-container">
+    <div className="d-flex main-book-container justify-content-center mt-5 pt-5">
+      <div className="d-flex book-container mt-3 mb-3">
         <div className="container book-cover-container d-flex justify-content-end pe-5">
           <div>
             <img

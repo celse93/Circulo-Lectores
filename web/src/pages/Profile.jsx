@@ -192,7 +192,7 @@ export const Profile = () => {
   const handleNavigateToRecommendations = () => navigate('/my_recommendations');
 
   return (
-    <div className="container-fluid bg-dark min-vh-100 py-4">
+    <div className="container-fluid bg-dark min-vh-100 pt-5 mt-5">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">

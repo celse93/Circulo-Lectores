@@ -17,7 +17,7 @@
 
 body {
   margin: 0;
-  background-color: var(--dark-bg);
+  background-color: #1a1a1a;
   color: var(--text-light);
   font-family:
     'Inter',
@@ -355,8 +355,8 @@ body {
 }
 
 .feed-container {
-  height: 600px;
-  width: 95%;
+  height: 500px;
+  width: 90%;
 }
 
 .card-books {
@@ -465,6 +465,11 @@ body {
 }
 
 .book-container {
+  min-height: 750px;
+  max-height: 755px;
+}
+
+.book-container {
   width: 60%;
 }
 
@@ -474,4 +479,9 @@ body {
 
 .book-description {
   max-height: 550px;
+}
+
+.hover-text-warning:hover {
+  color: #ffc107 !important;
+  transition: color 0.3s ease;
 }

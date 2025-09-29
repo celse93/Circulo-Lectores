@@ -16,7 +16,7 @@ export const NavBarFinal = () => {
 
   return (
     <nav className="navbar navbar-dark bg-transparent navbar-expand-lg">
-      <div className="nav container-fluid d-flex justify-content-around ">
+      <div className="nav container-fluid d-flex justify-content-around">
         <div className="nav-item dropdown">
           <button
             className="nav-link nav-item"

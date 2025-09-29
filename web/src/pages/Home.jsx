@@ -65,7 +65,7 @@ export const Home = () => {
   };
 
   return (
-    <div className="container-fluid bg-dark min-vh-100">
+    <div className="container-fluid bg-dark min-vh-100 mt-5 pt-5">
       {/* Header */}
       <div className="container py-4">
         <div className="row">
