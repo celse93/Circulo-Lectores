@@ -37,22 +37,23 @@ export const Book = () => {
   };
 
   return (
-    <>
-      <div className="d-flex">
-        <div className="container">
-          <img
-            src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
-            className="img-fluid"
-            alt="Book cover"
-          />
+    <div className="d-flex justify-content-center mt-5">
+      <div className="d-flex book-container">
+        <div className="container book-cover-container d-flex justify-content-end pe-5">
+          <div>
+            <img
+              src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
+              className="img-fluid"
+              alt="Book cover"
+            />
+          </div>
         </div>
         <div className="container">
           <div>
             <h3>{book.title}</h3>
           </div>
-          <div>
-            <div>
-              <h6>by</h6>
+          <div className="book-description overflow-scroll mb-3">
+            <div className="mb-3">
               <NavLink data-bs-toggle="modal" data-bs-target="#authorModal">
                 {author.author_name}
               </NavLink>
@@ -68,7 +69,7 @@ export const Book = () => {
               Agregar a biblioteca
             </button>
           </div>
-          <div className="mt-auto mb-2">
+          <div className="mt-auto mb-4">
             <button
               className="btn btn-primary btn-sm w-100"
               onClick={() => handleRecommendations(book)}
@@ -90,6 +91,8 @@ export const Book = () => {
                 <img
                   src={`https://covers.openlibrary.org/a/olid/${author.author_id}-M.jpg`}
                   className="rounded-circle"
+                  width="200"
+                  height="200"
                   alt="Author picture"
                 />
               </div>
@@ -116,6 +119,6 @@ export const Book = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

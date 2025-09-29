@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from src.db import db
 from src.models.models import ReadingList
+from datetime import date
 from sqlalchemy import select, and_
 from flask_jwt_extended import (
     jwt_required,
@@ -79,7 +80,13 @@ def reading_list_routes(app):
     @app.route("/reading_list", methods=["GET"])
     @jwt_required()
     def all_reading_list():
-        reading_list = db.session.execute(select(ReadingList)).scalars().all()
+        reading_list = (
+            db.session.execute(
+                select(ReadingList).where(ReadingList.created_at == date.today())
+            )
+            .scalars()
+            .all()
+        )
         if not reading_list:
             return jsonify({"error": "Reading list not found"}), 404
 

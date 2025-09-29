@@ -1,14 +1,17 @@
-import { useContext, useState } from 'react';
-import { isEmpty } from 'lodash';
+import { useContext } from 'react';
 import { NavLink } from 'react-router';
 import { UserContext } from '../context/UserContext';
-import { routesConfig } from '../services/routing/routes';
 
 export const NavBarFinal = () => {
-  const { logout } = useContext(UserContext);
+  const { logout, profile } = useContext(UserContext);
 
   const handleLogout = () => {
     logout();
+  };
+
+  const getProfileAvatar = () => {
+    const userName = profile?.name || 'Usuario';
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=7c3aed&color=fff&size=100&bold=true&rounded=true`;
   };
 
   return (
@@ -37,7 +40,7 @@ export const NavBarFinal = () => {
         </div>
         <div className="nav-item dropdown">
           <img
-            src="src/assets/profile_icon.jpg"
+            src={getProfileAvatar()}
             alt="Avatar"
             className="rounded-circle"
             data-bs-toggle="dropdown"

@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from src.db import db
 from src.models.models import Recommendations
+from datetime import date
 from sqlalchemy import select, and_
 from flask_jwt_extended import (
     jwt_required,
@@ -36,7 +37,7 @@ def recommendations_routes(app):
             new_book = Recommendations(book_id=book_id, user_id=user_id)
             db.session.add(new_book)
             db.session.commit()
-            return jsonify({"message": "Book saved successfully"}), 201
+            return jsonify({"message": "Libro guardado exitosamente"}), 201
 
         # method to delete book from Recommendation
         elif request.method == "DELETE":
@@ -83,7 +84,15 @@ def recommendations_routes(app):
     @app.route("/recommendations", methods=["GET"])
     @jwt_required()
     def all_recommendations():
-        recommendations = db.session.execute(select(Recommendations)).scalars().all()
+        recommendations = (
+            db.session.execute(
+                select(Recommendations).where(
+                    Recommendations.created_at == date.today()
+                )
+            )
+            .scalars()
+            .all()
+        )
         if not recommendations:
             return jsonify({"error": "Recommendation list not found"}), 404
 

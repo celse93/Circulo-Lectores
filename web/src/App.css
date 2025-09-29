@@ -463,3 +463,15 @@ body {
 .clickable-item {
   cursor: pointer;
 }
+
+.book-container {
+  width: 60%;
+}
+
+.book-cover-container {
+  width: 50%;
+}
+
+.book-description {
+  max-height: 550px;
+}

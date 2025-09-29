@@ -82,7 +82,7 @@ class ReadingList(db.Model):
     __tablename__ = "readinglist"
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
-    book_id: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    book_id: Mapped[str] = mapped_column(String(50), nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="readinglist")
@@ -103,7 +103,7 @@ class Recommendations(db.Model):
     __tablename__ = "recommendations"
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
-    book_id: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
+    book_id: Mapped[str] = mapped_column(String(50), nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="recommendation")
