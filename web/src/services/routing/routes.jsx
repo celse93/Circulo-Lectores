@@ -9,6 +9,8 @@ import { MyLibrary } from '../../pages/MyLibrary';
 import { MyQuotes } from '../../pages/MyQuotes';
 import { MyReviews } from '../../pages/MyReviews';
 import { MyRecommendations } from '../../pages/MyRecommendations';
+import { MyFollowers } from '../../components/MyFollowers';
+import { MyFollowings } from '../../components/MyFollowings';
 
 export const routesConfig = [
   {
@@ -75,6 +77,18 @@ export const routesConfig = [
     name: 'Footer',
     path: '/footer',
     component: <Footer />,
+    showInNavbar: false,
+  },
+  {
+    name: 'Mis Seguidores',
+    path: '/my_followers',
+    component: <MyFollowers />,
+    showInNavbar: false,
+  },
+  {
+    name: 'Siguiendo',
+    path: '/my_followings',
+    component: <MyFollowings />,
     showInNavbar: false,
   },
 ];
