@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { UserContext } from '../context/UserContext';
 import {
@@ -9,9 +9,10 @@ import {
 } from '../services/api/books';
 import { postQuote } from '../services/api/books';
 import { updateProfile, getCurrentUser } from '../services/api/users';
+import { getUserStats } from '../services/api/follows';
 
 export const Profile = () => {
-  const { profile, setUser, setProfile } = useContext(UserContext);
+  const { logout, profile, setUser, setProfile } = useContext(UserContext);
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [quote, setQuote] = useState('');
@@ -22,17 +23,37 @@ export const Profile = () => {
   const [bookSelected, setBookSelected] = useState({});
   const [newUsername, setNewUsername] = useState('');
 
-  // MODAL PRINCIPAL
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingsCount, setFollowingsCount] = useState(0);
+  const [loadingStats, setLoadingStats] = useState(true);
+
   const [showAddModal, setShowAddModal] = useState(false);
   const [showReadingListModal, setShowReadingListModal] = useState(false);
   const [showRecommendationModal, setShowRecommendationModal] = useState(false);
   const [showNewQuoteModal, setShowNewQuoteModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
 
-  // NUEVOS ESTADOS PARA RESEÑAS
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (profile?.id) {
+        try {
+          setLoadingStats(true);
+          const stats = await getUserStats(profile.id);
+          setFollowersCount(stats.followers_count);
+          setFollowingsCount(stats.followings_count);
+        } catch (error) {
+          console.error('Error fetching user stats:', error);
+        } finally {
+          setLoadingStats(false);
+        }
+      }
+    };
+    fetchStats();
+  }, [profile?.id]);
 
   const getProfileAvatar = () => {
     const userName = profile?.name || 'Usuario';
@@ -44,9 +65,7 @@ export const Profile = () => {
       setError('Por favor ingresa un término de búsqueda');
       return;
     }
-
     setError('');
-
     try {
       const result = await getBooksSearch(query);
       setBooks(result);
@@ -63,16 +82,44 @@ export const Profile = () => {
     setBooks([]);
   };
 
+  const handleSaveQuote = async () => {
+    try {
+      const saveQuote = await postQuote(bookSelected.book_id, quote.trim());
+      alert(`${saveQuote['message']}`);
+    } catch (error) {
+      console.error('Error: ', error);
+    } finally {
+      setQuery('');
+      setQuote('');
+    }
+  };
+
+  const handleSaveRecommendation = async () => {
+    try {
+      const saveRecommendation = await postRecommendations(
+        bookSelected.book_id
+      );
+      alert(`${saveRecommendation['message']}`);
+    } catch (error) {
+      console.error('Error: ', error);
+    } finally {
+      setQuery('');
+    }
+  };
+
+  const handleCloseModals = () => {
+    setQuery('');
+    setQuote('');
+  };
+
   const handleSaveProfile = async () => {
     setError('');
     setSuccess('');
-
     try {
       const profile = await updateProfile(newUsername);
       setProfile(profile);
       const user = await getCurrentUser();
       setUser(user);
-
       setSuccess('Perfil actualizado correctamente');
       setIsEditing(false);
     } catch (error) {
@@ -84,7 +131,10 @@ export const Profile = () => {
     }
   };
 
-  // FUNCIONES PARA EL MODAL PRINCIPAL
+  const handleLogout = () => {
+    logout();
+  };
+
   const handleShowAddModal = () => setShowAddModal(true);
   const handleCloseAddModal = () => setShowAddModal(false);
 
@@ -185,114 +235,160 @@ export const Profile = () => {
     setBookSelected({});
   };
 
-  // FUNCIONES DE NAVEGACIÓN
   const handleNavigateToLibrary = () => navigate('/my_library');
   const handleNavigateToReviews = () => navigate('/my_reviews');
   const handleNavigateToQuotes = () => navigate('/my_quotes');
   const handleNavigateToRecommendations = () => navigate('/my_recommendations');
 
   return (
-    <div className="container-fluid bg-dark min-vh-100 pt-5 mt-5">
+    <div className="container-fluid bg-dark min-vh-100 py-4">
+      {/* Espacio para evitar que la navbar tape la tarjeta */}
+      <div style={{ height: '88px' }}></div>
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12 col-lg-8">
             <div className="card bg-dark border border-secondary mb-4">
               <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h2 className="mb-0">Mi Perfil</h2>
+                <button
+                  className="btn btn-outline-light btn-sm"
+                  onClick={handleLogout}
+                >
+                  Cerrar Sesión
+                </button>
               </div>
-
               <div className="card-body">
                 {error && (
                   <div className="alert alert-danger" role="alert">
                     {error}
                   </div>
                 )}
-
                 {success && (
                   <div className="alert alert-success" role="alert">
                     {success}
                   </div>
                 )}
 
-                <form onSubmit={handleSaveProfile}>
-                  <div className="row">
-                    <div className="col-12 col-md-4 text-center mb-4 mb-md-0">
-                      <div className="mb-3">
-                        <img
-                          src={getProfileAvatar()}
-                          alt="Avatar"
-                          className="rounded-circle"
-                          width="100"
-                          height="100"
-                          style={{ objectFit: 'cover' }}
-                        />
-                      </div>
-
-                      <h5 className="text-white">
-                        {profile?.name || 'Usuario'}
-                      </h5>
-                      <p className="text-muted small">
-                        Miembro de Círculo Lectores
-                      </p>
+                <div className="row">
+                  <div
+                    className="col-12 col-md-4 d-flex flex-column justify-content-center align-items-center text-center mb-4 mb-md-0"
+                    style={{ minHeight: '250px', paddingTop: '40px' }}
+                  >
+                    <div className="mb-3">
+                      <img
+                        src={getProfileAvatar()}
+                        alt="Avatar"
+                        className="rounded-circle"
+                        width="100"
+                        height="100"
+                        style={{ objectFit: 'cover' }}
+                      />
                     </div>
+                    <h5 className="text-white mb-2">
+                      {profile?.name || 'Usuario'}
+                    </h5>
+                    <p className="text-muted small mb-3">
+                      Miembro de Círculo Lectores
+                    </p>
 
-                    <div className="col-12 col-md-8">
-                      {isEditing ? (
-                        <div className="mb-4">
-                          <label
-                            htmlFor="name"
-                            className="form-label text-white"
-                          >
-                            Nombre
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            name="name"
-                            value={newUsername}
-                            onChange={(e) => setNewUsername(e.target.value)}
-                            placeholder={profile.name}
-                          />
-                        </div>
-                      ) : (
-                        <></>
-                      )}
+                    {!isEditing && (
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-sm w-100"
+                        onClick={() => setIsEditing(true)}
+                      >
+                        Editar Perfil
+                      </button>
+                    )}
+                  </div>
 
-                      <div className="d-flex gap-2">
-                        {!isEditing && (
+                  <div className="col-12 col-md-8">
+                    {isEditing && (
+                      <div className="mb-3">
+                        <label htmlFor="name" className="form-label text-white">
+                          Nombre
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="name"
+                          name="name"
+                          value={newUsername}
+                          onChange={(e) => setNewUsername(e.target.value)}
+                          placeholder={profile.name}
+                        />
+                        <div className="d-flex gap-2 mt-3">
                           <button
                             type="button"
-                            className="btn btn-primary"
-                            onClick={() => setIsEditing(true)}
+                            onClick={handleSaveProfile}
+                            className="btn btn-success"
                           >
-                            Editar Perfil
+                            Guardar
                           </button>
-                        )}
-                        {isEditing && (
-                          <>
-                            <button type="submit" className="btn btn-success">
-                              Guardar
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-secondary"
-                              onClick={() => {
-                                setIsEditing(false);
-                              }}
-                            >
-                              Cancelar
-                            </button>
-                          </>
-                        )}
+                          <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => {
+                              setIsEditing(false);
+                              setNewUsername('');
+                            }}
+                          >
+                            Cancelar
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {!isEditing && (
+                      <div
+                        className="d-flex flex-column justify-content-center align-items-center w-100"
+                        style={{ minHeight: '250px' }}
+                      >
+                        <div className="d-flex flex-row justify-content-center align-items-center gap-3 w-100">
+                          <div style={{ minWidth: '140px' }}>
+                            <div
+                              className="card bg-secondary border-0 text-center"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => navigate('/my_followers')}
+                            >
+                              <div className="card-body">
+                                <h3 className="text-white mb-0">
+                                  {loadingStats ? (
+                                    <span className="spinner-border spinner-border-sm"></span>
+                                  ) : (
+                                    followersCount
+                                  )}
+                                </h3>
+                                <p className="text-muted mb-0">Seguidores</p>
+                              </div>
+                            </div>
+                          </div>
+                          <div style={{ minWidth: '140px' }}>
+                            <div
+                              className="card bg-secondary border-0 text-center"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => navigate('/my_followings')}
+                            >
+                              <div className="card-body">
+                                <h3 className="text-white mb-0">
+                                  {loadingStats ? (
+                                    <span className="spinner-border spinner-border-sm"></span>
+                                  ) : (
+                                    followingsCount
+                                  )}
+                                </h3>
+                                <p className="text-muted mb-0">Siguiendo</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </form>
+                </div>
               </div>
             </div>
 
-            {/* Sección de botones */}
             <div className="row mb-3">
               <div className="col-12">
                 <button
@@ -303,6 +399,29 @@ export const Profile = () => {
                   <i className="fa-solid fa-plus me-2"></i>
                   Añadir
                 </button>
+              </div>
+            </div>
+
+            <div className="row mb-4">
+              <div className="col-12">
+                <div className="d-flex gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#quoteModal"
+                  >
+                    + Cita
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#readModal"
+                  >
+                    + Leído
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -326,7 +445,6 @@ export const Profile = () => {
                   </div>
                 </div>
               </div>
-
               <div className="col-12 col-md-6">
                 <div className="card bg-dark border border-secondary h-100">
                   <div className="card-header bg-secondary text-white">
@@ -346,7 +464,6 @@ export const Profile = () => {
                   </div>
                 </div>
               </div>
-
               <div className="col-12 col-md-6">
                 <div className="card bg-dark border border-secondary h-100">
                   <div className="card-header bg-secondary text-white">
@@ -366,7 +483,6 @@ export const Profile = () => {
                   </div>
                 </div>
               </div>
-
               <div className="col-12 col-md-6">
                 <div className="card bg-dark border border-secondary h-100">
                   <div className="card-header bg-secondary text-white">
@@ -391,7 +507,172 @@ export const Profile = () => {
         </div>
       </div>
 
-      {/* MODAL PRINCIPAL - OPCIONES DE AÑADIR */}
+      <div className="modal fade" id="quoteModal" tabIndex="-1">
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5"></h1>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="recipient-name" className="col-form-label">
+                    Libro:
+                  </label>
+                  <div className="input-group">
+                    <button
+                      onClick={handleSearch}
+                      type="button"
+                      className="btn btn-primary btn-sm dropdown-toggle-split"
+                      data-bs-toggle="dropdown"
+                    >
+                      Buscar
+                    </button>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar libros por título, autor..."
+                      id="recipient-name"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <ul className="dropdown-menu">
+                      {books.map((book) => (
+                        <li key={book.book_id}>
+                          <button
+                            type="button"
+                            onClick={() => handleBookSelected(book)}
+                            className="dropdown-item d-flex align-items-center"
+                          >
+                            <img
+                              src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                              alt={book.title}
+                              style={{
+                                width: '30px',
+                                height: '45px',
+                                objectFit: 'cover',
+                                marginRight: '8px',
+                              }}
+                            />
+                            <span>{book.title}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="message-text" className="col-form-label">
+                    Cita:
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="message-text"
+                    value={quote}
+                    onChange={(e) => setQuote(e.target.value)}
+                  ></textarea>
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+                onClick={handleCloseModals}
+              >
+                Cerrar
+              </button>
+              <button
+                onClick={handleSaveQuote}
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="modal fade" id="readModal" tabIndex="-1">
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5"></h1>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="recipient-name" className="col-form-label">
+                    Libro:
+                  </label>
+                  <div className="input-group">
+                    <button
+                      onClick={handleSearch}
+                      type="button"
+                      className="btn btn-primary btn-sm dropdown-toggle-split"
+                      data-bs-toggle="dropdown"
+                    >
+                      Buscar
+                    </button>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Buscar libros por título, autor..."
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <ul className="dropdown-menu">
+                      {books.map((book) => (
+                        <li key={book.book_id}>
+                          <button
+                            type="button"
+                            onClick={() => handleBookSelected(book)}
+                            className="dropdown-item d-flex align-items-center"
+                          >
+                            <img
+                              src={`https://covers.openlibrary.org/b/id/${book.cover_id}-S.jpg`}
+                              alt={book.title}
+                              style={{
+                                width: '30px',
+                                height: '45px',
+                                objectFit: 'cover',
+                                marginRight: '8px',
+                              }}
+                            />
+                            <span>{book.title}</span>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+                onClick={handleCloseModals}
+              >
+                Cerrar
+              </button>
+              <button
+                onClick={handleSaveRecommendation}
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {showAddModal && (
         <div
           className="modal show d-block"
@@ -427,7 +708,6 @@ export const Profile = () => {
                       </div>
                     </button>
                   </div>
-
                   <div className="col-12 col-md-6">
                     <button
                       className="btn btn-outline-secondary w-100 h-100 p-3 text-start"
@@ -446,7 +726,6 @@ export const Profile = () => {
                       </div>
                     </button>
                   </div>
-
                   <div className="col-12 col-md-6">
                     <button
                       className="btn btn-outline-secondary w-100 h-100 p-3 text-start"
@@ -463,7 +742,6 @@ export const Profile = () => {
                       </div>
                     </button>
                   </div>
-
                   <div className="col-12 col-md-6">
                     <button
                       className="btn btn-outline-secondary w-100 h-100 p-3 text-start"
@@ -487,7 +765,6 @@ export const Profile = () => {
         </div>
       )}
 
-      {/* MODAL LISTA DE LECTURA */}
       {showReadingListModal && (
         <div
           className="modal show d-block"
@@ -576,7 +853,6 @@ export const Profile = () => {
         </div>
       )}
 
-      {/* MODAL RECOMENDACIÓN */}
       {showRecommendationModal && (
         <div
           className="modal show d-block"
@@ -665,7 +941,6 @@ export const Profile = () => {
         </div>
       )}
 
-      {/* MODAL NUEVA CITA */}
       {showNewQuoteModal && (
         <div
           className="modal show d-block"
@@ -731,7 +1006,6 @@ export const Profile = () => {
                     </ul>
                   )}
                 </div>
-
                 <div className="mb-3">
                   <label className="col-form-label text-white">Cita:</label>
                   <textarea
@@ -765,7 +1039,6 @@ export const Profile = () => {
         </div>
       )}
 
-      {/* MODAL RESEÑA */}
       {showReviewModal && (
         <div
           className="modal show d-block"
@@ -831,7 +1104,6 @@ export const Profile = () => {
                     </ul>
                   )}
                 </div>
-
                 <div className="mb-3">
                   <label className="col-form-label text-white">
                     Calificación:
@@ -840,7 +1112,11 @@ export const Profile = () => {
                     {[1, 2, 3, 4, 5].map((star) => (
                       <i
                         key={star}
-                        className={'fa-solid fa-star fa-lg text-warning'}
+                        className={`fa-solid fa-star fa-lg ${
+                          star <= (hoverRating || rating)
+                            ? 'text-warning'
+                            : 'text-muted'
+                        }`}
                         style={{ cursor: 'pointer' }}
                         onClick={() => setRating(star)}
                         onMouseEnter={() => setHoverRating(star)}
@@ -852,7 +1128,6 @@ export const Profile = () => {
                     </span>
                   </div>
                 </div>
-
                 <div className="mb-3">
                   <label className="col-form-label text-white">Reseña:</label>
                   <textarea
