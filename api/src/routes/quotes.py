@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from src.db import db
 from src.models.models import Quotes
+from datetime import date
 from sqlalchemy import select, and_
 from flask_jwt_extended import (
     jwt_required,
@@ -28,7 +29,7 @@ def quotes_routes(app):
             db.session.add(new_quote)
             db.session.commit()
 
-            return jsonify({"message": "Quote saved successfully"}), 201
+            return jsonify({"message": "Cita guardada exitosamente"}), 201
 
         # method to delete book from Quote list
         elif request.method == "DELETE":
@@ -77,7 +78,11 @@ def quotes_routes(app):
     @app.route("/quotes", methods=["GET"])
     @jwt_required()
     def all_quotes():
-        quote_list = db.session.execute(select(Quotes)).scalars().all()
+        quote_list = (
+            db.session.execute(select(Quotes).where(Quotes.created_at == date.today()))
+            .scalars()
+            .all()
+        )
         if not quote_list:
             return jsonify({"error": "Reading list not found"}), 404
 

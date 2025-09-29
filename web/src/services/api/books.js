@@ -92,7 +92,7 @@ export const postRecommendations = async (bookId) => {
 };
 
 export const postQuote = async (bookId, text) => {
-  if (text == '') return alert('¡Texto vacío!');
+  if (text == '' || bookId == '') return alert('¡Texto o libro vacío!');
   return await fetchWrapper(`${baseUrl}quotes/user`, {
     method: 'POST',
     headers: {
@@ -108,8 +108,9 @@ export const postQuote = async (bookId, text) => {
   });
 };
 
-export const postReview = async (bookId, text, rating) => {
-  if (text == '' || rating == 0) return alert('¡Rellena todos los campos!');
+export const postReview = async (bookId, text, ratings) => {
+  if (text == '' || ratings == 0 || bookId == '')
+    return alert('¡Rellena todos los campos!');
   return await fetchWrapper(`${baseUrl}reviews/user`, {
     method: 'POST',
     headers: {
@@ -119,7 +120,7 @@ export const postReview = async (bookId, text, rating) => {
     body: JSON.stringify({
       book_id: bookId,
       text: text,
-      rating: rating,
+      ratings: ratings,
     }),
   }).then((data) => {
     return data;
@@ -189,68 +190,3 @@ export const deleteReview = async (reviewId) => {
     return data;
   });
 };
-
-/*export const getAllRecommendations = async () => {
-  return await fetchWrapper(`${baseUrl}recommendations`, {
-    credentials: 'include',
-  }).then((data) => {
-    return data;
-  });
-};
-
-export const getAllReadingLists = async () => {
-  return await fetchWrapper(`${baseUrl}reading_list`, {
-    credentials: 'include',
-  }).then((data) => {
-    return data;
-  });
-};
-
-export const getAllQuotes = async () => {
-  return await fetchWrapper(`${baseUrl}quotes`, {
-    credentials: 'include',
-  }).then((data) => {
-    return data;
-  });
-};
-
-export const getAllReviews = async () => {
-  return await fetchWrapper(`${baseUrl}reviews`, {
-    credentials: 'include',
-  }).then((data) => {
-    return data;
-  });
-};
-};
-
-export const getUserRecommendations = async () => {
-  return await fetchWrapper(`${baseUrl}recommendations/user`, {
-    credentials: 'include',
-  }).then((data) => {
-    return data;
-  });
-};
-
-export const getUserReadingLists = async () => {
-  return await fetchWrapper(`${baseUrl}reading_list/user`, {
-    credentials: 'include',
-  }).then((data) => {
-    return data;
-  });
-};
-
-export const getUserQuotes = async () => {
-  return await fetchWrapper(`${baseUrl}quotes/user`, {
-    credentials: 'include',
-  }).then((data) => {
-    return data;
-  });
-};
-
-export const getUserlReviews = async () => {
-  return await fetchWrapper(`${baseUrl}reviews/user`, {
-    credentials: 'include',
-  }).then((data) => {
-    return data;
-  });
-}; */

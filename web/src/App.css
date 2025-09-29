@@ -17,7 +17,7 @@
 
 body {
   margin: 0;
-  background-color: var(--dark-bg);
+  background-color: #1a1a1a;
   color: var(--text-light);
   font-family:
     'Inter',
@@ -355,21 +355,29 @@ body {
 }
 
 .feed-container {
-  height: 450px;
-  width: 100vw;
+  height: 500px;
+  width: 90%;
 }
 
 .card-books {
   width: 250px;
   height: 350px;
 }
+
+.book-covers {
+  width: 250px;
+  height: 250px;
+}
+
 .card-reviews {
-  min-width: 275px;
+  min-width: 350px;
+  max-width: 350px;
   height: 300px;
   color: var(--text-light);
 }
 .card-quotes {
-  min-width: 275px;
+  min-width: 350px;
+  max-width: 350px;
   height: 300px;
   color: var(--text-light);
 }
@@ -450,4 +458,30 @@ body {
   .container {
     padding: 0 0.5rem;
   }
+}
+
+.clickable-item {
+  cursor: pointer;
+}
+
+.book-container {
+  min-height: 750px;
+  max-height: 755px;
+}
+
+.book-container {
+  width: 60%;
+}
+
+.book-cover-container {
+  width: 50%;
+}
+
+.book-description {
+  max-height: 550px;
+}
+
+.hover-text-warning:hover {
+  color: #ffc107 !important;
+  transition: color 0.3s ease;
 }

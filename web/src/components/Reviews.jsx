@@ -17,6 +17,7 @@ export const Reviews = () => {
         setReviews(data);
       } catch (error) {
         console.error('Failed to fetch recommendations:', error);
+        setLoading(false);
       }
     };
     fetchReviews();
@@ -39,6 +40,7 @@ export const Reviews = () => {
           setLoading(false);
         } catch (error) {
           console.error('Failed to fetch book details:', error);
+          setLoading(false);
         }
       }
       return () => {
@@ -48,48 +50,63 @@ export const Reviews = () => {
     fetchBookAndProfile();
   }, [reviews]);
 
-  return loading ? (
-    <p>Cargando... </p>
-  ) : (
-    <div className="d-flex flex-row overflow-auto">
-      {reviews.map((review) => {
-        const associatedBook = bookDetails.find(
-          (book) => book.book_id == review.book_id
-        );
-        const associatedProfile = profileNames.find(
-          (profile) => profile.id == review.user_id
-        );
-        return (
-          <div
-            key={review.id}
-            className="card card-reviews m-3 bg-transparent rounded-3 border border-light border-2"
-          >
-            <div className="card-header bg-primary">
-              <img
-                src="src/assets/profile_icon.jpg"
-                alt="Avatar"
-                className="rounded-circle me-2"
-                width="25"
-                height="25"
-                style={{ objectFit: 'cover' }}
-              />
-              {associatedProfile.name ? associatedProfile.name : 'Sin nombre'}
-            </div>
-            <div className="card-body overflow-auto border border-light">
-              <h6 className="card-title">
-                {review.ratings}
-                <i className="fa-solid fa-star ms-1"></i>
-              </h6>
-              <p className="card-text">{review.text}</p>
-            </div>
-            <div className="card-footer">
-              <cite title="Source Title">
-                {associatedBook ? associatedBook.title : 'Sin titulo'}
-              </cite>
+  return (
+    <>
+      {reviews.length == 0 && !loading ? (
+        <div className="text-center">
+          <div className="card bg-dark border border-secondary">
+            <div className="card-body py-5">
+              <i className="fa-solid fa-star fa-3x text-muted mb-3"></i>
+              <h5 className="text-white">Todavía no hay reseñas hoy</h5>
             </div>
           </div>
-        );
-      })}
-    </div>
+        </div>
+      ) : loading ? (
+        <p>Cargando... </p>
+      ) : (
+        <div className="d-flex flex-row overflow-auto">
+          {reviews.map((review) => {
+            const associatedBook = bookDetails.find(
+              (book) => book.book_id == review.book_id
+            );
+            const associatedProfile = profileNames.find(
+              (profile) => profile.id == review.user_id
+            );
+            return (
+              <div
+                key={review.id}
+                className="card card-reviews m-3 bg-transparent rounded-3 border border-light border-2"
+              >
+                <div className="card-header bg-primary">
+                  <img
+                    src="src/assets/profile_icon.jpg"
+                    alt="Avatar"
+                    className="rounded-circle me-2"
+                    width="25"
+                    height="25"
+                    style={{ objectFit: 'cover' }}
+                  />
+                  {associatedProfile.name
+                    ? associatedProfile.name
+                    : 'Sin nombre'}
+                </div>
+                <div className="card-body overflow-auto border border-light">
+                  <h6 className="card-title">
+                    {review.ratings}
+                    <i className="fa-solid fa-star ms-1"></i>
+                  </h6>
+                  <p className="card-text">{review.text}</p>
+                </div>
+                <div className="card-footer">
+                  <cite title="Source Title">
+                    {associatedBook ? associatedBook.title : 'Sin titulo'}
+                  </cite>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </>
   );
 };

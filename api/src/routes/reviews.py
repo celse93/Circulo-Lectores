@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from src.db import db
 from src.models.models import Reviews
+from datetime import date
 from sqlalchemy import select, and_
 from flask_jwt_extended import (
     jwt_required,
@@ -45,7 +46,7 @@ def reviews_routes(app):
             )
             db.session.add(new_book)
             db.session.commit()
-            return jsonify({"message": "Book rated successfully"}), 201
+            return jsonify({"message": "Reseña guardada exitosamente"}), 201
 
         # method to update review in Review list
         elif request.method == "PATCH":
@@ -131,7 +132,13 @@ def reviews_routes(app):
     @app.route("/reviews", methods=["GET"])
     @jwt_required()
     def all_reviews():
-        review_list = db.session.execute(select(Reviews)).scalars().all()
+        review_list = (
+            db.session.execute(
+                select(Reviews).where(Reviews.created_at == date.today())
+            )
+            .scalars()
+            .all()
+        )
         if not review_list:
             return jsonify({"error": "Review list not found"}), 404
 

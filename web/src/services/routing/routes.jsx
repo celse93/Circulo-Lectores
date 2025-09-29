@@ -4,10 +4,7 @@ import { Book } from '../../pages/Book';
 import { Feed } from '../../pages/Feed';
 import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
-import { ReviewForm } from '../../pages/ReviewForm';
 import { Footer } from '../../components/Footer';
-import { ReviewCard } from '../../components/ReviewCard';
-import { UserCard } from '../../components/UserCard';
 import { MyLibrary } from '../../pages/MyLibrary';
 import { MyQuotes } from '../../pages/MyQuotes';
 import { MyReviews } from '../../pages/MyReviews';
@@ -51,12 +48,6 @@ export const routesConfig = [
     showInNavbar: false,
   },
   {
-    name: 'Review Form',
-    path: '/review_form',
-    component: <ReviewForm />,
-    showInNavbar: true,
-  },
-  {
     name: 'Mi Biblioteca',
     path: '/my_library',
     component: <MyLibrary />,
@@ -85,17 +76,5 @@ export const routesConfig = [
     path: '/footer',
     component: <Footer />,
     showInNavbar: false,
-  },
-  {
-    name: 'ReviewCard',
-    path: '/review_card',
-    component: <ReviewCard />,
-    showInNavbar: true,
-  },
-  {
-    name: 'User Card',
-    path: '/user_card',
-    component: <UserCard />,
-    showInNavbar: true,
   },
 ];

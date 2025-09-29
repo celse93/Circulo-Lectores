@@ -65,7 +65,7 @@ export const Home = () => {
   };
 
   return (
-    <div className="container-fluid bg-dark min-vh-100">
+    <div className="container-fluid bg-dark min-vh-100 mt-5 pt-5">
       {/* Header */}
       <div className="container py-4">
         <div className="row">
@@ -151,12 +151,21 @@ export const Home = () => {
                   {/* Imagen del libro */}
                   <div className="position-relative">
                     {book.cover_id ? (
-                      <img
-                        src={`https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`}
-                        className="card-img-top"
-                        alt={book.title}
-                        style={{ height: '300px', objectFit: 'cover' }}
-                      />
+                      <div
+                        className="clickable-item"
+                        onClick={() => handleBookClick(book.book_id)}
+                      >
+                        <img
+                          src={
+                            book.cover_id != ''
+                              ? `https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`
+                              : 'https://imageplaceholder.net/300x300/eeeeee/131313?text=sin+portada+de+libro'
+                          }
+                          className="card-img-top"
+                          alt={book.title}
+                          style={{ height: '300px', objectFit: 'cover' }}
+                        />
+                      </div>
                     ) : (
                       <div
                         className="card-img-top d-flex align-items-center justify-content-center bg-secondary"
@@ -177,27 +186,13 @@ export const Home = () => {
                         ? `${book.title.substring(0, 50)}...`
                         : book.title}
                     </h6>
-                    <p className="card-text text-muted small">
-                      <strong>Autor:</strong>{' '}
-                      {book.author_name
-                        ? book.author_name.slice(0, 2).join(', ')
-                        : 'Autor desconocido'}
-                    </p>
                     {book.first_publish_year && (
-                      <p className="card-text text-muted small">
+                      <p className="card-text text-white small">
                         <strong>Año:</strong> {book.first_publish_year}
                       </p>
                     )}
 
                     {/* Botón de acción */}
-                    <div className="mt-auto mb-2">
-                      <button
-                        className="btn btn-primary btn-sm w-100"
-                        onClick={() => handleBookClick(book.book_id)}
-                      >
-                        Aprende más
-                      </button>
-                    </div>
                     <div className="mt-auto mb-2">
                       <button
                         className="btn btn-primary btn-sm w-100"
