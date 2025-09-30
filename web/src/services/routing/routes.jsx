@@ -1,20 +1,94 @@
-import { Home } from "../../pages/Home";
-import { Login } from "../../pages/Login";
+import { Home } from '../../pages/Home';
+import { Login } from '../../pages/Login';
+import { Book } from '../../pages/Book';
+import { Feed } from '../../pages/Feed';
+import { Profile } from '../../pages/Profile';
+import { Register } from '../../pages/Register';
+import { Footer } from '../../components/Footer';
+import { MyLibrary } from '../../pages/MyLibrary';
+import { MyQuotes } from '../../pages/MyQuotes';
+import { MyReviews } from '../../pages/MyReviews';
+import { MyRecommendations } from '../../pages/MyRecommendations';
+import { MyFollowers } from '../../components/MyFollowers';
+import { MyFollowings } from '../../components/MyFollowings';
 
 export const routesConfig = [
   {
-    name: "Root",
-    path: "/",
+    name: 'Home',
+    path: '/',
     component: <Home />,
+    showInNavbar: true,
   },
   {
-    name: "Login",
-    path: "/login",
+    name: 'Login',
+    path: '/login',
     component: <Login />,
+    showInNavbar: false,
   },
   {
-    name: "All",
-    path: "*",
-    component: <Home />,
+    name: 'Book Detail',
+    path: '/book',
+    component: <Book />,
+    showInNavbar: true,
+  },
+  {
+    name: 'Profile',
+    path: '/profile',
+    component: <Profile />,
+    showInNavbar: true,
+  },
+  {
+    name: 'Feed',
+    path: '/feed',
+    component: <Feed />,
+    showInNavbar: true,
+  },
+  {
+    name: 'Register',
+    path: '/register',
+    component: <Register />,
+    showInNavbar: false,
+  },
+  {
+    name: 'Mi Biblioteca',
+    path: '/my_library',
+    component: <MyLibrary />,
+    showInNavbar: false,
+  },
+  {
+    name: 'Mis Citas',
+    path: '/my_quotes',
+    component: <MyQuotes />,
+    showInNavbar: false,
+  },
+  {
+    name: 'Mis Reseñas',
+    path: '/my_reviews',
+    component: <MyReviews />,
+    showInNavbar: false,
+  },
+  {
+    name: 'Mis Recomendaciones',
+    path: '/my_recommendations',
+    component: <MyRecommendations />,
+    showInNavbar: false,
+  },
+  {
+    name: 'Footer',
+    path: '/footer',
+    component: <Footer />,
+    showInNavbar: false,
+  },
+  {
+    name: 'Mis Seguidores',
+    path: '/my_followers',
+    component: <MyFollowers />,
+    showInNavbar: false,
+  },
+  {
+    name: 'Siguiendo',
+    path: '/my_followings',
+    component: <MyFollowings />,
+    showInNavbar: false,
   },
 ];
