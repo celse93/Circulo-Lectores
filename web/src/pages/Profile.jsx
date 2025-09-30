@@ -246,7 +246,7 @@ export const Profile = () => {
       <div style={{ height: '88px' }}></div>
       <div className="container">
         <div className="row justify-content-center">
-          <div className="col-12 col-lg-8">
+          <div className="col-12 col-lg-9">
             <div className="card bg-dark border border-secondary mb-4">
               <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                 <h2 className="mb-0">Mi Perfil</h2>
@@ -399,29 +399,6 @@ export const Profile = () => {
                   <i className="fa-solid fa-plus me-2"></i>
                   Añadir
                 </button>
-              </div>
-            </div>
-
-            <div className="row mb-4">
-              <div className="col-12">
-                <div className="d-flex gap-2 flex-wrap">
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#quoteModal"
-                  >
-                    + Cita
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-outline-primary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#readModal"
-                  >
-                    + Leído
-                  </button>
-                </div>
               </div>
             </div>
 
