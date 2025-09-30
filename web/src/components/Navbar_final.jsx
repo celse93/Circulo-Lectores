@@ -78,7 +78,7 @@ export const NavBarFinal = () => {
 
   return (
     <nav className="navbar navbar-dark bg-transparent navbar-expand-lg">
-      <div className="nav container-fluid d-flex justify-content-between align-items-center">
+      <div className="nav container-fluid d-flex justify-content-between align-items-center mx-3">
         <div className="nav-item dropdown">
           <button
             className="nav-link nav-item"
@@ -90,7 +90,7 @@ export const NavBarFinal = () => {
           <ul className="dropdown-menu">
             <li>
               <NavLink className="dropdown-item" to="/">
-                Buscar
+                Buscar libros
               </NavLink>
             </li>
             <li>
