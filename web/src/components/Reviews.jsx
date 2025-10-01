@@ -79,7 +79,7 @@ export const Reviews = () => {
               >
                 <div className="card-header bg-primary">
                   <img
-                    src="src/assets/profile_icon.jpg"
+                    src="/assets/profile_icon.jpg"
                     alt="Avatar"
                     className="rounded-circle me-2"
                     width="25"
