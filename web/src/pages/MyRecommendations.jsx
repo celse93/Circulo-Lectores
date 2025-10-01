@@ -31,7 +31,7 @@ export const MyRecommendations = () => {
 
   if (loading) {
     return (
-      <div className="container-fluid bg-dark min-vh-100 py-4">
+      <div className="container-fluid bg-dark min-vh-100 pb-4 pt-5 mt-5">
         <div className="d-flex justify-content-center align-items-center h-100">
           <div className="text-white">Cargando tus recomendaciones...</div>
         </div>
@@ -40,7 +40,7 @@ export const MyRecommendations = () => {
   }
 
   return (
-    <div className="container-fluid bg-dark min-vh-100 py-4">
+    <div className="container-fluid bg-dark min-vh-100 pb-4 pt-5 mt-5">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12">
@@ -88,9 +88,6 @@ export const MyRecommendations = () => {
                               <h6 className="card-title text-white">
                                 {book?.title || 'Título desconocido'}
                               </h6>
-                              <p className="card-text text-white small flex-grow-1">
-                                {book?.author_name?.[0] || 'Autor desconocido'}
-                              </p>
                               <small className="text-white">
                                 Recomendado:{' '}
                                 {new Date(rec.created_at).toLocaleDateString()}

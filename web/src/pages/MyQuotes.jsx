@@ -31,7 +31,7 @@ export const MyQuotes = () => {
 
   if (loading) {
     return (
-      <div className="container-fluid bg-dark min-vh-100 py-4">
+      <div className="container-fluid bg-dark min-vh-100 pb-4 pt-5 mt-5">
         <div className="d-flex justify-content-center align-items-center h-100">
           <div className="text-white">Cargando tus citas...</div>
         </div>
@@ -40,7 +40,7 @@ export const MyQuotes = () => {
   }
 
   return (
-    <div className="container-fluid bg-dark min-vh-100 py-4">
+    <div className="container-fluid bg-dark min-vh-100 pb-4 pt-5 mt-5">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12">
