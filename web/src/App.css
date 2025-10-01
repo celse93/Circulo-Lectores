@@ -490,3 +490,344 @@ body {
   color: #ffc107 !important;
   transition: color 0.3s ease;
 }
+
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 {
+  --card-bg: rgba(255, 255, 255, 0.02);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --muted: rgba(161, 161, 170, 0.9);
+  color: var(--text-light, #fff);
+  padding-bottom: 48px;
+}
+
+/* Cabecera y textos */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .text-center h1,
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .text-center h2 {
+  margin-bottom: 0.25rem;
+  color: var(--text-light, #fff);
+}
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .text-center p {
+  color: var(--muted);
+}
+
+/* Tarjeta de búsqueda: apariencia más integrada con tema oscuro */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card.bg-dark {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0.015)
+  );
+  border-color: var(--card-border) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+
+/* Input de búsqueda grande */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .input-group .form-control {
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  height: 56px;
+  padding: 0.75rem 0.9rem;
+  font-size: 1rem;
+}
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5
+  .input-group
+  .form-control::placeholder {
+  color: rgba(161, 161, 170, 0.85);
+}
+
+/* Botón de búsqueda grande */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .btn-primary.btn-lg {
+  height: 56px;
+  padding: 0 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5
+  .btn-primary.btn-lg
+  .spinner-border {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.14rem;
+}
+
+/* Alerts (mensaje de error) */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .alert {
+  margin-top: 12px;
+  background: rgba(255, 0, 0, 0.05);
+  color: #ffb3b3;
+  border-color: rgba(255, 0, 0, 0.1);
+}
+
+/* Tarjetas de resultados: fondo y efectos */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card.bg-dark.border {
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  transition:
+    transform 0.14s ease,
+    box-shadow 0.14s ease;
+}
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card.bg-dark.border:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65);
+}
+
+/* Imagen de portada (ajustes de object-fit y fallback) */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card-img-top {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  height: 300px; /* coincide con inline style en tu JSX */
+}
+
+/* Fallback cuando no hay portada */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card .bg-secondary {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01)
+  );
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* Titulares y truncado: elegante y consistente */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card-title {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Metadatos y texto pequeño */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card-text.small {
+  color: var(--muted);
+}
+
+/* Botones dentro de la tarjeta */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card .btn {
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-weight: 600;
+  box-shadow: none;
+}
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card .btn + .btn {
+  margin-top: 8px;
+}
+
+/* Elementos clicables */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .clickable-item {
+  cursor: pointer;
+  display: block;
+}
+
+/* Mensajes sin resultados y estado inicial */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .py-5 i.fa-solid {
+  opacity: 0.95;
+}
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .text-muted {
+  color: var(--muted) !important;
+}
+
+/* Accesibilidad: foco visible (suave y consistente) */
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .btn:focus,
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .form-control:focus,
+.container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card:focus {
+  outline: 3px solid rgba(124, 58, 237, 0.12);
+  outline-offset: 3px;
+}
+
+/* Responsive: ajustar altura de imagen en pantallas pequeñas */
+@media (max-width: 768px) {
+  .container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card-img-top {
+    height: 260px;
+  }
+}
+@media (max-width: 576px) {
+  .container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .card-img-top {
+    height: 220px;
+  }
+  .container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .input-group .form-control {
+    height: 50px;
+  }
+  .container-fluid.bg-dark.min-vh-100.mt-5.pt-5 .btn-primary.btn-lg {
+    height: 50px;
+  }
+}
+
+/* ===== Carrusel de libros (pégalo al final de app.css) ===== */
+.rl-section {
+  margin: 24px 0;
+}
+
+.rl-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+.rl-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-light);
+  font-weight: 600;
+}
+.rl-controls {
+  display: flex;
+  gap: 8px;
+}
+.rl-controls button {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-light);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition:
+    background 0.18s ease,
+    transform 0.12s ease;
+}
+.rl-controls button:hover,
+.rl-controls button:focus {
+  background: var(--primary-color);
+  transform: translateY(-2px);
+  outline: none;
+  border-color: var(--primary-hover);
+}
+.rl-controls button:active {
+  transform: translateY(0);
+}
+
+/* contenedor horizontal con scroll suave */
+.rl-carousel {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Opcional: esconder scrollbar para Webkit, dejando aún scroll accesible */
+.rl-carousel::-webkit-scrollbar {
+  height: 8px;
+}
+.rl-carousel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+.rl-carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* tarjeta de libro */
+.rl-card {
+  flex: 0 0 160px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 260px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.rl-card:hover {
+  transform: translateY(-6px);
+}
+
+/* portada */
+.rl-cover {
+  width: 140px;
+  height: 200px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0.02)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+.rl-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* fallback si no hay portada */
+.rl-no-cover {
+  color: var(--text-gray);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* metadatos */
+.rl-meta {
+  margin-top: 8px;
+  text-align: center;
+  width: 100%;
+  padding: 0 6px;
+  box-sizing: border-box;
+}
+.rl-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  color: var(--text-light);
+  height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.rl-authors {
+  color: var(--text-gray);
+  font-size: 0.82rem;
+  margin-top: 6px;
+  height: 30px;
+  overflow: hidden;
+}
+
+/* accesibilidad: foco */
+.rl-card:focus-within,
+.rl-card:focus {
+  outline: 2px solid rgba(124, 58, 237, 0.25);
+  outline-offset: 3px;
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .rl-card {
+    flex: 0 0 140px;
+    min-height: 240px;
+  }
+  .rl-cover {
+    width: 120px;
+    height: 170px;
+  }
+}
+@media (max-width: 600px) {
+  .rl-card {
+    flex: 0 0 120px;
+    min-height: 210px;
+  }
+  .rl-cover {
+    width: 100px;
+    height: 150px;
+  }
+  .rl-header h3 {
+    font-size: 1rem;
+  }
+}
