@@ -31,7 +31,7 @@ export const MyLibrary = () => {
 
   if (loading) {
     return (
-      <div className="container-fluid bg-dark min-vh-100 py-4">
+      <div className="container-fluid bg-dark min-vh-100 pb-4 pt-5 mt-5">
         <div className="d-flex justify-content-center align-items-center h-100">
           <div className="text-white">Cargando tu biblioteca...</div>
         </div>
@@ -40,7 +40,7 @@ export const MyLibrary = () => {
   }
 
   return (
-    <div className="container-fluid bg-dark min-vh-100 py-4">
+    <div className="container-fluid bg-dark min-vh-100 pb-4 pt-5 mt-5">
       <div className="container">
         <div className="row justify-content-center">
           <div className="col-12">
@@ -83,9 +83,6 @@ export const MyLibrary = () => {
                             <h6 className="card-title text-white">
                               {book.title}
                             </h6>
-                            <p className="card-text text-white small flex-grow-1">
-                              {book.author_name?.[0] || 'Autor desconocido'}
-                            </p>
                             <small className="text-white">
                               Añadido:{' '}
                               {new Date(

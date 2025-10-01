@@ -1092,7 +1092,7 @@ export const Profile = () => {
                         className={`fa-solid fa-star fa-lg ${
                           star <= (hoverRating || rating)
                             ? 'text-warning'
-                            : 'text-muted'
+                            : 'text-white'
                         }`}
                         style={{ cursor: 'pointer' }}
                         onClick={() => setRating(star)}
