@@ -23,7 +23,7 @@ Círculo Lectores is a simple and intuitive platform that allows users to track 
 ### **Frontend**  
 - 🏷️ **HTML5**: Semantic content structure.  
 - 🎨 **CSS3**: Custom styles for a responsive design.
-<i class="glyphicon glyphicon-bold"></i> **Bootstrap**: Quick components and responsive grid systems.  
+- 🅱️ **Bootstrap**: Quick components and responsive grid systems.  
 - 💻 **JavaScript**: Interactivity and client-side logic.  
 - ⚛️ **React.js**: Reusable components and state management with Flux.  
 
