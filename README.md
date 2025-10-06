@@ -3,11 +3,14 @@
 
 Círculo Lectores is a simple and intuitive platform that allows users to track the books they read & want to read as well as add book reviews and quotes from a particular book.
 
-![Homepage](web/src/assets/homepage.png "Screenshot of the homepage")
+<div align="center">
+<img src="Circulo Lectores.gif" alt="GIF" width="400" height="350" />
+</div>
+
 
 ---
 
-## 🌟 Key Features  
+## 🔑 Key Features  
 
 1. **Robust Backend**: Powered by Python and Flask, our backend provides a reliable and scalable server to support all operations.  
 2. **Responsive Design**: Fully optimized for use on any device—mobile, tablet, or desktop.  
@@ -28,7 +31,8 @@ Círculo Lectores is a simple and intuitive platform that allows users to track 
 - ⚛️ **React.js**: Reusable components and state management with Flux.  
 
 ### **Backend**  
-- 🐍 **Python**: Server-side logic and data handling.  
+- 🐍 **Python**: Server-side logic.
+- 🗄️ **SQLAlchemy** & **PostgreSQL**: data modeling and handling.
 - 🌐 **Flask**: Framework for routing, authentication, and database connections.  
 - ☁️ **APIs**: Integration of external services, such as books' data.  
 
