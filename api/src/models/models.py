@@ -43,8 +43,7 @@ class Profiles(db.Model):
     id: Mapped[int] = mapped_column(
         ForeignKey("users.id"), primary_key=True, nullable=False
     )
-    name: Mapped[str] = mapped_column(String(50), nullable=False)
-    avatar: Mapped[str] = mapped_column(String(150), nullable=True)
+    username: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
     user: Mapped["Users"] = relationship(back_populates="profile")
     recommendation: Mapped["Recommendations"] = relationship(back_populates="profile")
     readinglist: Mapped["ReadingList"] = relationship(back_populates="profile")
@@ -73,8 +72,7 @@ class Profiles(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name,
-            "avatar": self.avatar,
+            "username": self.username,
         }
 
 
@@ -152,8 +150,10 @@ class Quotes(db.Model):
     text: Mapped[str] = mapped_column(String(500), nullable=False)
     book_id: Mapped[str] = mapped_column(String(50), nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
+    category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="quote")
+    category: Mapped[List["Categories"]] = relationship(back_populates="quote")
 
     def __repr__(self):
         return f"<Profile: {self.user_id}>"
@@ -164,5 +164,23 @@ class Quotes(db.Model):
             "text": self.text,
             "book_id": self.book_id,
             "user_id": self.user_id,
+            "category_id": self.category_id,
             "created_at": self.created_at.isoformat(),
+        }
+
+
+class Categories(db.Model):
+    __tablename__ = "categories"
+
+    id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
+    label: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
+    quote: Mapped["Quotes"] = relationship(back_populates="category")
+
+    def __repr__(self):
+        return f"<Category: {self.label}>"
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "label": self.label,
         }

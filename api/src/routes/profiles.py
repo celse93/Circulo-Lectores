@@ -15,16 +15,16 @@ def profiles_routes(app):
         # method for updating profile
         if request.method == "PATCH":
             data = request.get_json()
-            required_fields = ["name", "avatar"]
+            required_fields = ["username"]
 
             if not any(field in data for field in required_fields):
                 return jsonify({"error": "Missing required fields"}), 400
 
-            name = data["name"]
+            username = data["username"]
             user_id = get_jwt_identity()
 
             update_profile = db.session.get(Profiles, user_id)
-            update_profile.name = name
+            update_profile.username = username
             db.session.commit()
 
             return jsonify({"message": "Profile updated successfully"}), 201

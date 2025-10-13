@@ -9,6 +9,7 @@ from src.routes.recommendations import recommendations_routes
 from src.routes.reviews import reviews_routes
 from src.routes.quotes import quotes_routes
 from src.routes.book_search import books_search_routes
+from src.routes.categories import categories_routes
 from src.routes.author_detail import author_detail_route
 from src.routes.follows import follows_routes
 from dotenv import load_dotenv
@@ -73,6 +74,7 @@ quotes_routes(app)
 books_search_routes(app)
 author_detail_route(app)
 follows_routes(app)
+categories_routes(app)
 
 
 if __name__ == "__main__":

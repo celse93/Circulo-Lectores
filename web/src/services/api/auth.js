@@ -1,8 +1,8 @@
 import { baseUrl, fetchWrapper } from './config';
 
-export const postRegister = async (name, email, password) => {
-  if (email == '' || password == '' || name == '')
-    return alert('¡Faltan campos obligatorios!');
+export const postRegister = async (username, email, password) => {
+  if (email == '' || password == '' || username == '')
+    return alert('Missing mandatory fields!');
   return await fetchWrapper(`${baseUrl}register`, {
     method: 'POST',
     credentials: 'include',
@@ -10,7 +10,7 @@ export const postRegister = async (name, email, password) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: name,
+      username: username,
       email: email,
       password: password,
     }),
@@ -20,7 +20,7 @@ export const postRegister = async (name, email, password) => {
 };
 
 export const postLogin = async (email, password) => {
-  if (email == '' || password == '') return alert('¡Sin email o password!');
+  if (email == '' || password == '') return alert('No email or password!');
   return await fetchWrapper(`${baseUrl}login`, {
     method: 'POST',
     headers: {

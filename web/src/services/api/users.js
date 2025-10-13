@@ -24,8 +24,8 @@ export const getCurrentProfile = async () => {
   });
 };
 
-export const updateProfile = async (name) => {
-  if (name == '') return alert('¡Sin nombre!');
+export const updateProfile = async (username) => {
+  if (username == '') return alert('¡Sin nombre!');
   return await fetchWrapper(`${baseUrl}profiles/user`, {
     method: 'PATCH',
     headers: {
@@ -33,7 +33,7 @@ export const updateProfile = async (name) => {
     },
     credentials: 'include',
     body: JSON.stringify({
-      name: name,
+      username: username,
     }),
   }).then((data) => {
     return data;

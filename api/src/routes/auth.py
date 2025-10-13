@@ -1,5 +1,6 @@
 from src.db import db
 from flask import request, jsonify
+from sqlalchemy import select
 from src.models.models import Users, Profiles
 import bcrypt
 from flask_jwt_extended import (
@@ -16,20 +17,29 @@ def auth_routes(app):
     @app.route("/register", methods=["POST"])
     def register():
         data = request.get_json()
-        required_fields = ["name", "email", "password"]
+        required_fields = ["username", "email", "password"]
 
         if not all(field in data for field in required_fields):
             return jsonify({"error": "Missing required fields"}), 400
 
-        name = data["name"]
+        username = data["username"]
         email = data["email"]
         password = data["password"]
 
         # Check for existing user
-        existing_user = db.session.query(Users).filter((Users.email == email)).first()
+        existing_email = db.session.execute(
+            select(Users).where(Users.email == email)
+        ).scalar_one_or_none()
 
-        if existing_user:
+        existing_username = db.session.execute(
+            select(Profiles).where(Profiles.username == username)
+        ).scalar_one_or_none()
+        print(existing_email)
+        if existing_email:
             return jsonify({"error": "Email already registered"}), 400
+
+        if existing_username:
+            return jsonify({"error": "Username already registered"}), 400
 
         # Hash password
         hashed_password = bcrypt.hashpw(
@@ -42,7 +52,7 @@ def auth_routes(app):
         db.session.commit()
 
         # Create profile
-        new_profile = Profiles(id=new_user.id, name=name)
+        new_profile = Profiles(id=new_user.id, username=username)
         db.session.add(new_profile)
         db.session.commit()
 
