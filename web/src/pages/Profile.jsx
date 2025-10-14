@@ -757,6 +757,7 @@ export const Profile = () => {
                   onClick={handleCloseNewModals}
                 ></button>
               </div>
+
               <div className="modal-body">
                 <div className="mb-3">
                   <label className="col-form-label text-white">Libro:</label>

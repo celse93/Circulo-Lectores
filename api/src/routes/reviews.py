@@ -16,7 +16,7 @@ def reviews_routes(app):
         # method to save review in Review list
         if request.method == "POST":
             data = request.get_json()
-            required_fields = ["book_id", "text", "ratings"]
+            required_fields = ["book_id", "text"]
             user_id = get_jwt_identity()
 
             if not all(field in data for field in required_fields):
@@ -24,7 +24,6 @@ def reviews_routes(app):
 
             book_id = data["book_id"]
             text = data["text"]
-            ratings = data["ratings"]
 
             existing_book = db.session.execute(
                 select(Reviews).where(
@@ -38,12 +37,7 @@ def reviews_routes(app):
             if existing_book:
                 return jsonify({"error": "Book already rated"}), 400
 
-            if ratings < 1 or ratings > 5:
-                return jsonify({"error": "Rating outside boundries"}), 400
-
-            new_book = Reviews(
-                text=text, ratings=ratings, book_id=book_id, user_id=user_id
-            )
+            new_book = Reviews(text=text, book_id=book_id, user_id=user_id)
             db.session.add(new_book)
             db.session.commit()
             return jsonify({"message": "Reseña guardada exitosamente"}), 201
@@ -51,14 +45,13 @@ def reviews_routes(app):
         # method to update review in Review list
         elif request.method == "PATCH":
             data = request.get_json()
-            required_fields = ["book_id", "text", "ratings"]
+            required_fields = ["book_id", "text"]
 
             if not any(field in data for field in required_fields):
                 return jsonify({"error": "Missing at least one required field"}), 400
 
             book_id = data["book_id"]
             text = data["text"]
-            ratings = data["ratings"]
             user_id = get_jwt_identity()
 
             existing_review = db.session.execute(
@@ -72,21 +65,7 @@ def reviews_routes(app):
                     {"error": "Book review doesn't exist for this user."}
                 ), 400
 
-            if ratings < 1 or ratings > 5:
-                return jsonify({"error": "Rating outside boundries"}), 400
-
-            if not text:
-                existing_review.ratings = ratings
-                db.session.commit()
-                return jsonify({"message": "Ratings updated successfully"}), 201
-
-            if not ratings:
-                existing_review.text = text
-                db.session.commit()
-                return jsonify({"message": "Text updated successfully"}), 201
-
             existing_review.text = text
-            existing_review.ratings = ratings
             db.session.commit()
 
             return jsonify({"message": "Review updated successfully"}), 201

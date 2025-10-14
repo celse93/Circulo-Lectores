@@ -123,7 +123,6 @@ class Reviews(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     text: Mapped[str] = mapped_column(String(500), nullable=False)
-    ratings: Mapped[int] = mapped_column(nullable=False)
     book_id: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
@@ -136,7 +135,6 @@ class Reviews(db.Model):
         return {
             "id": self.id,
             "text": self.text,
-            "ratings": self.ratings,
             "book_id": self.book_id,
             "user_id": self.user_id,
             "created_at": self.created_at.isoformat(),

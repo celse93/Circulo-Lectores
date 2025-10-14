@@ -108,9 +108,8 @@ export const postQuote = async (bookId, text) => {
   });
 };
 
-export const postReview = async (bookId, text, ratings) => {
-  if (text == '' || ratings == 0 || bookId == '')
-    return alert('¡Rellena todos los campos!');
+export const postReview = async (bookId, text) => {
+  if (text == '' || bookId == '') return alert('¡Rellena todos los campos!');
   return await fetchWrapper(`${baseUrl}reviews/user`, {
     method: 'POST',
     headers: {
@@ -120,7 +119,6 @@ export const postReview = async (bookId, text, ratings) => {
     body: JSON.stringify({
       book_id: bookId,
       text: text,
-      ratings: ratings,
     }),
   }).then((data) => {
     return data;
