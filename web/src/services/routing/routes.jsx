@@ -1,7 +1,7 @@
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
 import { Book } from '../../pages/Book';
-import { Feed } from '../../pages/Feed';
+import { Feed } from '../../components/Feed';
 import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
 import { Footer } from '../../components/Footer';

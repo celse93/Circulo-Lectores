@@ -27,7 +27,11 @@ def quotes_routes(app):
             category_id = data["category_id"]
 
             new_quote = Quotes(
-                book_id=book_id, user_id=user_id, text=text, category_id=category_id
+                book_id=book_id,
+                user_id=user_id,
+                text=text,
+                category_id=category_id,
+                content_type="quote",
             )
             db.session.add(new_quote)
             db.session.commit()

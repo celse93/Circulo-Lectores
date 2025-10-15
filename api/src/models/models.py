@@ -82,6 +82,7 @@ class ReadingList(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     book_id: Mapped[str] = mapped_column(String(50), nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
+    content_type: Mapped[str] = mapped_column(String(50), nullable=False)
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="readinglist")
 
@@ -93,6 +94,7 @@ class ReadingList(db.Model):
             "id": self.id,
             "book_id": self.book_id,
             "user_id": self.user_id,
+            "content_type": self.content_type,
             "created_at": self.created_at.isoformat(),
         }
 
@@ -103,6 +105,7 @@ class Recommendations(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     book_id: Mapped[str] = mapped_column(String(50), nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
+    content_type: Mapped[str] = mapped_column(String(50), nullable=False)
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="recommendation")
 
@@ -114,6 +117,7 @@ class Recommendations(db.Model):
             "id": self.id,
             "book_id": self.book_id,
             "user_id": self.user_id,
+            "content_type": self.content_type,
             "created_at": self.created_at.isoformat(),
         }
 
@@ -125,6 +129,7 @@ class Reviews(db.Model):
     text: Mapped[str] = mapped_column(String(500), nullable=False)
     book_id: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
+    content_type: Mapped[str] = mapped_column(String(50), nullable=False)
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="review")
 
@@ -137,6 +142,7 @@ class Reviews(db.Model):
             "text": self.text,
             "book_id": self.book_id,
             "user_id": self.user_id,
+            "content_type": self.content_type,
             "created_at": self.created_at.isoformat(),
         }
 
@@ -149,6 +155,7 @@ class Quotes(db.Model):
     book_id: Mapped[str] = mapped_column(String(50), nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("profiles.id"))
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))
+    content_type: Mapped[str] = mapped_column(String(50), nullable=False)
     created_at: Mapped[date] = mapped_column(Date, default=date.today)
     profile: Mapped[List["Profiles"]] = relationship(back_populates="quote")
     category: Mapped[List["Categories"]] = relationship(back_populates="quote")
@@ -162,6 +169,7 @@ class Quotes(db.Model):
             "text": self.text,
             "book_id": self.book_id,
             "user_id": self.user_id,
+            "content_type": self.content_type,
             "category_id": self.category_id,
             "created_at": self.created_at.isoformat(),
         }

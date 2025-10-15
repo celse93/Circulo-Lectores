@@ -31,7 +31,9 @@ def reading_list_routes(app):
             if existing_book:
                 return jsonify({"error": "¡Error! Libro ya registrado"}), 400
 
-            new_book = ReadingList(book_id=book_id, user_id=user_id)
+            new_book = ReadingList(
+                book_id=book_id, user_id=user_id, content_type="reading_list"
+            )
             db.session.add(new_book)
             db.session.commit()
 

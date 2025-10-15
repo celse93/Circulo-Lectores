@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: ef2b262825b9
+Revision ID: 28a5382667c3
 Revises:
-Create Date: 2025-10-13 21:17:10.417827
+Create Date: 2025-10-15 16:59:07.988612
 
 """
 
@@ -11,7 +11,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "ef2b262825b9"
+revision = "28a5382667c3"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -67,6 +67,7 @@ def upgrade():
         sa.Column("book_id", sa.String(length=50), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.Column("category_id", sa.Integer(), nullable=False),
+        sa.Column("content_type", sa.String(length=50), nullable=False),
         sa.Column("created_at", sa.Date(), nullable=False),
         sa.ForeignKeyConstraint(
             ["category_id"],
@@ -83,6 +84,7 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("book_id", sa.String(length=50), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
+        sa.Column("content_type", sa.String(length=50), nullable=False),
         sa.Column("created_at", sa.Date(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_id"],
@@ -95,6 +97,7 @@ def upgrade():
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("book_id", sa.String(length=50), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
+        sa.Column("content_type", sa.String(length=50), nullable=False),
         sa.Column("created_at", sa.Date(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_id"],
@@ -106,9 +109,9 @@ def upgrade():
         "reviews",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("text", sa.String(length=500), nullable=False),
-        sa.Column("ratings", sa.Integer(), nullable=False),
         sa.Column("book_id", sa.String(length=50), nullable=False),
         sa.Column("user_id", sa.Integer(), nullable=False),
+        sa.Column("content_type", sa.String(length=50), nullable=False),
         sa.Column("created_at", sa.Date(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_id"],

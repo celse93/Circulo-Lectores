@@ -37,7 +37,9 @@ def reviews_routes(app):
             if existing_book:
                 return jsonify({"error": "Book already rated"}), 400
 
-            new_book = Reviews(text=text, book_id=book_id, user_id=user_id)
+            new_book = Reviews(
+                text=text, book_id=book_id, user_id=user_id, content_type="review"
+            )
             db.session.add(new_book)
             db.session.commit()
             return jsonify({"message": "Reseña guardada exitosamente"}), 201

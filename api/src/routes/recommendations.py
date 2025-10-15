@@ -34,7 +34,9 @@ def recommendations_routes(app):
             if existing_book:
                 return jsonify({"error": "Book already registered"}), 400
 
-            new_book = Recommendations(book_id=book_id, user_id=user_id)
+            new_book = Recommendations(
+                book_id=book_id, user_id=user_id, content_type="recommendation"
+            )
             db.session.add(new_book)
             db.session.commit()
             return jsonify({"message": "Libro guardado exitosamente"}), 201
