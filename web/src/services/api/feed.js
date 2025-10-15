@@ -63,3 +63,11 @@ export const getAllReviews = async () => {
     return data;
   });
 };
+
+export const getAllCategories = async () => {
+  return await fetchWrapper(`${baseUrl}categories`, {
+    credentials: 'include',
+  }).then((data) => {
+    return data;
+  });
+};

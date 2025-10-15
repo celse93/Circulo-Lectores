@@ -1,54 +1,49 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { UserContext } from '../context/UserContext';
 import {
   getBooksSearch,
   postRecommendations,
   postReadingList,
   postReview,
 } from '../services/api/books';
+import { getAllCategories } from '../services/api/feed';
 import { postQuote } from '../services/api/books';
-import { updateProfile, getCurrentUser } from '../services/api/users';
-import { getUserStats } from '../services/api/follows';
 import Modal from '@mui/material/Modal';
 
 export const CreatePosts = () => {
-  const { logout, profile, setUser, setProfile } = useContext(UserContext);
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
-  const [quote, setQuote] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [books, setBooks] = useState([]);
   const [bookSelected, setBookSelected] = useState({});
-  const [newUsername, setNewUsername] = useState('');
-
-  const [showModal, setShowModal] = useState(false);
-  const [showReadingListModal, setShowReadingListModal] = useState(false);
-  const [showRecommendationModal, setShowRecommendationModal] = useState(false);
-  const [showNewQuoteModal, setShowNewQuoteModal] = useState(false);
-  const [showReviewModal, setShowReviewModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState('reading');
-  const [review, setReview] = useState('');
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-
-  const [content, setContent] = useState();
+  const [selectedCategory, setSelectedCategory] = useState(1);
+  const [content, setContent] = useState('');
   const [open, setOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesList = await getAllCategories();
+        setCategories(categoriesList);
+      } catch (error) {
+        console.error('Error fetching user stats:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleSearch = async () => {
     if (!query.trim()) {
-      setError('Por favor ingresa un término de búsqueda');
+      alert('Error: Search query is empty.');
       return;
     }
-    setError('');
     try {
       const result = await getBooksSearch(query);
       setBooks(result);
     } catch (error) {
       console.error(error);
-      setError('Error al buscar libros. Intenta de nuevo.');
+      alert('Error searching book. Try again.');
       setBooks([]);
     }
   };
@@ -57,93 +52,6 @@ export const CreatePosts = () => {
     setQuery(book.title);
     setBookSelected(book);
     setBooks([]);
-  };
-
-  const handleCloseModals = () => {
-    setQuery('');
-    setQuote('');
-  };
-
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseAddModal = () => setShowModal(false);
-
-  const handleSaveReadingList = async () => {
-    try {
-      const saveReadingList = await postReadingList(bookSelected.book_id);
-      alert(`${saveReadingList['message']}`);
-      setShowReadingListModal(false);
-    } catch (error) {
-      console.error('Error: ', error);
-    } finally {
-      setQuery('');
-      setBooks([]);
-      setBookSelected({});
-    }
-  };
-
-  const handleSaveNewRecommendation = async () => {
-    try {
-      const saveRecommendation = await postRecommendations(
-        bookSelected.book_id
-      );
-      alert(`${saveRecommendation['message']}`);
-      setShowRecommendationModal(false);
-    } catch (error) {
-      console.error('Error: ', error);
-    } finally {
-      setQuery('');
-      setBooks([]);
-      setBookSelected({});
-    }
-  };
-
-  const handleSaveNewQuote = async () => {
-    try {
-      const saveQuote = await postQuote(bookSelected.book_id, quote.trim());
-      alert(`${saveQuote['message']}`);
-      setShowNewQuoteModal(false);
-    } catch (error) {
-      console.error('Error: ', error);
-    } finally {
-      setQuery('');
-      setQuote('');
-      setBooks([]);
-      setBookSelected({});
-    }
-  };
-
-  const handleSaveReview = async () => {
-    try {
-      const saveReview = await postReview(
-        bookSelected.book_id,
-        review.trim(),
-        rating
-      );
-      alert(`${saveReview['message']}`);
-      setShowReviewModal(false);
-    } catch (error) {
-      console.error('Error: ', error);
-    } finally {
-      setQuery('');
-      setReview('');
-      setRating(0);
-      setBooks([]);
-      setBookSelected({});
-    }
-  };
-
-  const handleCloseNewModals = () => {
-    setShowReadingListModal(false);
-    setShowRecommendationModal(false);
-    setShowNewQuoteModal(false);
-    setShowReviewModal(false);
-    setQuery('');
-    setQuote('');
-    setReview('');
-    setRating(0);
-    setHoverRating(0);
-    setBooks([]);
-    setBookSelected({});
   };
 
   const handleSubmit = async (e) => {
@@ -162,7 +70,11 @@ export const CreatePosts = () => {
       }
 
       if (selectedValue == 'quote') {
-        const saveQuote = await postQuote(bookSelected.book_id, content.trim());
+        const saveQuote = await postQuote(
+          bookSelected.book_id,
+          content.trim(),
+          selectedCategory
+        );
         alert(`${saveQuote['message']}`);
       }
 
@@ -177,17 +89,14 @@ export const CreatePosts = () => {
         const saveReadingList = await postReadingList(bookSelected.book_id);
         alert(`${saveReadingList['message']}`);
       }
-
-      setShowReadingListModal(false);
-      setShowRecommendationModal(false);
-      setShowNewQuoteModal(false);
-      setShowReviewModal(false);
     } catch (error) {
       console.error('Error: ', error);
     } finally {
       setQuery('');
-      setReview('');
       setBooks([]);
+      setContent('');
+      setSelectedCategory(1);
+      setSelectedOption('reading');
       setBookSelected({});
       navigate('/');
     }
@@ -197,9 +106,18 @@ export const CreatePosts = () => {
     setSelectedOption(e.target.value);
   };
 
+  const handleOnChangeCategory = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
   const showContent = selectedOption == 'quote' || selectedOption == 'review';
+
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
+  const handleClose = () => {
+    setOpen(false);
+    setQuery('');
+  };
 
   return (
     <>
@@ -208,7 +126,7 @@ export const CreatePosts = () => {
         <div className="post-modal">
           <h5>Share Your Reading Experience</h5>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="options">Choose a car:</label>
+            <label htmlFor="options">What would you like to share?</label>
             <select
               onChange={handleOnChange}
               value={selectedOption}
@@ -223,11 +141,11 @@ export const CreatePosts = () => {
 
             <div>
               <div>
-                <label className="text-white">Libro:</label>
+                <label className="text-white">Search a book:</label>
                 <div className="input-group">
                   <input
                     type="text"
-                    placeholder="Buscar libros por título, autor..."
+                    placeholder="Search by title or author"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     onKeyDown={(e) => {
@@ -237,6 +155,9 @@ export const CreatePosts = () => {
                       }
                     }}
                   />
+                  <button onClick={handleSearch}>
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                  </button>
                 </div>
                 {books.length > 0 && (
                   <ul className="list-group mt-2">
@@ -271,25 +192,46 @@ export const CreatePosts = () => {
               </div>
             </div>
             {showContent && (
-              <div>
-                <label htmlFor="content">
-                  {selectedOption == 'quote' ? 'Quote *' : 'Your Review *'}
-                </label>
-                <textarea
-                  id="content"
-                  placeholder={
-                    selectedOption == 'quote'
-                      ? 'Enter your favorite quote from this book...'
-                      : 'Share your thoughts about this book...'
-                  }
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  rows="5"
-                  required
-                />
-              </div>
+              <>
+                {selectedOption == 'quote' && categories.length > 0 && (
+                  <div>
+                    <label htmlFor="categories">Select category:</label>
+                    <select
+                      onChange={handleOnChangeCategory}
+                      value={selectedCategory}
+                      name="categories"
+                      id="categories"
+                    >
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                <div>
+                  <label htmlFor="content">
+                    {selectedOption == 'quote' ? 'Quote *' : 'Your Review *'}
+                  </label>
+                  <textarea
+                    id="content"
+                    placeholder={
+                      selectedOption == 'quote'
+                        ? 'Enter your favorite quote from this book...'
+                        : 'Share your thoughts about this book...'
+                    }
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    rows="5"
+                    required
+                  />
+                </div>
+              </>
             )}
-            <input type="submit" value="Submit" />
+            <button type="submit" value="Submit">
+              Submit
+            </button>
           </form>
         </div>
       </Modal>

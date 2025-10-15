@@ -91,8 +91,8 @@ export const postRecommendations = async (bookId) => {
   });
 };
 
-export const postQuote = async (bookId, text) => {
-  if (text == '' || bookId == '') return alert('¡Texto o libro vacío!');
+export const postQuote = async (bookId, text, categoryId) => {
+  if (text == '' || bookId == '') return alert('Required fields empty!');
   return await fetchWrapper(`${baseUrl}quotes/user`, {
     method: 'POST',
     headers: {
@@ -102,6 +102,7 @@ export const postQuote = async (bookId, text) => {
     body: JSON.stringify({
       book_id: bookId,
       text: text,
+      category_id: categoryId,
     }),
   }).then((data) => {
     return data;

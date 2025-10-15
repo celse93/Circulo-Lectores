@@ -16,7 +16,7 @@ def quotes_routes(app):
         # method to save book in Quote list
         if request.method == "POST":
             data = request.get_json()
-            required_fields = ["book_id", "text"]
+            required_fields = ["book_id", "text", "category_id"]
             user_id = get_jwt_identity()
 
             if not all(field in data for field in required_fields):
@@ -24,12 +24,15 @@ def quotes_routes(app):
 
             book_id = data["book_id"]
             text = data["text"]
+            category_id = data["category_id"]
 
-            new_quote = Quotes(book_id=book_id, user_id=user_id, text=text)
+            new_quote = Quotes(
+                book_id=book_id, user_id=user_id, text=text, category_id=category_id
+            )
             db.session.add(new_quote)
             db.session.commit()
 
-            return jsonify({"message": "Cita guardada exitosamente"}), 201
+            return jsonify({"message": "Quote saved successfully"}), 201
 
         # method to delete book from Quote list
         elif request.method == "DELETE":
