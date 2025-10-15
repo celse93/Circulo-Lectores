@@ -5,7 +5,7 @@ import requests
 from ratelimit import limits, sleep_and_retry
 
 
-CALLS = 5
+CALLS = 10
 PERIOD = 1
 
 

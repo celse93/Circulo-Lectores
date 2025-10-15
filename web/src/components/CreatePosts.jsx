@@ -117,6 +117,11 @@ export const CreatePosts = () => {
   const handleClose = () => {
     setOpen(false);
     setQuery('');
+    setBooks([]);
+    setContent('');
+    setSelectedCategory(1);
+    setSelectedOption('reading');
+    setBookSelected({});
   };
 
   return (

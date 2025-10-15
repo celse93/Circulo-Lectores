@@ -22,7 +22,7 @@ def books_search_routes(app):
             books = data["docs"]
             results = []
 
-            for x in range(6):
+            for x in range(8):
                 book_id = books[x]["key"].split("/")[-1]
                 results.append(
                     {
