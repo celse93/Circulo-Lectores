@@ -20,7 +20,7 @@ def reading_list_routes(app):
             user_id = get_jwt_identity()
 
             if not book_id:
-                return jsonify({"error": "¡Error! ID de libro faltante"}), 400
+                return jsonify({"error": "Missing book ID"}), 400
 
             existing_book = db.session.execute(
                 select(ReadingList).where(
@@ -29,7 +29,7 @@ def reading_list_routes(app):
             ).scalar_one_or_none()
 
             if existing_book:
-                return jsonify({"error": "¡Error! Libro ya registrado"}), 400
+                return jsonify({"error": "Book already registered"}), 400
 
             new_book = ReadingList(
                 book_id=book_id, user_id=user_id, content_type="reading_list"
@@ -37,7 +37,7 @@ def reading_list_routes(app):
             db.session.add(new_book)
             db.session.commit()
 
-            return jsonify({"message": "Libro guardado exitosamente"}), 201
+            return jsonify({"message": "Book saved successfully"}), 201
 
         # method to delete book from ReadingList
         elif request.method == "DELETE":

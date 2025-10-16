@@ -52,6 +52,9 @@ export const Feed = () => {
 
   useEffect(() => {
     const fetchBookCovers = async () => {
+      if (booksData.length == 0) {
+        setLoading(false);
+      }
       if (booksData.length > 0) {
         try {
           const bookDetailPromises = booksData.map((book) =>
@@ -72,6 +75,7 @@ export const Feed = () => {
 
   console.log(booksData);
   console.log(bookDetails);
+  console.log(loading);
 
   const handleBookClick = async (bookId) => {
     const fetchBook = await selectBook(bookId);

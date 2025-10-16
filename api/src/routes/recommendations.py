@@ -39,7 +39,7 @@ def recommendations_routes(app):
             )
             db.session.add(new_book)
             db.session.commit()
-            return jsonify({"message": "Libro guardado exitosamente"}), 201
+            return jsonify({"message": "Book saved successfully"}), 201
 
         # method to delete book from Recommendation
         elif request.method == "DELETE":

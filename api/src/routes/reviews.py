@@ -42,7 +42,7 @@ def reviews_routes(app):
             )
             db.session.add(new_book)
             db.session.commit()
-            return jsonify({"message": "Reseña guardada exitosamente"}), 201
+            return jsonify({"message": "Review saved successfully"}), 201
 
         # method to update review in Review list
         elif request.method == "PATCH":
