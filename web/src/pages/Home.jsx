@@ -4,6 +4,7 @@ import { UserContext } from '../context/UserContext';
 import { getBooksSearch } from '../services/api/books';
 import { postReadingList, postRecommendations } from '../services/api/books';
 import { CreatePosts } from '../components/CreatePosts';
+import { Feed } from '../components/Feed';
 
 export const Home = () => {
   const [query, setQuery] = useState('');
@@ -245,6 +246,7 @@ export const Home = () => {
         )}
       </div>
       <CreatePosts />
+      <Feed />
     </div>
   );
 };

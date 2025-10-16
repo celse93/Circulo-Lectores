@@ -77,7 +77,7 @@ def quotes_routes(app):
                 .all()
             )
             if not quote_list:
-                return jsonify({"error": "Reading list not found"}), 404
+                return jsonify({"error": "Reading list not found"}), 200
 
             response_body = [item.serialize() for item in quote_list]
             return jsonify(response_body), 200
@@ -91,7 +91,7 @@ def quotes_routes(app):
             .all()
         )
         if not quote_list:
-            return jsonify({"error": "Reading list not found"}), 404
+            return jsonify({"error": "Reading list not found"}), 200
 
         response_body = [item.serialize() for item in quote_list]
         return jsonify(response_body), 200

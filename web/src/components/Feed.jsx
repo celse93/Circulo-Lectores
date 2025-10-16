@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { postReadingList, postRecommendations } from '../services/api/books';
+import { getAllQuotes, getAllReviews } from '../services/api/feed';
 import {
   getAllReadingLists,
   getAllRecommendations,
@@ -31,8 +32,16 @@ export const Feed = () => {
         setLoading(true);
         const dataRecommendations = await getAllRecommendations();
         const dataReadingList = await getAllReadingLists();
-        const combinedData = [...dataRecommendations, ...dataReadingList];
-        setBooksData(combinedData);
+        const dataQuotes = await getAllQuotes();
+        const dataReviews = await getAllReviews();
+
+        setBooksData((prevBooksData) => [
+          ...prevBooksData,
+          ...(Array.isArray(dataRecommendations) ? dataRecommendations : []),
+          ...(Array.isArray(dataReadingList) ? dataReadingList : []),
+          ...(Array.isArray(dataQuotes) ? dataQuotes : []),
+          ...(Array.isArray(dataReviews) ? dataReviews : []),
+        ]);
       } catch (error) {
         console.error('Failed to fetch books data:', error);
         setLoading(false);
@@ -63,7 +72,6 @@ export const Feed = () => {
 
   console.log(booksData);
   console.log(bookDetails);
-  console.log(loading);
 
   const handleBookClick = async (bookId) => {
     const fetchBook = await selectBook(bookId);
@@ -94,7 +102,7 @@ export const Feed = () => {
 
   return (
     <>
-      <div style={{ height: '300px' }}></div>
+      <div style={{ height: '100px' }}></div>
       {booksData.length == 0 && !loading ? (
         <div>
           <h5>No posts yet</h5>
@@ -116,9 +124,7 @@ export const Feed = () => {
               onClick={() => handleBookClick(book.book_id)}
             >
               <CardHeader
-                // User Info Section (Left)
                 avatar={
-                  // Equivalent to: <a href="/profile/..." class="flex items-center gap-3">
                   <Link
                     href=""
                     underline="none"
@@ -140,7 +146,6 @@ export const Feed = () => {
                     </Box>
                   </Link>
                 }
-                // Action/Badge Section (Right)
                 action={
                   <Chip
                     size="small"

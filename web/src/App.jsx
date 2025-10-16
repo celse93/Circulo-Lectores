@@ -5,6 +5,7 @@ import { LoginRedirect } from './components/routing/LoginRedirect';
 import { Register } from './pages/Register';
 import { LoginForm } from './pages/LoginForm';
 import { ProtectedNavBar } from './components/routing/ProtectedNavBar';
+import './App.css';
 
 export const App = () => {
   return (

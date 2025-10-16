@@ -104,7 +104,7 @@ def reviews_routes(app):
                 .all()
             )
             if not review_list:
-                return jsonify({"error": "Review list not found"}), 404
+                return jsonify({"error": "Review list not found"}), 200
 
             response_body = [item.serialize() for item in review_list]
 
@@ -121,7 +121,7 @@ def reviews_routes(app):
             .all()
         )
         if not review_list:
-            return jsonify({"error": "Review list not found"}), 404
+            return jsonify({"error": "Review list not found"}), 200
 
         response_body = [item.serialize() for item in review_list]
 
