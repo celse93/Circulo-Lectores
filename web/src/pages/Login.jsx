@@ -1,6 +1,4 @@
 import { Link } from 'react-router';
-import BookCarousel from '../components/BooksCarousel';
-import TrendingCarousel from '../components/TrendingCarousel';
 
 export const Login = () => {
   return (
@@ -81,9 +79,6 @@ export const Login = () => {
           </div>
         </div>
       </section>
-
-      <BookCarousel />
-      <TrendingCarousel />
     </div>
   );
 };

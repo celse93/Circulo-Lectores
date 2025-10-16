@@ -86,7 +86,7 @@ export const Feed = () => {
     }
   };
 
-  const handleBookReadList = async (book) => {
+  const handleReadingList = async (book) => {
     try {
       const saveBook = await postReadingList(book.book_id);
       alert(`Libro "${book.title}": ${saveBook['message']}`);

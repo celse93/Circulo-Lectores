@@ -90,12 +90,7 @@ export const NavBarFinal = () => {
           <ul className="dropdown-menu">
             <li>
               <NavLink className="dropdown-item" to="/">
-                Buscar libros
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className="dropdown-item" to="/feed">
-                Feed
+                Home
               </NavLink>
             </li>
           </ul>

@@ -1,10 +1,8 @@
 import { Home } from '../../pages/Home';
 import { Login } from '../../pages/Login';
 import { Book } from '../../pages/Book';
-import { Feed } from '../../components/Feed';
 import { Profile } from '../../pages/Profile';
 import { Register } from '../../pages/Register';
-import { Footer } from '../../components/Footer';
 import { MyLibrary } from '../../pages/MyLibrary';
 import { MyQuotes } from '../../pages/MyQuotes';
 import { MyReviews } from '../../pages/MyReviews';
@@ -38,12 +36,6 @@ export const routesConfig = [
     showInNavbar: true,
   },
   {
-    name: 'Feed',
-    path: '/feed',
-    component: <Feed />,
-    showInNavbar: true,
-  },
-  {
     name: 'Register',
     path: '/register',
     component: <Register />,
@@ -71,12 +63,6 @@ export const routesConfig = [
     name: 'Mis Recomendaciones',
     path: '/my_recommendations',
     component: <MyRecommendations />,
-    showInNavbar: false,
-  },
-  {
-    name: 'Footer',
-    path: '/footer',
-    component: <Footer />,
     showInNavbar: false,
   },
   {
