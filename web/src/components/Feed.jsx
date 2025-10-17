@@ -158,7 +158,7 @@ export const Feed = () => {
                           {profile.username}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          less than a minute ago
+                          {data.created_data}
                         </Typography>
                       </Box>
                     </Link>
@@ -166,7 +166,7 @@ export const Feed = () => {
                   action={
                     <Chip
                       size="small"
-                      label="Quote"
+                      label={data.content_type}
                       icon={'abc'}
                       sx={{
                         bgcolor: 'secondary.light',
@@ -195,7 +195,9 @@ export const Feed = () => {
                           objectFit: 'cover',
                         }}
                         src={
-                          'https://imageplaceholder.net/300x300/eeeeee/131313?text=sin+portada+de+libro'
+                          bookInfo.cover_id != ''
+                            ? `https://covers.openlibrary.org/b/id/${bookInfo.cover_id}-M.jpg`
+                            : 'https://imageplaceholder.net/300x300/eeeeee/131313?text=sin+portada+de+libro'
                         }
                       />
                     </Box>
@@ -209,25 +211,28 @@ export const Feed = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  <Box
-                    sx={{
-                      p: 2,
-                      borderRadius: 1,
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      borderLeft: '4px solid',
-                      borderLeftColor: 'primary.main',
-                      bgcolor: 'action.hover',
-                      fontStyle: 'italic',
-                    }}
-                  >
-                    <Typography
-                      variant="body2"
-                      sx={{ whiteSpace: 'pre-wrap', lineHeight: 'relaxed' }}
+                  {(data.content_type == 'quote' ||
+                    data.content_type == 'review') && (
+                    <Box
+                      sx={{
+                        p: 2,
+                        borderRadius: 1,
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        borderLeft: '4px solid',
+                        borderLeftColor: 'primary.main',
+                        bgcolor: 'action.hover',
+                        fontStyle: 'italic',
+                      }}
                     >
-                      filosofare
-                    </Typography>
-                  </Box>
+                      <Typography
+                        variant="body2"
+                        sx={{ whiteSpace: 'pre-wrap', lineHeight: 'relaxed' }}
+                      >
+                        {data.text}
+                      </Typography>
+                    </Box>
+                  )}
                 </CardContent>
               </Card>
             );
