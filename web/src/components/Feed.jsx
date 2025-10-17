@@ -19,19 +19,19 @@ import {
   Box,
   Chip,
 } from '@mui/material';
+import AutoStoriesRoundedIcon from '@mui/icons-material/AutoStoriesRounded';
 
 export const Feed = () => {
   const [booksData, setBooksData] = useState([]);
   const [bookDetails, setBookDetails] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [profileNames, setProfileNames] = useState([]);
+  const [fetchComplete, setFetchComplete] = useState(false);
   const navigate = useNavigate();
   const { selectBook } = useContext(UserContext);
 
   useEffect(() => {
     const fetchBooksData = async () => {
       try {
-        setLoading(true);
         const dataRecommendations = await getAllRecommendations();
         const dataReadingList = await getAllReadingLists();
         const dataQuotes = await getAllQuotes();
@@ -45,7 +45,6 @@ export const Feed = () => {
         ]);
       } catch (error) {
         console.error('Failed to fetch books data:', error);
-        setLoading(false);
       }
     };
     fetchBooksData();
@@ -54,7 +53,6 @@ export const Feed = () => {
   useEffect(() => {
     const fetchBookCovers = async () => {
       if (booksData.length == 0) {
-        setLoading(false);
         return;
       }
       try {
@@ -70,7 +68,7 @@ export const Feed = () => {
       } catch (error) {
         console.error('Failed to fetch book details:', error);
       } finally {
-        setLoading(false);
+        setFetchComplete(true);
       }
     };
     fetchBookCovers();
@@ -79,7 +77,6 @@ export const Feed = () => {
   console.log(booksData);
   console.log(bookDetails);
   console.log(profileNames);
-  console.log(loading);
 
   const handleBookClick = async (bookId) => {
     const fetchBook = await selectBook(bookId);
@@ -111,12 +108,12 @@ export const Feed = () => {
   return (
     <>
       <div style={{ height: '100px' }}></div>
-      {booksData.length == 0 && !loading ? (
-        <div>
-          <h5>No posts yet</h5>
-        </div>
-      ) : loading ? (
-        <p>Loading...</p>
+      {!fetchComplete ? (
+        <Typography sx={{ color: 'text.primary' }}>Loading...</Typography>
+      ) : bookDetails.length == 0 && fetchComplete ? (
+        <Box>
+          <Typography variant="h5"> No posts yet</Typography>
+        </Box>
       ) : (
         <Box>
           {booksData.map((data) => {
@@ -132,8 +129,11 @@ export const Feed = () => {
             return (
               <Card
                 sx={{
-                  maxWidth: 400,
-                  margin: 'auto',
+                  mb: 1,
+                  py: 1,
+                  width: 770,
+                  height: 'auto',
+                  mx: 'auto',
                   borderRadius: 3,
                   transition: 'box-shadow 0.3s',
                   '&:hover': { boxShadow: 6 },
@@ -149,16 +149,20 @@ export const Feed = () => {
                       sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}
                     >
                       <Avatar
-                        alt="Pedro"
-                        src="/assets/generated/default-avatar.dim_100x100.png"
-                        sx={{ width: 40, height: 40 }}
-                      />
+                        alt="icon"
+                        sx={{ width: 40, height: 40, color: 'var(--primary)' }}
+                      >
+                        <AutoStoriesRoundedIcon />
+                      </Avatar>
                       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Typography variant="subtitle1" fontWeight="bold">
                           {profile.username}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {data.created_data}
+                        <Typography
+                          variant="caption"
+                          sx={{ color: 'var(--primary)' }}
+                        >
+                          {data.created_at}
                         </Typography>
                       </Box>
                     </Link>
@@ -194,6 +198,7 @@ export const Feed = () => {
                           borderRadius: 8,
                           objectFit: 'cover',
                         }}
+                        className="clickable-item"
                         src={
                           bookInfo.cover_id != ''
                             ? `https://covers.openlibrary.org/b/id/${bookInfo.cover_id}-M.jpg`
