@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router';
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../context/UserContext';
 import { postReadingList, postRecommendations } from '../services/api/books';
-import { getAllQuotes, getAllReviews } from '../services/api/feed';
-import { getProfileNames } from '../services/api/users';
 import {
+  getAllQuotes,
+  getAllReviews,
   getAllReadingLists,
   getAllRecommendations,
 } from '../services/api/feed';
+import { getProfileNames } from '../services/api/users';
 import {
   Card,
   CardContent,
@@ -53,6 +54,7 @@ export const Feed = () => {
   useEffect(() => {
     const fetchBookCovers = async () => {
       if (booksData.length == 0) {
+        setFetchComplete(true);
         return;
       }
       try {

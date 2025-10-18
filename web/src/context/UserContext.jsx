@@ -32,7 +32,7 @@ export const UserProvider = ({ children }) => {
       setUser(user);
       const profile = await getCurrentProfile();
       setProfile(profile);
-      navigate('/profile');
+      navigate('/');
     } catch (error) {
       console.error('Login error:', error);
       throw error;

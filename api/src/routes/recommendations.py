@@ -78,7 +78,7 @@ def recommendations_routes(app):
             )
 
             if not recommendations:
-                return jsonify({"error": "Recommendation list not found"}), 200
+                return jsonify({"error": "Recommendation list not found"}), 404
 
             response_body = [item.serialize() for item in recommendations]
             return jsonify(response_body), 200
@@ -96,7 +96,7 @@ def recommendations_routes(app):
             .all()
         )
         if not recommendations:
-            return jsonify({"error": "Recommendation list not found"}), 200
+            return jsonify({"error": "Recommendation list not found"}), 404
 
         response_body = [item.serialize() for item in recommendations]
         return jsonify(response_body), 200

@@ -73,7 +73,7 @@ def reading_list_routes(app):
                 .all()
             )
             if not reading_list:
-                return jsonify({"error": "Reading list not found"}), 200
+                return jsonify({"error": "Reading list not found"}), 404
 
             response_body = [item.serialize() for item in reading_list]
 
@@ -90,7 +90,7 @@ def reading_list_routes(app):
             .all()
         )
         if not reading_list:
-            return jsonify({"error": "Reading list not found"}), 200
+            return jsonify({"error": "Reading list not found"}), 404
 
         response_body = [item.serialize() for item in reading_list]
 
