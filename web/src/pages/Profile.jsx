@@ -118,7 +118,7 @@ export const Profile = () => {
                     {profile?.username || 'User'}
                   </Typography>
                 </Box>
-                <Box sx={{ mx: 4, width: '20%', p: 0 }}>
+                <Box sx={{ mx: 3, width: '20%', p: 0 }}>
                   <Box sx={{ width: '100%', height: '50%' }}>
                     <Button
                       sx={{
@@ -133,7 +133,7 @@ export const Profile = () => {
                       onClick={() => navigate('/follows')}
                       startIcon={<PersonIcon />}
                     >
-                      Fellow Readers
+                      Fellows
                     </Button>
                   </Box>
                   <Box sx={{ width: '100%', height: '50%' }}>
