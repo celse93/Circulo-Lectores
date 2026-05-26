@@ -20,7 +20,7 @@ export const Footer = () => {
               color: 'var(--chart-1)',
             }}
           >
-            © 2025. Built with{' '}
+            Built with{' '}
             <FavoriteIcon
               sx={{
                 fontFamily: 'sans-serif',

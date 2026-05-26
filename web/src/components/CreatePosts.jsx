@@ -145,6 +145,7 @@ export const CreatePosts = () => {
     <>
       <Button
         sx={{
+          width: '100%',
           background: 'var(--chart-0)',
           '&:hover': { bgcolor: 'var(--chart-2)', color: 'var(--chart-1)' },
         }}
@@ -152,7 +153,7 @@ export const CreatePosts = () => {
         variant="contained"
         onClick={handleOpen}
       >
-        Share Book
+        Share
       </Button>
 
       <Modal open={open} onClose={handleClose}>

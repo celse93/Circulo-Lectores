@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { UserContext } from '../context/UserContext';
+import { ThemeContext } from '../context/ThemeContext';
 import { LoginForm } from './LoginForm';
 import { Register } from './Register';
 import {
@@ -13,15 +14,20 @@ import {
   AppBar,
   Toolbar,
   Modal,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
 import AutoStoriesOutlinedIcon from '@mui/icons-material/AutoStoriesOutlined';
 import LoginIcon from '@mui/icons-material/Login';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 
 export const Navbar = () => {
   const { logout, profile, isLoggedIn } = useContext(UserContext);
+  const { mode, toggleTheme } = useContext(ThemeContext);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [openLoginModal, setOpenLoginModal] = useState(false);
@@ -79,7 +85,8 @@ export const Navbar = () => {
             paddingX: { xs: 2, sm: 3 },
           }}
         >
-          <Box sx={{ ml: 5 }}>
+          {/* Left: Logo */}
+          <Box sx={{ flex: 1, display: 'flex', ml: 5 }}>
             <Typography
               variant="h5"
               component="span"
@@ -95,15 +102,59 @@ export const Navbar = () => {
               Wisdom
             </Typography>
           </Box>
-          {!isLoggedIn && (
-            <Box sx={{ mr: 5 }}>
+
+          {/* Center: Feed / Explore */}
+          {isLoggedIn && (
+            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', gap: 3 }}>
+              <Box
+                component="span"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  fontFamily: 'serif',
+                  color: 'var(--muted-foreground)',
+                  fontStyle: 'oblique',
+                  fontWeight: 'bold',
+                  '&:hover': { color: 'var(--foreground)', transition: 'color 0.3s ease-in-out' },
+                }}
+                className="clickable-item"
+                onClick={() => navigate('/home')}
+              >
+                <AutoStoriesOutlinedIcon sx={{ mr: 0.5 }} />
+                <Typography>Feed</Typography>
+              </Box>
+              <Box
+                component="span"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  fontFamily: 'serif',
+                  color: 'var(--muted-foreground)',
+                  fontStyle: 'oblique',
+                  fontWeight: 'bold',
+                  '&:hover': { color: 'var(--foreground)', transition: 'color 0.3s ease-in-out' },
+                }}
+                className="clickable-item"
+                onClick={() => navigate('/explore')}
+              >
+                <ExploreOutlinedIcon sx={{ mr: 0.5 }} />
+                <Typography>Explore</Typography>
+              </Box>
+            </Box>
+          )}
+
+          {/* Right: theme toggle + avatar or login */}
+          <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 1, mr: 5 }}>
+            <Tooltip title={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+              <IconButton onClick={toggleTheme} sx={{ color: 'var(--muted-foreground)' }}>
+                {mode === 'dark' ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
+              </IconButton>
+            </Tooltip>
+            {!isLoggedIn && (
               <Button
                 sx={{
                   background: 'var(--chart-0)',
-                  '&:hover': {
-                    bgcolor: 'var(--chart-2)',
-                    color: 'var(--chart-1)',
-                  },
+                  '&:hover': { bgcolor: 'var(--chart-2)', color: 'var(--chart-1)' },
                 }}
                 variant="contained"
                 onClick={handleOpenLoginModal}
@@ -111,112 +162,36 @@ export const Navbar = () => {
               >
                 Login
               </Button>
-            </Box>
-          )}
-          {isLoggedIn && (
-            <>
-              <Box
-                sx={{
-                  display: 'flex',
-                }}
-              >
-                <Box
-                  variant="h6"
-                  component="span"
-                  sx={{
-                    display: 'flex',
-                    fontFamily: 'serif',
-                    color: 'var(--muted-foreground)',
-                    fontStyle: 'oblique',
-                    fontWeight: 'bold',
-                    mr: 3,
-                    '&:hover': {
-                      color: 'var(--foreground)',
-                      transition: 'color 0.3s ease-in-out',
-                    },
-                  }}
+            )}
+            {isLoggedIn && profile && (
+              <>
+                <Avatar
+                  src={getProfileAvatar(profile.username)}
+                  alt="icon"
+                  sx={{ width: 40, height: 40, color: 'var(--primary)' }}
                   className="clickable-item"
-                  onClick={() => navigate('/home')}
+                  onClick={handleClick}
+                />
+                <Menu
+                  sx={{ my: 1 }}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  anchorEl={anchorEl}
+                  open={isOpen}
+                  onClose={handleClose}
                 >
-                  <AutoStoriesOutlinedIcon
-                    sx={{
-                      mr: 0.5,
-                    }}
-                  />
-                  <Typography>Feed</Typography>
-                </Box>
-                <Box
-                  variant="h6"
-                  component="span"
-                  sx={{
-                    display: 'flex',
-                    fontFamily: 'serif',
-                    color: 'var(--muted-foreground)',
-                    fontStyle: 'oblique',
-                    fontWeight: 'bold',
-                    '&:hover': {
-                      color: 'var(--foreground)',
-                      transition: 'color 0.3s ease-in-out',
-                    },
-                  }}
-                  className="clickable-item"
-                  onClick={() => navigate('/explore')}
-                >
-                  <ExploreOutlinedIcon
-                    sx={{
-                      mr: 0.5,
-                    }}
-                  />
-                  <Typography>Explore</Typography>
-                </Box>
-              </Box>
-              {!profile ? (
-                <Box>
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    disabled={profile.id}
-                  >
-                    <LoginIcon />
-                    {profile ? 'Connecting...' : 'Log In'}
-                  </Button>
-                </Box>
-              ) : (
-                <Box sx={{ minWidth: 120 }}>
-                  <Avatar
-                    src={getProfileAvatar(profile.username)}
-                    alt="icon"
-                    sx={{ width: 40, height: 40, color: 'var(--primary)' }}
-                    className="clickable-item"
-                    onClick={handleClick}
-                  />
-                  <Menu
-                    sx={{ my: 1 }}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'right',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    anchorEl={anchorEl}
-                    open={isOpen}
-                    onClose={handleClose}
-                  >
-                    <MenuItem onClick={handleClickProfile}>
-                      <PersonOutlineIcon />
-                      My Profile
-                    </MenuItem>
-                    <MenuItem onClick={handleLogout}>
-                      <LogoutIcon />
-                      Log out
-                    </MenuItem>
-                  </Menu>
-                </Box>
-              )}
-            </>
-          )}
+                  <MenuItem onClick={handleClickProfile}>
+                    <PersonOutlineIcon />
+                    My Profile
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <LogoutIcon />
+                    Log out
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
       <Modal open={openLoginModal} onClose={handleCloseLoginModal}>

@@ -8,6 +8,7 @@ html, body {
 
 
 :root {
+  --navbar-bg: #180f0d;
   --background: #fef7f2;
   --back-secondary: #291510;
   --text: #1b150f;
@@ -51,7 +52,7 @@ html, body {
   --input3: #d3d3d7;
 }
 
-.navbar {
+:root .navbar {
   position: fixed;
   top: 0;
   left: 0;
@@ -59,22 +60,7 @@ html, body {
   padding: 1rem 0;
   width: 100%;
   z-index: 1000;
-  background: var(--desctructive);
-  border: 1px solid var(--border);
-  border-bottom-width: 1px;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-}
-
-.dark .navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 1rem 0;
-  width: 100%;
-  z-index: 1000;
-  background: var(--desctructive);
+  background: transparent;
   border-color: var(--border);
   border-style: solid;
   border-width: 0px 0px 1px 0px;
@@ -86,16 +72,22 @@ html, body {
   cursor: pointer;
 }
 
-.footer {
+:root .footer {
   width: 100%;
   z-index: 10;
-  background: var(--card);
-  border-color: var(--border);
-  border-style: solid;
-  border-width: 1px 0px 0px 0px;
+  background: transparent;
+  border: none;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   display: block;
+}
+
+:root .footer::before {
+  content: '';
+  display: block;
+  width: 90%;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
 }
 
 .content-wrapper {
